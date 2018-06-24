@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent;
 public class Environment extends JFrame implements ActionListener {
     private Swarm panel;
 
-    public  Environment() {
+    public Environment() {
         int w = 800;
         int h = 600;
         initFrame(w, h);
@@ -29,7 +29,7 @@ public class Environment extends JFrame implements ActionListener {
         });
 
         panel = new Swarm(10);
-        panel.setBackground(Color.ORANGE);
+        panel.setBackground(Color.YELLOW);
         Container container = getContentPane();
         container.add(panel, BorderLayout.CENTER);
 
