@@ -1,6 +1,6 @@
 public class Main {
 
     public static void main(String[] args) {
-        SCEnvironment scEnvironment = new SCEnvironment();
+        Environment env = new Environment();
     }
 }

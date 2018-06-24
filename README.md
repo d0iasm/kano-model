@@ -1,4 +1,4 @@
-# Swarm Chemistry Minimum
+# Swarm Chemistry Simple
 Simple version of [swarm-chemistry](https://github.com/d0iasm/swarm-chemistry).
 
 ## References

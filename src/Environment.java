@@ -3,8 +3,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class SCEnvironment extends JFrame{
-    public  SCEnvironment() {
+public class Environment extends JFrame{
+    public  Environment() {
         int w = 800;
         int h = 600;
         initFrame(w, h);
