@@ -6,21 +6,19 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Environment extends JFrame implements ActionListener {
-    private Swarm panel;
+    private Swarm swarm;
 
     public Environment() {
-        int w = 800;
-        int h = 600;
-        initFrame(w, h);
-        new Timer(100, (ActionEvent e) -> {
-            panel.run();
+        initFrame(600, 600);
+        new Timer(500, (ActionEvent e) -> {
+            swarm.run();
         }).start();
     }
 
     private void initFrame(int w, int h) {
         setTitle("Swarm Chemistry Simulator");
         setSize(new Dimension(w, h));
-        setBackground(Color.white);
+        setBackground(Color.WHITE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -29,10 +27,10 @@ public class Environment extends JFrame implements ActionListener {
             }
         });
 
-        panel = new Swarm(10);
-        panel.setBackground(Color.YELLOW);
+        swarm = new Swarm(10);
+        swarm.setBackground(Color.WHITE);
         Container container = getContentPane();
-        container.add(panel, BorderLayout.CENTER);
+        container.add(swarm, BorderLayout.CENTER);
 
         setVisible(true);
     }
