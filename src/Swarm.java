@@ -14,6 +14,14 @@ public class Swarm extends JPanel {
         }
     }
 
+    public void run() {
+        for (Particle p : particles) {
+            p.move();
+            System.out.println(p.getX());
+        }
+        repaint();
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

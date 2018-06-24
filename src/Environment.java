@@ -12,8 +12,9 @@ public class Environment extends JFrame implements ActionListener {
         int w = 800;
         int h = 600;
         initFrame(w, h);
-//        while (true) {
-//        }
+        new Timer(100, (ActionEvent e) -> {
+            panel.run();
+        }).start();
     }
 
     private void initFrame(int w, int h) {
