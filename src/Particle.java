@@ -1,8 +1,10 @@
 
 public class Particle {
     private double x, y;
-    private int min = -300;
-    private int max = 300;
+//    private int min = -300;
+//    private int max = 300;
+    private double min = -0.5;
+    private double max = 0.5;
     private int id;
 
     public Particle(int id) {

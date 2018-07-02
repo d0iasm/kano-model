@@ -56,22 +56,35 @@ public class Swarm extends JPanel {
         return distance(x1, y1, x2, y2);
     }
 
+    private double distance(Particle pi, Particle pj, int scale) {
+        double x1 = pi.getX();
+        double y1 = pi.getY();
+        double x2 = pj.getX();
+        double y2 = pj.getY();
+        return distance(x1/scale, y1/scale, x2/scale, y2/scale);
+    }
+
     public void run() {
         double nextX;
         double nextY;
         double dis;
         double paramK;
+        List<Double> newX = new ArrayList<>(pNum);
+        List<Double> newY = new ArrayList<>(pNum);
+
         for (Particle p1 : particles) {
             nextX = 0;
             nextY = 0;
+
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
 
-                dis = distance(p1, p2) / scale;
+                dis = distance(p1, p2, scale);
+//                dis = distance(p1, p2);
                 paramK = k(p1.getId(), p2.getId());
 
-//                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
-//                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
+                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
+                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
                 System.out.println("distance: " + dis);
                 System.out.println("pow -1: " + Math.pow(dis, -1) + ", pow -2: " + Math.pow(dis, -2));
 //                System.out.println("pow -1: " + (1/dis) + ", pow -2: " + (1/(dis * dis)));
@@ -90,9 +103,17 @@ public class Swarm extends JPanel {
             System.out.println("nextX: " + nextX + ", nextY: " + nextY);
             System.out.println("x: " + p1.getX() + nextX + ", y: " + p1.getY() + nextY);
             System.out.println("---------------------");
-            p1.setX(p1.getX() + nextX);
-            p1.setY(p1.getY() + nextY);
+//            p1.setX(p1.getX() + nextX);
+            newX.add(p1.getX() + nextX);
+            newY.add(p1.getY() + nextY);
+//            p1.setY(p1.getY() + nextY);
         }
+
+        for (int i=0; i<pNum; i++) {
+            particles.get(i).setX(newX.get(i));
+            particles.get(i).setY(newY.get(i));
+        }
+
         repaint();
     }
 
@@ -104,7 +125,7 @@ public class Swarm extends JPanel {
             g.drawLine(0, i, w, i);
             g.drawLine(i, 0, i, h);
         }
-        
+
         for (Particle p : particles) {
             if (p.getId() <= pNum / 2) {
                 g.setColor(Color.RED);
