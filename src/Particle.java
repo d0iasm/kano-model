@@ -35,8 +35,8 @@ public class Particle {
     }
 
     public void straying() {
-        x += Math.random() * 10 - 0.5;
-        y += Math.random() * 10 - 0.5;
+        x += Math.random() - 0.5;
+        y += Math.random() - 0.5;
     }
 
     private void separation() {
