@@ -27,7 +27,7 @@ public class Environment extends JFrame implements ActionListener {
             }
         });
 
-        swarm = new Swarm(10);
+        swarm = new Swarm(50);
         swarm.setBackground(Color.WHITE);
         Container container = getContentPane();
         container.add(swarm, BorderLayout.CENTER);
