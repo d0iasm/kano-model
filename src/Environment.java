@@ -10,7 +10,7 @@ public class Environment extends JFrame implements ActionListener {
 
     public Environment() {
         initFrame(600, 600);
-        new Timer(10, (ActionEvent e) -> {
+        new Timer(1000, (ActionEvent e) -> {
             swarm.run();
         }).start();
     }
@@ -27,8 +27,9 @@ public class Environment extends JFrame implements ActionListener {
             }
         });
 
-        swarm = new Swarm(50);
+        swarm = new Swarm(5);
         swarm.setBackground(Color.WHITE);
+//        swarm.setLocation(0, 0);
         Container container = getContentPane();
         container.add(swarm, BorderLayout.CENTER);
 
