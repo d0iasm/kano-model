@@ -1,21 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class Swarm extends JPanel {
-
     private int w;
     private int h;
 
+    private int pNum;
     private int pSize = 10;
     private List<Particle> particles;
 
-    //    private double k = 0.1;
-    private Callable k;
-    private int pNum;
+    private int count = 0;
 
     public Swarm(int num, int w, int h) {
         this.pNum = num;
@@ -29,26 +25,14 @@ public class Swarm extends JPanel {
 
     private double k(int i, int j) {
         if (i < pNum / 2 && j < pNum / 2) {
-            return 1.0;
+            return 0.7;
         } else if (i < pNum / 2 && j >= pNum / 2) {
-            return 1.0;
+            return 1.2;
         } else if (i >= pNum / 2 & j < pNum / 2) {
             return 0.5;
         } else {
-            return 1.3;
+            return 0.7;
         }
-    }
-
-    private Point2D.Double diff(double x1, double y1, double x2, double y2) {
-        return new Point2D.Double(x2 - x1, y2 - y1);
-    }
-
-    private Point2D.Double diff(Particle pi, Particle pj) {
-        double x1 = pi.getX();
-        double y1 = pi.getY();
-        double x2 = pj.getX();
-        double y2 = pj.getY();
-        return diff(x1, y1, x2, y2);
     }
 
     private double diffX(Particle pi, Particle pj) {
@@ -85,20 +69,25 @@ public class Swarm extends JPanel {
                 dis = distance(p1, p2);
                 paramK = k(p1.getId(), p2.getId());
 
-                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
-                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
-                System.out.println("distance: " + dis);
-                System.out.println("diff X: " + diffX(p1, p2));
-                System.out.println("diff Y: " + diffY(p1, p2));
+//                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
+//                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
+//                System.out.println("distance: " + dis);
+//                System.out.println("diff X: " + diffX(p1, p2));
+//                System.out.println("diff Y: " + diffY(p1, p2));
 
-                nextX += (diffX(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
-                nextY += (diffY(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
+                nextX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1));
+                nextY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1));
+
+//                nextX += (diffX(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
+//                nextY += (diffY(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
             }
 
-            System.out.println("X: " + nextX + " Y: " + nextY);
-            System.out.println("---------------------");
-            p1.setX(nextX);
-            p1.setY(nextY);
+//            System.out.println("X: " + nextX + " Y: " + nextY);
+//            System.out.println("---------------------");
+            count++;
+            System.out.println("count: " + count);
+            p1.setX(p1.getX() + nextX);
+            p1.setY(p1.getY() + nextY);
         }
         repaint();
     }
