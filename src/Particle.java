@@ -1,12 +1,18 @@
 
 public class Particle {
     private double x, y;
-    private int min = 0;
-    private int max = 600;
+    private int min = -300;
+    private int max = 300;
+    private int id;
 
-    public Particle() {
+    public Particle(int id) {
+        this.id = id;
         x = min + Math.random() * (max - min);
         y = min + Math.random() * (max - min);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public double getX() {

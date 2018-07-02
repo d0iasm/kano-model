@@ -3,18 +3,39 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class Swarm extends JPanel {
+
+    private int w;
+    private int h;
 
     private int pSize = 10;
     private List<Particle> particles;
 
-    private double k = 0.1;
+    //    private double k = 0.1;
+    private Callable k;
+    private int pNum;
 
-    public Swarm(int num) {
+    public Swarm(int num, int w, int h) {
+        this.pNum = num;
+        this.w = w;
+        this.h = h;
         particles = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
-            particles.add(new Particle());
+            particles.add(new Particle(i));
+        }
+    }
+
+    private double k(int i, int j) {
+        if (i < pNum / 2 && j < pNum / 2) {
+            return 1.0;
+        } else if (i < pNum / 2 && j >= pNum / 2) {
+            return 1.0;
+        } else if (i >= pNum / 2 & j < pNum / 2) {
+            return 0.5;
+        } else {
+            return 1.3;
         }
     }
 
@@ -54,6 +75,7 @@ public class Swarm extends JPanel {
         double nextX;
         double nextY;
         double dis;
+        double paramK;
         for (Particle p1 : particles) {
             nextX = 0;
             nextY = 0;
@@ -61,14 +83,16 @@ public class Swarm extends JPanel {
                 if (p1 == p2) continue;
 
                 dis = distance(p1, p2);
+                paramK = k(p1.getId(), p2.getId());
+
                 System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
                 System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
                 System.out.println("distance: " + dis);
                 System.out.println("diff X: " + diffX(p1, p2));
                 System.out.println("diff Y: " + diffY(p1, p2));
 
-                nextX += (diffX(p1, p2) / dis) * (k * (1 / dis) - (1 / dis * dis));
-                nextY += (diffY(p1, p2) / dis) * (k * (1 / dis) - (1 / dis * dis));
+                nextX += (diffX(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
+                nextY += (diffY(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
             }
 
             System.out.println("X: " + nextX + " Y: " + nextY);
@@ -83,9 +107,13 @@ public class Swarm extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         for (Particle p : particles) {
-            g.setColor(Color.ORANGE);
-            g.fillOval((int) (p.getX() - (pSize / 2)),
-                    (int) (p.getY() - (pSize / 2)),
+            if (p.getId() < pNum / 2) {
+                g.setColor(Color.RED);
+            } else {
+                g.setColor(Color.BLUE);
+            }
+            g.fillOval((int) (p.getX() - (pSize / 2) + w/2),
+                    (int) (p.getY() - (pSize / 2) + h/2),
                     pSize, pSize);
         }
     }

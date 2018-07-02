@@ -10,7 +10,7 @@ public class Environment extends JFrame implements ActionListener {
 
     public Environment() {
         initFrame(600, 600);
-        new Timer(1000, (ActionEvent e) -> {
+        new Timer(100, (ActionEvent e) -> {
             swarm.run();
         }).start();
     }
@@ -27,10 +27,15 @@ public class Environment extends JFrame implements ActionListener {
             }
         });
 
-        swarm = new Swarm(5);
+        swarm = new Swarm(50, w, h);
         swarm.setBackground(Color.WHITE);
-//        swarm.setLocation(0, 0);
+        swarm.setSize(new Dimension(w, h));
+        //TODO: Chase the middle of particles
+//        swarm.setSize(new Dimension(w-100, h-100));
+//        swarm.setLocation(100, 100);
+//        swarm.setBackground(Color.YELLOW);
         Container container = getContentPane();
+        container.setLayout(null);
         container.add(swarm, BorderLayout.CENTER);
 
         setVisible(true);
