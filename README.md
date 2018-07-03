@@ -1,5 +1,5 @@
-# Swarm Chemistry Simple
-Simple version of [swarm-chemistry](https://github.com/d0iasm/swarm-chemistry).
+# Kano Model
+Minimal model of self-organization induced by asymmetric interactions.
 
 ## References
 - [Swarm Chemistry Homepage](http://bingweb.binghamton.edu/~sayama/SwarmChemistry/)

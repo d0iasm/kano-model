@@ -27,13 +27,13 @@ public class Swarm extends JPanel {
 
     private double k(int i, int j) {
         if (i <= pNum / 2 && j <= pNum / 2) {
-            return 1.0;
+            return 0.8;
         } else if (i <= pNum / 2 && j > pNum / 2) {
-            return 0.5;
+            return 1.1;
         } else if (i > pNum / 2 & j <= pNum / 2) {
-            return 1.0;
+            return 0.6;
         } else {
-            return 1.3;
+            return 1.0;
         }
     }
 
@@ -57,14 +57,6 @@ public class Swarm extends JPanel {
         return distance(x1, y1, x2, y2);
     }
 
-    private double distance(Particle pi, Particle pj, int scale) {
-        double x1 = pi.getX();
-        double y1 = pi.getY();
-        double x2 = pj.getX();
-        double y2 = pj.getY();
-        return distance(x1 / scale, y1 / scale, x2 / scale, y2 / scale);
-    }
-
     public void run() {
         double sumX;
         double sumY;
@@ -78,36 +70,34 @@ public class Swarm extends JPanel {
             sumY = 0;
 
             for (Particle p2 : particles) {
+//                TODO: Runge–Kutta method
+//                このやり方だと差分方程式。微分方程式の積分を求めるべし。
+//                CHECK: Vertlet integration, Newton cotes, Euler integration
                 if (p1 == p2) continue;
 
-//                dis = distance(p1, p2, scale);
                 dis = distance(p1, p2);
                 paramK = k(p1.getId(), p2.getId());
 
-                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
-                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
-                System.out.println("distance: " + dis);
-                System.out.println("pow -0.8: " + Math.pow(dis, -0.8) + ", pow -1: " + Math.pow(dis, -1));
-//                System.out.println("pow -1: " + (1/dis) + ", pow -2: " + (1/(dis * dis)));
-                System.out.println("diff X: " + diffX(p1, p2));
-                System.out.println("diff Y: " + diffY(p1, p2));
+//                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
+//                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
+//                System.out.println("distance: " + dis);
+//                System.out.println("pow -0.8: " + Math.pow(dis, -0.8) + ", pow -1: " + Math.pow(dis, -1));
+//                System.out.println("diff X: " + diffX(p1, p2));
+//                System.out.println("diff Y: " + diffY(p1, p2));
 
-                System.out.println("plus X: " + ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
-                System.out.println("plus Y: " + ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
+//                System.out.println("plus X: " + ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
+//                System.out.println("plus Y: " + ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
 
                 sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1));
                 sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1));
-
-//                sumX += (diffX(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
-//                sumY += (diffY(p1, p2) / dis) * (paramK * (1 / dis) - (1 / dis * dis));
             }
 
-            System.out.println("---------i end----------");
-            System.out.println("sumX: " + sumX + ", sumY: " + sumY);
-            System.out.println("x: " + (p1.getX() + sumX) + ", y: " + (p1.getY() + sumY));
+//            System.out.println("---------i end----------");
+//            System.out.println("sumX: " + sumX + ", sumY: " + sumY);
+//            System.out.println("x: " + (p1.getX() + sumX) + ", y: " + (p1.getY() + sumY));
 //            p1.setX(p1.getX() + sumX);
 //            p1.setY(p1.getY() + sumY);
-            System.out.println("---------i end----------");
+//            System.out.println("---------i end----------");
 
             newX.add(p1.getX() + sumX);
             newY.add(p1.getY() + sumY);
@@ -129,11 +119,11 @@ public class Swarm extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.LIGHT_GRAY);
-        for (int i = scale; i < h; i += scale) {
-            g2.drawLine(0, i, w, i);
-            g2.drawLine(i, 0, i, h);
-        }
+//        g2.setColor(Color.LIGHT_GRAY);
+//        for (int i = scale; i < h; i += scale) {
+//            g2.drawLine(0, i, w, i);
+//            g2.drawLine(i, 0, i, h);
+//        }
 
         for (Particle p : particles) {
             if (p.getId() <= pNum / 2) {
@@ -142,17 +132,9 @@ public class Swarm extends JPanel {
                 g2.setColor(Color.BLUE);
             }
 
-//            System.out.println("fillover X: " + (p.getX() - (pSize / 2)));
-//            System.out.println("fillover Y: " + (p.getY() - (pSize / 2)));
-//            g.fillOval((int) (p.getX() - (pSize / 2) + w / 2),
-//                    (int) (p.getY() - (pSize / 2) + h / 2),
-//                    pSize, pSize);
-
-//            g.fillOval((int) (p.getX() * scale - (pSize / 2) + w/2),
-//                    (int) (p.getY() * scale - (pSize / 2) + h/2),
-//                    pSize, pSize);
-            g2.fill(new Ellipse2D.Double(p.getX() - (pSize / 2) + w / 2,
-                    p.getY() - (pSize / 2) + h / 2,
+            g2.fill(new Ellipse2D.Double(
+                    p.getX() * 4 - (pSize / 2) + w / 2,
+                    p.getY() * 4 - (pSize / 2) + h / 2,
                     pSize, pSize));
         }
     }
