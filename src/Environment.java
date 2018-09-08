@@ -10,9 +10,12 @@ public class Environment extends JFrame implements ActionListener {
 
     public Environment() {
         initFrame(800, 800);
-        new Timer(100, (ActionEvent e) -> {
+        while(true) {
             swarm.run();
-        }).start();
+        }
+//        new Timer(1, (ActionEvent e) -> {
+//            swarm.run();
+//        }).start();
     }
 
     private void initFrame(int w, int h) {

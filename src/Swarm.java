@@ -8,8 +8,9 @@ public class Swarm extends JPanel {
     private int w;
     private int h;
 
+    private double timeStep = 0.002;
     private int pNum;
-    private int pSize = 8;
+    private int pSize = 4;
     private int scale = 200;
     private List<Particle> particles;
 
@@ -38,11 +39,11 @@ public class Swarm extends JPanel {
     }
 
     private double diffX(Particle pi, Particle pj) {
-        return pj.getX() - pi.getX();
+        return pj.x - pi.x;
     }
 
     private double diffY(Particle pi, Particle pj) {
-        return pj.getY() - pi.getY();
+        return pj.y - pi.y;
     }
 
     private double distance(double x1, double y1, double x2, double y2) {
@@ -50,11 +51,20 @@ public class Swarm extends JPanel {
     }
 
     private double distance(Particle pi, Particle pj) {
-        double x1 = pi.getX();
-        double y1 = pi.getY();
-        double x2 = pj.getX();
-        double y2 = pj.getY();
+        double x1 = pi.x;
+        double y1 = pi.y;
+        double x2 = pj.x;
+        double y2 = pj.y;
         return distance(x1, y1, x2, y2);
+    }
+
+    private double calcRungeKutta(double x) {
+        double timeStep = 0.002;
+        double k1 = x;
+        double k2 = x + k1 * timeStep * 0.5;
+        double k3 = x + k2 * timeStep * 0.5;
+        double k4 = x + k3 * timeStep;
+        return (k1 + 2*k2 + 2*k3 + k4) * (timeStep / 6.0);
     }
 
     public void run() {
@@ -62,6 +72,10 @@ public class Swarm extends JPanel {
         double sumY;
         double dis;
         double paramK;
+
+        double rungeSumX;
+        double rungeSumY;
+
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
@@ -75,11 +89,12 @@ public class Swarm extends JPanel {
 //                CHECK: Vertlet integration, Newton cotes, Euler integration
                 if (p1 == p2) continue;
 
+                // TODO: 事前に距離の計算をしておく
                 dis = distance(p1, p2);
                 paramK = k(p1.getId(), p2.getId());
 
-//                System.out.println("p1 X: " + p1.getX() + " p1 Y: " + p1.getY());
-//                System.out.println("p2 X: " + p2.getX() + " p2 Y: " + p2.getY());
+//                System.out.println("p1 X: " + p1.x + " p1 Y: " + p1.y);
+//                System.out.println("p2 X: " + p2.x + " p2 Y: " + p2.y);
 //                System.out.println("distance: " + dis);
 //                System.out.println("pow -0.8: " + Math.pow(dis, -0.8) + ", pow -1: " + Math.pow(dis, -1));
 //                System.out.println("diff X: " + diffX(p1, p2));
@@ -88,31 +103,42 @@ public class Swarm extends JPanel {
 //                System.out.println("plus X: " + ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
 //                System.out.println("plus Y: " + ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
 
-                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1));
-                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1));
+                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
+                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
             }
 
 //            System.out.println("---------i end----------");
 //            System.out.println("sumX: " + sumX + ", sumY: " + sumY);
-//            System.out.println("x: " + (p1.getX() + sumX) + ", y: " + (p1.getY() + sumY));
-//            p1.setX(p1.getX() + sumX);
-//            p1.setY(p1.getY() + sumY);
+//            System.out.println("x: " + (p1.x + sumX) + ", y: " + (p1.y + sumY));
+//            p1.setX(p1.x + sumX);
+//            p1.setY(p1.y + sumY);
 //            System.out.println("---------i end----------");
 
-            newX.add(p1.getX() + sumX);
-            newY.add(p1.getY() + sumY);
+
+
+            rungeSumX = calcRungeKutta(sumX);
+            rungeSumY = calcRungeKutta(sumY);
+
+//            rungeSumX = sumX * 0.002;
+//            rungeSumY = sumY * 0.002;
+            newX.add(p1.x + rungeSumX);
+            newY.add(p1.y + rungeSumY);
         }
 
         count++;
-        System.out.println("count: " + count);
-        System.out.println("---------------------");
+//        System.out.println("count: " + count);
+//        System.out.println("---------------------");
 
         for (int i = 0; i < pNum; i++) {
             particles.get(i).setX(newX.get(i));
             particles.get(i).setY(newY.get(i));
         }
 
-        repaint();
+        if (count % 100 == 0) {
+            System.out.println("count: " + count);
+
+            repaint();
+        }
     }
 
     @Override
@@ -133,8 +159,8 @@ public class Swarm extends JPanel {
             }
 
             g2.fill(new Ellipse2D.Double(
-                    p.getX() * 4 - (pSize / 2) + w / 2,
-                    p.getY() * 4 - (pSize / 2) + h / 2,
+                    p.x * 4 - (pSize / 2) + w / 2,
+                    p.y * 4 - (pSize / 2) + h / 2,
                     pSize, pSize));
         }
     }

@@ -1,6 +1,6 @@
 
 public class Particle {
-    private double x, y;
+    public double x, y;
 //    private int min = -300;
 //    private int max = 300;
     private double min = -0.5;
