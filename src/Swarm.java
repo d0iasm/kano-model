@@ -84,14 +84,11 @@ public class Swarm extends JPanel {
             sumY = 0;
 
             for (Particle p2 : particles) {
-//                TODO: Runge–Kutta method
-//                このやり方だと差分方程式。微分方程式の積分を求めるべし。
-//                CHECK: Vertlet integration, Newton cotes, Euler integration
                 if (p1 == p2) continue;
 
                 // TODO: 事前に距離の計算をしておく
                 dis = distance(p1, p2);
-                paramK = k(p1.getId(), p2.getId());
+                paramK = k(p1.id, p2.id);
 
 //                System.out.println("p1 X: " + p1.x + " p1 Y: " + p1.y);
 //                System.out.println("p2 X: " + p2.x + " p2 Y: " + p2.y);
@@ -107,20 +104,9 @@ public class Swarm extends JPanel {
                 sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
             }
 
-//            System.out.println("---------i end----------");
-//            System.out.println("sumX: " + sumX + ", sumY: " + sumY);
-//            System.out.println("x: " + (p1.x + sumX) + ", y: " + (p1.y + sumY));
-//            p1.setX(p1.x + sumX);
-//            p1.setY(p1.y + sumY);
-//            System.out.println("---------i end----------");
-
-
-
             rungeSumX = calcRungeKutta(sumX);
             rungeSumY = calcRungeKutta(sumY);
 
-//            rungeSumX = sumX * 0.002;
-//            rungeSumY = sumY * 0.002;
             newX.add(p1.x + rungeSumX);
             newY.add(p1.y + rungeSumY);
         }
@@ -130,13 +116,12 @@ public class Swarm extends JPanel {
 //        System.out.println("---------------------");
 
         for (int i = 0; i < pNum; i++) {
-            particles.get(i).setX(newX.get(i));
-            particles.get(i).setY(newY.get(i));
+            particles.get(i).x = newX.get(i);
+            particles.get(i).y = newY.get(i);
         }
 
         if (count % 100 == 0) {
             System.out.println("count: " + count);
-
             repaint();
         }
     }
@@ -152,7 +137,7 @@ public class Swarm extends JPanel {
 //        }
 
         for (Particle p : particles) {
-            if (p.getId() <= pNum / 2) {
+            if (p.id <= pNum / 2) {
                 g2.setColor(Color.RED);
             } else {
                 g2.setColor(Color.BLUE);
