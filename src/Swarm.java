@@ -69,6 +69,7 @@ public class Swarm extends JPanel {
 
     public void run() {
         double sumX;
+        double sumXPOW;
         double sumY;
         double dis;
         double paramK;
@@ -82,6 +83,7 @@ public class Swarm extends JPanel {
         for (Particle p1 : particles) {
             sumX = 0;
             sumY = 0;
+            sumXPOW = 0;
 
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
@@ -100,12 +102,27 @@ public class Swarm extends JPanel {
 //                System.out.println("plus X: " + ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
 //                System.out.println("plus Y: " + ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
 
+                sumXPOW += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
+
                 sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
                 sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
+                // TODO: Bug? |Rij|^-1 and |Rij|^-2
+//                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - Math.pow(dis, -2.0));
+//                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - Math.pow(dis, -2.0));
+            }
+
+//            System.out.println("MATH pow: " + sumXPOW);
+//            System.out.println("1/dis:    " + sumX);
+            // TODO: FOUND DEFFERENCE! WHY?
+            if (sumX != sumXPOW) {
+                System.out.println("ERROR: different sum" + sumX + ", " + sumXPOW);
             }
 
             rungeSumX = calcRungeKutta(sumX);
             rungeSumY = calcRungeKutta(sumY);
+
+//            rungeSumX = 0.002 * sumX;
+//            rungeSumY = 0.002 * sumY;
 
             newX.add(p1.x + rungeSumX);
             newY.add(p1.y + rungeSumY);
