@@ -4,6 +4,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Swarm extends JPanel {
     private int w;
     private int h;
@@ -12,10 +13,45 @@ public class Swarm extends JPanel {
     private int pNum;
     private int pType;
     private int pPartition;
-    private int pSize = 4;
+    private int pSize = 6;
     private List<Particle> particles;
 
     private int count = 0;
+
+//    Spin as one big cluster at the center
+//        double[][] matrics = {
+//                {0.0, 1.4, 1.5},
+//                {1.5, 0.0, 1.4},
+//                {1.4, 1.5, 0.0}
+//        };
+
+    //        Attack and complicated movement NOT SAME to a paper
+//    double[][] matrics = {
+//            {1.1, 0.0, 1.5},
+//            {1.5, 1.1, 0.0},
+//            {0.0, 1.5, 1.1}
+//    };
+
+    //        Spin as a small cluster
+//    double[][] matrics = {
+//            {-0.5, 1.0, 1.4},
+//            {1.4, -0.5, 1.0},
+//            {1.0, 1.4, -0.5},
+//    };
+
+//        Spin like a film
+        double[][] matrics = {
+                {-0.1, 1.0, 1.4},
+                {1.4, -0.1, 1.0},
+                {1.0, 1.4, -0.1},
+        };
+
+//        Spin speedy with making a cluster with the same type
+//        double[][] matrics = {
+//                {1.3, 0.0, 1.5},
+//                {1.5, 1.3, 0.0},
+//                {0.0, 1.5, 1.3}
+//        };
 
     public Swarm(int num, int w, int h) {
         this.pNum = num;
@@ -23,6 +59,7 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = 2;
         this.pPartition = pNum / pType;
+        System.out.println(pPartition);
         particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
@@ -42,25 +79,63 @@ public class Swarm extends JPanel {
     }
 
     private double kDouble(int i, int j) {
-        // TODO: Optimize this function
-        if (i <= pNum / 2 && j <= pNum / 2) {
-            return 0.8;
-        } else if (i <= pNum / 2 && j > pNum / 2) {
-            return 1.7;
-        } else if (i > pNum / 2 & j <= pNum / 2) {
-            return 0.5;
-        } else {
-            return 1.2;
-        }
+//        Separation and fusion
+//        double[][] matrics = {
+//                {0.8, 1.1},
+//                {0.6, 1.0}
+//        };
+
+//        Like >--< this form
+        double[][] matrics = {
+                {0.8, 1.7},
+                {0.5, 1.2}
+        };
+
+//        Chase blue -> red -> blue
+//        double[][] matrics = {
+//                {1.0, 1.0},
+//                {0.5, 1.3}
+//        };
+        return matrics[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
     private double kTriple(int i, int j) {
-        double[][] matrics = {
-                {0.0, 1.4, 1.5},
-                {1.5, 0.0, 1.4},
-                {1.4, 1.5, 0.0}
-        };
-        return matrics[(i-1)/pPartition][(j-1)/pPartition];
+//        Spin as one big cluster at the center
+//        double[][] matrics = {
+//                {0.0, 1.4, 1.5},
+//                {1.5, 0.0, 1.4},
+//                {1.4, 1.5, 0.0}
+//        };
+
+//        Attack and complicated movement NOT SAME to a paper
+//        double[][] matrics = {
+//                {1.1, 0.0, 1.5},
+//                {1.5, 1.1, 0.0},
+//                {0.0, 1.5, 1.1}
+//        };
+
+//        Spin as a small cluster
+//        double[][] matrics = {
+//                {-0.5, 1.0, 1.4},
+//                {1.4, -0.5, 1.0},
+//                {1.0, 1.4, -0.5}
+//        };
+
+//        Spin like a film
+//        double[][] matrics = {
+//                {-0.1, 1.0, 1.4},
+//                {1.4, -0.1, 1.0},
+//                {1.0, 1.4, -0.1}
+//        };
+
+//        Spin speedy with making a cluster with the same type
+//        double[][] matrics = {
+//                {1.3, 0.0, 1.5},
+//                {1.5, 1.3, 0.0},
+//                {0.0, 1.5, 1.3}
+//        };
+
+        return matrics[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
     private double diffX(Particle pi, Particle pj) {
@@ -91,17 +166,38 @@ public class Swarm extends JPanel {
         return (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0);
     }
 
+    private void flipKParam(double[][] kSums) {
+        if (kSums[0][1] * kSums[1][2] * kSums[2][0] < 0) {
+            int base = (int)(Math.random() * 3);
+            matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
+            System.out.println("1: Flip k param " + base);
+            return;
+        }
+
+        if (kSums[0][2] * kSums[2][1] * kSums[1][0] < 0) {
+            int base = (int)(Math.random() * 3);
+            matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
+            System.out.println("2: Flip k param " + base);
+            return;
+        }
+    }
+
     public void run() {
         double sumX;
         double sumY;
         double dis;
         double paramK;
-
         double rungeSumX;
         double rungeSumY;
 
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
+
+        double[][] kSums = new double[][]{
+                {0, 0, 0},
+                {0, 0, 0},
+                {0, 0, 0},
+        };
 
         for (Particle p1 : particles) {
             sumX = 0;
@@ -122,27 +218,26 @@ public class Swarm extends JPanel {
                 sumY += ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis)));
 //                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 //                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
+
+                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = sumX + sumY;
             }
 
             rungeSumX = calcRungeKutta(sumX);
             rungeSumY = calcRungeKutta(sumY);
 
-//            rungeSumX = 0.002 * sumX;
-//            rungeSumY = 0.002 * sumY;
-
             newX.add(p1.x + rungeSumX);
             newY.add(p1.y + rungeSumY);
         }
-
-        count++;
 
         for (int i = 0; i < pNum; i++) {
             particles.get(i).x = newX.get(i);
             particles.get(i).y = newY.get(i);
         }
+        flipKParam(kSums);
 
+        count++;
         if (count % 100 == 0) {
-            System.out.println("count: " + count);
+//            System.out.println("count: " + count);
             repaint();
         }
     }
@@ -160,15 +255,15 @@ public class Swarm extends JPanel {
         for (Particle p : particles) {
             if (p.id <= pPartition) {
                 g2.setColor(Color.RED);
-            } else if (pPartition < p.id && p.id <= pPartition * 2){
+            } else if (pPartition < p.id && p.id <= pPartition * 2) {
                 g2.setColor(Color.BLUE);
             } else {
                 g2.setColor(Color.GREEN);
             }
 
             g2.fill(new Ellipse2D.Double(
-                    p.x * 20 - (pSize / 2) + w / 2,
-                    p.y * 20 - (pSize / 2) + h / 2,
+                    p.x * 4 - (pSize / 2) + w / 2,
+                    p.y * 4 - (pSize / 2) + h / 2,
                     pSize, pSize));
         }
     }
