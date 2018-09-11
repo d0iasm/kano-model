@@ -10,8 +10,9 @@ public class Swarm extends JPanel {
 
     private double timeStep = 0.002;
     private int pNum;
+    private int pType;
+    private int pPartition;
     private int pSize = 4;
-    private int scale = 200;
     private List<Particle> particles;
 
     private int count = 0;
@@ -20,22 +21,46 @@ public class Swarm extends JPanel {
         this.pNum = num;
         this.w = w;
         this.h = h;
+        this.pType = 2;
+        this.pPartition = pNum / pType;
         particles = new ArrayList<>(num);
-        for (int i = 0; i < num; i++) {
+        for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
     }
 
-    private double k(int i, int j) {
+    public Swarm(int num, int w, int h, int type) {
+        this.pNum = num;
+        this.w = w;
+        this.h = h;
+        this.pType = type;
+        this.pPartition = pNum / pType;
+        particles = new ArrayList<>(num);
+        for (int i = 1; i <= num; i++) {
+            particles.add(new Particle(i));
+        }
+    }
+
+    private double kDouble(int i, int j) {
+        // TODO: Optimize this function
         if (i <= pNum / 2 && j <= pNum / 2) {
             return 0.8;
         } else if (i <= pNum / 2 && j > pNum / 2) {
-            return 1.1;
+            return 1.7;
         } else if (i > pNum / 2 & j <= pNum / 2) {
-            return 0.6;
+            return 0.5;
         } else {
-            return 1.0;
+            return 1.2;
         }
+    }
+
+    private double kTriple(int i, int j) {
+        double[][] matrics = {
+                {0.0, 1.4, 1.5},
+                {1.5, 0.0, 1.4},
+                {1.4, 1.5, 0.0}
+        };
+        return matrics[(i-1)/pPartition][(j-1)/pPartition];
     }
 
     private double diffX(Particle pi, Particle pj) {
@@ -59,17 +84,15 @@ public class Swarm extends JPanel {
     }
 
     private double calcRungeKutta(double x) {
-        double timeStep = 0.002;
         double k1 = x;
         double k2 = x + k1 * timeStep * 0.5;
         double k3 = x + k2 * timeStep * 0.5;
         double k4 = x + k3 * timeStep;
-        return (k1 + 2*k2 + 2*k3 + k4) * (timeStep / 6.0);
+        return (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0);
     }
 
     public void run() {
         double sumX;
-        double sumXPOW;
         double sumY;
         double dis;
         double paramK;
@@ -83,39 +106,22 @@ public class Swarm extends JPanel {
         for (Particle p1 : particles) {
             sumX = 0;
             sumY = 0;
-            sumXPOW = 0;
 
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
 
                 // TODO: 事前に距離の計算をしておく
                 dis = distance(p1, p2);
-                paramK = k(p1.id, p2.id);
+//                paramK = kDouble(p1.id, p2.id);
+                paramK = kTriple(p1.id, p2.id);
 
-//                System.out.println("p1 X: " + p1.x + " p1 Y: " + p1.y);
-//                System.out.println("p2 X: " + p2.x + " p2 Y: " + p2.y);
-//                System.out.println("distance: " + dis);
-//                System.out.println("pow -0.8: " + Math.pow(dis, -0.8) + ", pow -1: " + Math.pow(dis, -1));
-//                System.out.println("diff X: " + diffX(p1, p2));
-//                System.out.println("diff Y: " + diffY(p1, p2));
-
-//                System.out.println("plus X: " + ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
-//                System.out.println("plus Y: " + ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1))));
-
-                sumXPOW += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
-
-                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
-                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
-//                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - Math.pow(dis, -2.0));
-//                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - Math.pow(dis, -2.0));
-            }
-
-//            System.out.println("MATH pow: " + sumXPOW);
-//            System.out.println("1/dis:    " + sumX);
-            // TODO: FOUND DEFFERENCE! WHY?
-            if (sumX != sumXPOW) {
-                System.out.println("ERROR: different sum" + sumX + ", " + sumXPOW);
+//                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
+//                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
+                sumX += ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis)));
+                sumY += ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis)));
+//                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
+//                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
             }
 
             rungeSumX = calcRungeKutta(sumX);
@@ -129,8 +135,6 @@ public class Swarm extends JPanel {
         }
 
         count++;
-//        System.out.println("count: " + count);
-//        System.out.println("---------------------");
 
         for (int i = 0; i < pNum; i++) {
             particles.get(i).x = newX.get(i);
@@ -154,15 +158,17 @@ public class Swarm extends JPanel {
 //        }
 
         for (Particle p : particles) {
-            if (p.id <= pNum / 2) {
+            if (p.id <= pPartition) {
                 g2.setColor(Color.RED);
-            } else {
+            } else if (pPartition < p.id && p.id <= pPartition * 2){
                 g2.setColor(Color.BLUE);
+            } else {
+                g2.setColor(Color.GREEN);
             }
 
             g2.fill(new Ellipse2D.Double(
-                    p.x * 4 - (pSize / 2) + w / 2,
-                    p.y * 4 - (pSize / 2) + h / 2,
+                    p.x * 20 - (pSize / 2) + w / 2,
+                    p.y * 20 - (pSize / 2) + h / 2,
                     pSize, pSize));
         }
     }

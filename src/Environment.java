@@ -30,7 +30,7 @@ public class Environment extends JFrame implements ActionListener {
             }
         });
 
-        swarm = new Swarm(50, w, h);
+        swarm = new Swarm(60, w, h, 3);
         swarm.setBackground(Color.WHITE);
         swarm.setSize(new Dimension(w, h));
         //TODO: Chase the middle of particles
