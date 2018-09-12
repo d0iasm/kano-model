@@ -17,6 +17,7 @@ public class Swarm extends JPanel {
     private List<Particle> particles;
 
     private int count = 0;
+//    double[][] matrics = new double[3][3];
 
 //    Spin as one big cluster at the center
 //        double[][] matrics = {
@@ -33,6 +34,7 @@ public class Swarm extends JPanel {
     };
 
     //        Spin as a small cluster
+    // GOOD with changeKParamNewcomb()
 //    double[][] matrics = {
 //            {-0.5, 1.0, 1.4},
 //            {1.4, -0.5, 1.0},
@@ -40,6 +42,7 @@ public class Swarm extends JPanel {
 //    };
 
 //        Spin like a film
+//    GOOD with changeKParamNewcomb()
 //        double[][] matrics = {
 //                {-0.1, 1.0, 1.4},
 //                {1.4, -0.1, 1.0},
@@ -59,7 +62,6 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = 2;
         this.pPartition = pNum / pType;
-        System.out.println(pPartition);
         particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
@@ -76,6 +78,13 @@ public class Swarm extends JPanel {
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
+
+//        Initialize random
+//        for (int i=0; i<3; i++) {
+//            for (int j=0; j<3; j++) {
+//                matrics[i][j] = -2.0 + Math.random() * 4.0;
+//            }
+//        }
     }
 
     private double kDouble(int i, int j) {
@@ -285,6 +294,7 @@ public class Swarm extends JPanel {
 //                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 //                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 
+
                 kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = sumX + sumY;
             }
 
@@ -298,33 +308,41 @@ public class Swarm extends JPanel {
 
         for (int i = 0; i < pNum; i++) {
             // TODO: Periodic boundary
-            if (newX.get(i) < -w / 2) {
-                particles.get(i).x = newX.get(i) + w;
-            } else if (newX.get(i) > w * 2) {
-                particles.get(i).x = newX.get(i) - w;
-            } else {
-                particles.get(i).x = newX.get(i);
-            }
+//            if (newX.get(i) * 4 - (pSize / 2) + w / 2 < 0) {
+//                System.out.println("x: " + newX.get(i));
+//                particles.get(i).x = newX.get(i) + w;
+//
+//                System.out.println("NEW x: " + particles.get(i).x);
+//            } else if (newX.get(i) * 4 - (pSize / 2) + w / 2 > w) {
+//                particles.get(i).x = newX.get(i) - w;
+//            } else {
+//                particles.get(i).x = newX.get(i);
+//            }
+//
+//            if (newY.get(i) * 4 - (pSize / 2) + h / 2 < 0) {
+//                particles.get(i).y = newY.get(i) + h;
+//            } else if (newY.get(i) * 4 - (pSize / 2) + h / 2 > h) {
+//                particles.get(i).y = newY.get(i) - h;
+//            } else {
+//                particles.get(i).y = newY.get(i);
+//            }
 
-            if (newY.get(i) < -h / 2) {
-                particles.get(i).y = newY.get(i) + h;
-            } else if (newY.get(i) > h * 2) {
-                particles.get(i).y = newY.get(i) - h;
-            } else {
-                particles.get(i).y = newY.get(i);
-            }
-
-            System.out.println("X:" + newX.get(i) + " calced X: " + particles.get(i).x);
+//            System.out.println("X:" + newX.get(i) + " calced X: " + particles.get(i).x);
 //            Open boundary
-//            particles.get(i).x = newX.get(i);
-//            particles.get(i).y = newY.get(i);
+            particles.get(i).x = newX.get(i);
+            particles.get(i).y = newY.get(i);
         }
-        changeKParamHeider(kSums);
+//        flipKParamHeider(kSums);
+//        changeKParamHeider(kSums);
+//        flipKParamNewcomb(kSums);
+//        changeKParamNewcomb(kSums);
 
         count++;
         if (count % 100 == 0) {
-//            System.out.println("count: " + count);
             repaint();
+            if (count % 1000 == 0) {
+                System.out.println("count: " + count);
+            }
         }
     }
 
@@ -348,8 +366,8 @@ public class Swarm extends JPanel {
             }
 
             g2.fill(new Ellipse2D.Double(
-                    p.x * 4 - (pSize / 2) + w / 2,
-                    p.y * 4 - (pSize / 2) + h / 2,
+                    p.x * 10 - (pSize / 2) + w / 2,
+                    p.y * 10- (pSize / 2) + h / 2,
                     pSize, pSize));
         }
     }
