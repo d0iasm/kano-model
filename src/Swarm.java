@@ -19,11 +19,11 @@ public class Swarm extends JPanel {
     private int count = 0;
 
 //    Spin as one big cluster at the center
-//        double[][] matrics = {
-//                {0.0, 1.4, 1.5},
-//                {1.5, 0.0, 1.4},
-//                {1.4, 1.5, 0.0}
-//        };
+        double[][] matrics = {
+                {0.0, 1.4, 1.5},
+                {1.5, 0.0, 1.4},
+                {1.4, 1.5, 0.0}
+        };
 
     //        Attack and complicated movement NOT SAME to a paper
 //    double[][] matrics = {
@@ -40,11 +40,11 @@ public class Swarm extends JPanel {
 //    };
 
 //        Spin like a film
-        double[][] matrics = {
-                {-0.1, 1.0, 1.4},
-                {1.4, -0.1, 1.0},
-                {1.0, 1.4, -0.1},
-        };
+//        double[][] matrics = {
+//                {-0.1, 1.0, 1.4},
+//                {1.4, -0.1, 1.0},
+//                {1.0, 1.4, -0.1},
+//        };
 
 //        Spin speedy with making a cluster with the same type
 //        double[][] matrics = {
@@ -166,7 +166,7 @@ public class Swarm extends JPanel {
         return (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0);
     }
 
-    private void flipKParam(double[][] kSums) {
+    private void flipKParamSimpleHeider(double[][] kSums) {
         if (kSums[0][1] * kSums[1][2] * kSums[2][0] < 0) {
             int base = (int)(Math.random() * 3);
             matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
@@ -179,6 +179,72 @@ public class Swarm extends JPanel {
             matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
             System.out.println("2: Flip k param " + base);
             return;
+        }
+    }
+
+    private void flipKParamHeider(double[][] kSums) {
+        int perceiver  = (int)(Math.random() * 3);
+        int other = (int)(Math.random() * 3);
+        while (other == perceiver) {
+            other = (int)(Math.random() * 3);
+        }
+        int x = 3 - perceiver - other;
+
+        if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
+            System.out.println("Flip k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
+            matrics[perceiver][other] = -matrics[perceiver][other];
+        }
+    }
+
+    private void changeKParamHeider(double[][] kSums) {
+        int perceiver  = (int)(Math.random() * 3);
+        int other = (int)(Math.random() * 3);
+        while (other == perceiver) {
+            other = (int)(Math.random() * 3);
+        }
+        int x = 3 - perceiver - other;
+        double offset = 0.1;
+
+        if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
+            System.out.println("Flip k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
+            if (kSums[perceiver][other] < 0 && matrics[perceiver][other] < 2.0) {
+                matrics[perceiver][other] += offset;
+            } else if (-2.0 < matrics[perceiver][other]) {
+                matrics[perceiver][other] -= offset;
+            }
+        }
+    }
+
+    private void flipKParamNewcomb(double[][] kSums) {
+        int a  = (int)(Math.random() * 3);
+        int b = (int)(Math.random() * 3);
+        while (a == b) {
+            b = (int)(Math.random() * 3);
+        }
+        int x = 3 - a - b;
+
+        if (kSums[a][x] * kSums[b][x] < 0) {
+            System.out.println("Flip k param " + a + " -> " + x + " : " + matrics[a][x]);
+            matrics[a][x] = -matrics[a][x];
+        }
+    }
+
+    private void changeKParamNewcomb(double[][] kSums) {
+        int a  = (int)(Math.random() * 3);
+        int b = (int)(Math.random() * 3);
+        while (a == b) {
+            b = (int)(Math.random() * 3);
+        }
+        int x = 3 - a - b;
+        double offset = 0.1;
+
+        if (kSums[a][x] * kSums[b][x] < 0) {
+            System.out.println("Flip k param " + a + " -> " + x + " : " + matrics[a][x]);
+            if (kSums[a][x] < 0 && matrics[a][x] < 2.0) {
+                matrics[a][x] += offset;
+            } else if (-2.0 < matrics[a][x]){
+                matrics[a][x] -= offset;
+            }
         }
     }
 
@@ -233,7 +299,7 @@ public class Swarm extends JPanel {
             particles.get(i).x = newX.get(i);
             particles.get(i).y = newY.get(i);
         }
-        flipKParam(kSums);
+        changeKParamHeider(kSums);
 
         count++;
         if (count % 100 == 0) {
