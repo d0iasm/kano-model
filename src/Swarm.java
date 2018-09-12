@@ -19,18 +19,18 @@ public class Swarm extends JPanel {
     private int count = 0;
 
 //    Spin as one big cluster at the center
-        double[][] matrics = {
-                {0.0, 1.4, 1.5},
-                {1.5, 0.0, 1.4},
-                {1.4, 1.5, 0.0}
-        };
+//        double[][] matrics = {
+//                {0.0, 1.4, 1.5},
+//                {1.5, 0.0, 1.4},
+//                {1.4, 1.5, 0.0},
+//        };
 
     //        Attack and complicated movement NOT SAME to a paper
-//    double[][] matrics = {
-//            {1.1, 0.0, 1.5},
-//            {1.5, 1.1, 0.0},
-//            {0.0, 1.5, 1.1}
-//    };
+    double[][] matrics = {
+            {1.1, 0.0, 1.5},
+            {1.5, 1.1, 0.0},
+            {0.0, 1.5, 1.1},
+    };
 
     //        Spin as a small cluster
 //    double[][] matrics = {
@@ -168,14 +168,14 @@ public class Swarm extends JPanel {
 
     private void flipKParamSimpleHeider(double[][] kSums) {
         if (kSums[0][1] * kSums[1][2] * kSums[2][0] < 0) {
-            int base = (int)(Math.random() * 3);
+            int base = (int) (Math.random() * 3);
             matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
             System.out.println("1: Flip k param " + base);
             return;
         }
 
         if (kSums[0][2] * kSums[2][1] * kSums[1][0] < 0) {
-            int base = (int)(Math.random() * 3);
+            int base = (int) (Math.random() * 3);
             matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
             System.out.println("2: Flip k param " + base);
             return;
@@ -183,10 +183,10 @@ public class Swarm extends JPanel {
     }
 
     private void flipKParamHeider(double[][] kSums) {
-        int perceiver  = (int)(Math.random() * 3);
-        int other = (int)(Math.random() * 3);
+        int perceiver = (int) (Math.random() * 3);
+        int other = (int) (Math.random() * 3);
         while (other == perceiver) {
-            other = (int)(Math.random() * 3);
+            other = (int) (Math.random() * 3);
         }
         int x = 3 - perceiver - other;
 
@@ -197,16 +197,16 @@ public class Swarm extends JPanel {
     }
 
     private void changeKParamHeider(double[][] kSums) {
-        int perceiver  = (int)(Math.random() * 3);
-        int other = (int)(Math.random() * 3);
+        int perceiver = (int) (Math.random() * 3);
+        int other = (int) (Math.random() * 3);
         while (other == perceiver) {
-            other = (int)(Math.random() * 3);
+            other = (int) (Math.random() * 3);
         }
         int x = 3 - perceiver - other;
         double offset = 0.1;
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
-            System.out.println("Flip k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
+            System.out.println("Change k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
             if (kSums[perceiver][other] < 0 && matrics[perceiver][other] < 2.0) {
                 matrics[perceiver][other] += offset;
             } else if (-2.0 < matrics[perceiver][other]) {
@@ -216,10 +216,10 @@ public class Swarm extends JPanel {
     }
 
     private void flipKParamNewcomb(double[][] kSums) {
-        int a  = (int)(Math.random() * 3);
-        int b = (int)(Math.random() * 3);
+        int a = (int) (Math.random() * 3);
+        int b = (int) (Math.random() * 3);
         while (a == b) {
-            b = (int)(Math.random() * 3);
+            b = (int) (Math.random() * 3);
         }
         int x = 3 - a - b;
 
@@ -230,19 +230,19 @@ public class Swarm extends JPanel {
     }
 
     private void changeKParamNewcomb(double[][] kSums) {
-        int a  = (int)(Math.random() * 3);
-        int b = (int)(Math.random() * 3);
+        int a = (int) (Math.random() * 3);
+        int b = (int) (Math.random() * 3);
         while (a == b) {
-            b = (int)(Math.random() * 3);
+            b = (int) (Math.random() * 3);
         }
         int x = 3 - a - b;
         double offset = 0.1;
 
         if (kSums[a][x] * kSums[b][x] < 0) {
-            System.out.println("Flip k param " + a + " -> " + x + " : " + matrics[a][x]);
+            System.out.println("Change k param " + a + " -> " + x + " : " + matrics[a][x]);
             if (kSums[a][x] < 0 && matrics[a][x] < 2.0) {
                 matrics[a][x] += offset;
-            } else if (-2.0 < matrics[a][x]){
+            } else if (-2.0 < matrics[a][x]) {
                 matrics[a][x] -= offset;
             }
         }
@@ -295,9 +295,29 @@ public class Swarm extends JPanel {
             newY.add(p1.y + rungeSumY);
         }
 
+
         for (int i = 0; i < pNum; i++) {
-            particles.get(i).x = newX.get(i);
-            particles.get(i).y = newY.get(i);
+            // TODO: Periodic boundary
+            if (newX.get(i) < -w / 2) {
+                particles.get(i).x = newX.get(i) + w;
+            } else if (newX.get(i) > w * 2) {
+                particles.get(i).x = newX.get(i) - w;
+            } else {
+                particles.get(i).x = newX.get(i);
+            }
+
+            if (newY.get(i) < -h / 2) {
+                particles.get(i).y = newY.get(i) + h;
+            } else if (newY.get(i) > h * 2) {
+                particles.get(i).y = newY.get(i) - h;
+            } else {
+                particles.get(i).y = newY.get(i);
+            }
+
+            System.out.println("X:" + newX.get(i) + " calced X: " + particles.get(i).x);
+//            Open boundary
+//            particles.get(i).x = newX.get(i);
+//            particles.get(i).y = newY.get(i);
         }
         changeKParamHeider(kSums);
 
