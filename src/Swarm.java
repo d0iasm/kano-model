@@ -19,6 +19,42 @@ public class Swarm extends JPanel {
     private int count = 0;
 //    double[][] matrics = new double[3][3];
 
+//    Balance
+//    double[][] matrics = {
+//                {0.0, 1.0, 1.0},
+//                {1.0, 0.0, 1.0},
+//                {1.0, 1.0, 0.0},
+//        };
+
+//    Balance
+//    double[][] matrics = {
+//            {0.0, 1.0, -1.0},
+//            {1.0, 0.0, -1.0},
+//            {-1.0, -1.0, 0.0},
+//    };
+
+//    Balance same to the above
+//    double[][] matrics = {
+//            {0.0, -1.0, 1.0},
+//            {-1.0, 0.0, -1.0},
+//            {1.0, -1.0, 0.0},
+//    };
+
+//    Balance same to the above
+//    double[][] matrics = {
+//            {0.0, -1.0, -1.0},
+//            {-1.0, 0.0, 1.0},
+//            {-1.0, 1.0, 0.0},
+//    };
+
+//    Unbalance ?
+//    double[][] matrics = {
+//            {0.0, -1.0, -1.0},
+//            {-1.0, 0.0, -1.0},
+//            {-1.0, -1.0, 0.0},
+//    };
+
+
 //    Spin as one big cluster at the center
 //        double[][] matrics = {
 //                {0.0, 1.4, 1.5},
@@ -251,8 +287,31 @@ public class Swarm extends JPanel {
             System.out.println("Change k param " + a + " -> " + x + " : " + matrics[a][x]);
             if (kSums[a][x] < 0 && matrics[a][x] < 2.0) {
                 matrics[a][x] += offset;
-            } else if (-2.0 < matrics[a][x]) {
+            } else if (-1.0 < matrics[a][x]) {
                 matrics[a][x] -= offset;
+            }
+        }
+    }
+
+    private void memeNewcomb(double[][] kSums) {
+        int a = (int) (Math.random() * 3);
+        int b = (int) (Math.random() * 3);
+        while (a == b) {
+            b = (int) (Math.random() * 3);
+        }
+        int x = 3 - a - b;
+        double offset;
+
+        if (kSums[a][x] * kSums[b][x] < 0) {
+            System.out.println("Change k param " + a + " -> " + x + " : " + matrics[a][x]);
+            if (kSums[a][x] < 0) {
+                offset = matrics[b][x] / 10;
+                matrics[a][x] += offset;
+                matrics[b][x] -= offset;
+            } else {
+                offset = matrics[a][x] / 10;
+                matrics[a][x] -= offset;
+                matrics[b][x] += offset;
             }
         }
     }
@@ -294,7 +353,6 @@ public class Swarm extends JPanel {
 //                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 //                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 
-
                 kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = sumX + sumY;
             }
 
@@ -304,6 +362,13 @@ public class Swarm extends JPanel {
             newX.add(p1.x + rungeSumX);
             newY.add(p1.y + rungeSumY);
         }
+
+//        for (Particle p1 : particles) {
+//            for (Particle p2 : particles) {
+//                if (p1 == p2) continue;
+//
+//            }
+//        }
 
 
         for (int i = 0; i < pNum; i++) {
@@ -331,17 +396,25 @@ public class Swarm extends JPanel {
 //            Open boundary
             particles.get(i).x = newX.get(i);
             particles.get(i).y = newY.get(i);
+//            particles.get(i).y = 0;
         }
 //        flipKParamHeider(kSums);
 //        changeKParamHeider(kSums);
 //        flipKParamNewcomb(kSums);
 //        changeKParamNewcomb(kSums);
+        memeNewcomb(kSums);
 
         count++;
         if (count % 100 == 0) {
             repaint();
             if (count % 1000 == 0) {
                 System.out.println("count: " + count);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        System.out.print(matrics[i][j] + ", ");
+                    }
+                    System.out.println(" ");
+                }
             }
         }
     }
@@ -367,7 +440,7 @@ public class Swarm extends JPanel {
 
             g2.fill(new Ellipse2D.Double(
                     p.x * 10 - (pSize / 2) + w / 2,
-                    p.y * 10- (pSize / 2) + h / 2,
+                    p.y * 10 - (pSize / 2) + h / 2,
                     pSize, pSize));
         }
     }
