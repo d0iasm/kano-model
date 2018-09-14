@@ -18,6 +18,10 @@ public class Environment extends JFrame implements ActionListener {
 //        }).start();
     }
 
+    private void printSwarmParam() {
+        swarm.printSwarmParam();
+    }
+
     private void initFrame(int w, int h) {
         setTitle("Swarm Chemistry Simulator");
         setSize(new Dimension(w, h));
@@ -25,6 +29,7 @@ public class Environment extends JFrame implements ActionListener {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                printSwarmParam();
                 super.windowClosing(e);
                 System.exit(0);
             }

@@ -17,7 +17,13 @@ public class Swarm extends JPanel {
     private List<Particle> particles;
 
     private int count = 0;
-//    double[][] matrics = new double[3][3];
+    double[][] matrics = new double[3][3];
+
+//    double[][] matrics = {
+//            {0.0, 0.8, 1.8},
+//            {-1.0, 0.0, 0.7},
+//            {-1.0, 0.3, 0.0},
+//    };
 
 //    Balance
 //    double[][] matrics = {
@@ -63,11 +69,11 @@ public class Swarm extends JPanel {
 //        };
 
     //        Attack and complicated movement NOT SAME to a paper
-    double[][] matrics = {
-            {1.1, 0.0, 1.5},
-            {1.5, 1.1, 0.0},
-            {0.0, 1.5, 1.1},
-    };
+//    double[][] matrics = {
+//            {1.1, 0.0, 1.5},
+//            {1.5, 1.1, 0.0},
+//            {0.0, 1.5, 1.1},
+//    };
 
     //        Spin as a small cluster
     // GOOD with changeKParamNewcomb()
@@ -116,11 +122,16 @@ public class Swarm extends JPanel {
         }
 
 //        Initialize random
-//        for (int i=0; i<3; i++) {
-//            for (int j=0; j<3; j++) {
-//                matrics[i][j] = -2.0 + Math.random() * 4.0;
-//            }
-//        }
+        double tmp;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tmp = -2.0 + Math.random() * 4.0;
+                tmp *= 10;
+                tmp = Math.floor(tmp);
+                tmp /= 10;
+                matrics[i][j] = tmp;
+            }
+        }
     }
 
     private double kDouble(int i, int j) {
@@ -287,7 +298,7 @@ public class Swarm extends JPanel {
             System.out.println("Change k param " + a + " -> " + x + " : " + matrics[a][x]);
             if (kSums[a][x] < 0 && matrics[a][x] < 2.0) {
                 matrics[a][x] += offset;
-            } else if (-1.0 < matrics[a][x]) {
+            } else if (-2.0 < matrics[a][x]) {
                 matrics[a][x] -= offset;
             }
         }
@@ -324,6 +335,8 @@ public class Swarm extends JPanel {
         double rungeSumX;
         double rungeSumY;
 
+        double tmpX, tmpY;
+
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
@@ -348,12 +361,35 @@ public class Swarm extends JPanel {
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
 //                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
 //                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
-                sumX += ((diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis)));
-                sumY += ((diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis)));
+                tmpX = (diffX(p1, p2) / dis);
+                tmpY = (diffY(p1, p2) / dis);
+                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
+
+                tmpX = (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                tmpY = (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
 //                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 //                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 
-                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = sumX + sumY;
+//                System.out.println("--------------------------");
+//                System.out.println("R^: " + (diffX(p1, p2) / dis));
+//                if ((diffX(p1, p2) / dis) < 0) {
+//                    System.out.println("R^ is minus!!!!!!!!!!!!!!");
+//                }
+//                System.out.println("|Rij|^-1: " + (1 / dis));
+//                if ((1 / dis) < 0) {
+//                    System.out.println("|Rij|^-1 is minus!!!!!!!!!!!!!!");
+//                }
+//                System.out.println("kij{...}: " + (paramK * Math.pow(dis, -0.8) - (1 / dis)));
+//                if ((paramK * Math.pow(dis, -0.8) - (1 / dis)) < 0) {
+//                    System.out.println("kij{....} is minus!!!!!!!!!!!!!!");
+//                }
+//                System.out.println("tmpX: " + tmpX);
+//                if (tmpX < 0) {
+//                    System.out.println("tmpX is minus!!!!!!!!!!!!!!!!");
+//                }
+
+                sumX += tmpX;
+                sumY += tmpY;
             }
 
             rungeSumX = calcRungeKutta(sumX);
@@ -399,14 +435,19 @@ public class Swarm extends JPanel {
 //            particles.get(i).y = 0;
         }
 //        flipKParamHeider(kSums);
-//        changeKParamHeider(kSums);
+        changeKParamHeider(kSums);
 //        flipKParamNewcomb(kSums);
 //        changeKParamNewcomb(kSums);
-        memeNewcomb(kSums);
+//        memeNewcomb(kSums);
 
         count++;
         if (count % 100 == 0) {
             repaint();
+
+//        flipKParamHeider(kSums);
+//            changeKParamHeider(kSums);
+//        flipKParamNewcomb(kSums);
+//        changeKParamNewcomb(kSums);
             if (count % 1000 == 0) {
                 System.out.println("count: " + count);
                 for (int i = 0; i < 3; i++) {
@@ -417,6 +458,18 @@ public class Swarm extends JPanel {
                 }
             }
         }
+    }
+
+    public void printSwarmParam() {
+        System.out.println("END---------------------------");
+        System.out.println("count: " + count);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(matrics[i][j] + ", ");
+            }
+            System.out.println(" ");
+        }
+        System.out.println("END---------------------------");
     }
 
     @Override
