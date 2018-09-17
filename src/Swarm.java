@@ -16,6 +16,8 @@ public class Swarm extends JPanel {
     private int pSize = 6;
     private List<Particle> particles;
 
+    private int metrics;
+
     private int count = 0;
     double[][] matrics = new double[3][3];
 
@@ -263,10 +265,62 @@ public class Swarm extends JPanel {
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
             System.out.println("Change k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
-            if (kSums[perceiver][other] < 0 && matrics[perceiver][other] < 2.0) {
+            if (kSums[perceiver][other] < 0 && matrics[perceiver][other] < 2.0 - offset) {
                 matrics[perceiver][other] += offset;
-            } else if (-2.0 < matrics[perceiver][other]) {
+            } else if (-2.0 + offset < matrics[perceiver][other]) {
                 matrics[perceiver][other] -= offset;
+            }
+        }
+    }
+
+    private void balanceKParamHeiderHelper(int x, int y, double kDiff, boolean isPlus) {
+        if (isPlus) {
+            matrics[x][y] = Math.min(2.0, matrics[x][y] + kDiff);
+        } else {
+            matrics[x][y] = Math.max(-2.0, matrics[x][y] - kDiff);
+        }
+    }
+
+    private void balanceKParamHeider(double[][] kSums) {
+        int perceiver = (int) (Math.random() * 3);
+        int other = (int) (Math.random() * 3);
+        while (other == perceiver) {
+            other = (int) (Math.random() * 3);
+        }
+        int x = 3 - perceiver - other;
+        double kPO, kPX, kDiff;
+        boolean isKPOBigger;
+
+        if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
+            System.out.println("Change k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
+            kPO = Math.abs(matrics[perceiver][other]);
+            kPX = Math.abs(matrics[perceiver][x]);
+            isKPOBigger = kPO > kPX ? true : false;
+            kDiff = isKPOBigger ? kPO - kPX : kPX - kPO;
+            if (kSums[perceiver][other] < 0 && kSums[other][x] < 0) {
+                if (isKPOBigger) {
+                    balanceKParamHeiderHelper(perceiver, x, kDiff, true);
+                } else {
+                    balanceKParamHeiderHelper(perceiver, other, kDiff, true);
+                }
+            } else if (kSums[perceiver][other] < 0 && kSums[perceiver][x] >= 0) {
+                if (isKPOBigger) {
+                    balanceKParamHeiderHelper(perceiver, x, kDiff, false);
+                } else {
+                    balanceKParamHeiderHelper(perceiver, other, kDiff, true);
+                }
+            } else if (kSums[perceiver][other] >= 0 && kSums[perceiver][x] < 0) {
+                if (isKPOBigger) {
+                    balanceKParamHeiderHelper(perceiver, x, kDiff, true);
+                } else {
+                    balanceKParamHeiderHelper(perceiver, other, kDiff, false);
+                }
+            } else if(kSums[perceiver][other] >= 0 && kSums[perceiver][x] >= 0) {
+                if (isKPOBigger) {
+                    balanceKParamHeiderHelper(perceiver, x, kDiff, false);
+                } else {
+                    balanceKParamHeiderHelper(perceiver, other, kDiff, false);
+                }
             }
         }
     }
@@ -361,32 +415,13 @@ public class Swarm extends JPanel {
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
 //                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
 //                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
-                tmpX = (diffX(p1, p2) / dis);
-                tmpY = (diffY(p1, p2) / dis);
-                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
+//                tmpX = (diffX(p1, p2) / dis);
+//                tmpY = (diffY(p1, p2) / dis);
 
                 tmpX = (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
                 tmpY = (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
-//                sumX += (diffX(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
-//                sumY += (diffY(p1, p2) / dis) * (paramK * (1/dis) - (1/dis) * (1/dis));
 
-//                System.out.println("--------------------------");
-//                System.out.println("R^: " + (diffX(p1, p2) / dis));
-//                if ((diffX(p1, p2) / dis) < 0) {
-//                    System.out.println("R^ is minus!!!!!!!!!!!!!!");
-//                }
-//                System.out.println("|Rij|^-1: " + (1 / dis));
-//                if ((1 / dis) < 0) {
-//                    System.out.println("|Rij|^-1 is minus!!!!!!!!!!!!!!");
-//                }
-//                System.out.println("kij{...}: " + (paramK * Math.pow(dis, -0.8) - (1 / dis)));
-//                if ((paramK * Math.pow(dis, -0.8) - (1 / dis)) < 0) {
-//                    System.out.println("kij{....} is minus!!!!!!!!!!!!!!");
-//                }
-//                System.out.println("tmpX: " + tmpX);
-//                if (tmpX < 0) {
-//                    System.out.println("tmpX is minus!!!!!!!!!!!!!!!!");
-//                }
+                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
 
                 sumX += tmpX;
                 sumY += tmpY;
@@ -435,7 +470,8 @@ public class Swarm extends JPanel {
 //            particles.get(i).y = 0;
         }
 //        flipKParamHeider(kSums);
-        changeKParamHeider(kSums);
+//        changeKParamHeider(kSums);
+        balanceKParamHeider(kSums);
 //        flipKParamNewcomb(kSums);
 //        changeKParamNewcomb(kSums);
 //        memeNewcomb(kSums);
