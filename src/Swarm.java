@@ -134,6 +134,8 @@ public class Swarm extends JPanel {
                 matrics[i][j] = tmp;
             }
         }
+
+        printSwarmParam();
     }
 
     private double kDouble(int i, int j) {
@@ -158,41 +160,6 @@ public class Swarm extends JPanel {
     }
 
     private double kTriple(int i, int j) {
-//        Spin as one big cluster at the center
-//        double[][] matrics = {
-//                {0.0, 1.4, 1.5},
-//                {1.5, 0.0, 1.4},
-//                {1.4, 1.5, 0.0}
-//        };
-
-//        Attack and complicated movement NOT SAME to a paper
-//        double[][] matrics = {
-//                {1.1, 0.0, 1.5},
-//                {1.5, 1.1, 0.0},
-//                {0.0, 1.5, 1.1}
-//        };
-
-//        Spin as a small cluster
-//        double[][] matrics = {
-//                {-0.5, 1.0, 1.4},
-//                {1.4, -0.5, 1.0},
-//                {1.0, 1.4, -0.5}
-//        };
-
-//        Spin like a film
-//        double[][] matrics = {
-//                {-0.1, 1.0, 1.4},
-//                {1.4, -0.1, 1.0},
-//                {1.0, 1.4, -0.1}
-//        };
-
-//        Spin speedy with making a cluster with the same type
-//        double[][] matrics = {
-//                {1.3, 0.0, 1.5},
-//                {1.5, 1.3, 0.0},
-//                {0.0, 1.5, 1.3}
-//        };
-
         return matrics[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
@@ -274,11 +241,20 @@ public class Swarm extends JPanel {
     }
 
     private void balanceKParamHeiderHelper(int x, int y, double kDiff, boolean isPlus) {
+        double tmp = matrics[x][y];
+        if (kDiff != 0) {
+            System.out.println("NOT 0: " + kDiff);
+        }
         if (isPlus) {
+//            System.out.println("DEBUG kDiff: " + kDiff +  " isPlus true: " + Math.min(2.0, matrics[x][y] + kDiff));
             matrics[x][y] = Math.min(2.0, matrics[x][y] + kDiff);
         } else {
+//            System.out.println("DEBUG kDiff: " + kDiff +  " isPlus false: " + Math.max(-2.0, matrics[x][y] - kDiff));
             matrics[x][y] = Math.max(-2.0, matrics[x][y] - kDiff);
         }
+//        if (kDiff != 0) {
+//            System.out.println("Changed k param " + x + " -> " + y + " : " + tmp + " -> " + matrics[x][y]);
+//        }
     }
 
     private void balanceKParamHeider(double[][] kSums) {
@@ -292,11 +268,15 @@ public class Swarm extends JPanel {
         boolean isKPOBigger;
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
-            System.out.println("Change k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
             kPO = Math.abs(matrics[perceiver][other]);
             kPX = Math.abs(matrics[perceiver][x]);
             isKPOBigger = kPO > kPX ? true : false;
             kDiff = isKPOBigger ? kPO - kPX : kPX - kPO;
+            kDiff /= 2;
+            kDiff *= 10;
+            kDiff = Math.floor(kDiff);
+            kDiff /= 10;
+
             if (kSums[perceiver][other] < 0 && kSums[other][x] < 0) {
                 if (isKPOBigger) {
                     balanceKParamHeiderHelper(perceiver, x, kDiff, true);
@@ -434,14 +414,6 @@ public class Swarm extends JPanel {
             newY.add(p1.y + rungeSumY);
         }
 
-//        for (Particle p1 : particles) {
-//            for (Particle p2 : particles) {
-//                if (p1 == p2) continue;
-//
-//            }
-//        }
-
-
         for (int i = 0; i < pNum; i++) {
             // TODO: Periodic boundary
 //            if (newX.get(i) * 4 - (pSize / 2) + w / 2 < 0) {
@@ -497,7 +469,7 @@ public class Swarm extends JPanel {
     }
 
     public void printSwarmParam() {
-        System.out.println("END---------------------------");
+        System.out.println("Print current kParams---------------------------");
         System.out.println("count: " + count);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -505,13 +477,14 @@ public class Swarm extends JPanel {
             }
             System.out.println(" ");
         }
-        System.out.println("END---------------------------");
+        System.out.println("Print current kParams---------------------------");
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+//        TODO: Draw gray lines to make it easier to know scale
 //        g2.setColor(Color.LIGHT_GRAY);
 //        for (int i = scale; i < h; i += scale) {
 //            g2.drawLine(0, i, w, i);
