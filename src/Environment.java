@@ -5,28 +5,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Environment extends JFrame implements ActionListener {
+public class Environment implements ActionListener {
+    private JFrame frame;
     private Swarm swarm;
 
     public Environment() {
         initFrame(800, 800);
-        while(true) {
+        while (true) {
             swarm.run();
         }
-//        new Timer(1, (ActionEvent e) -> {
-//            swarm.run();
-//        }).start();
-    }
-
-    private void printSwarmParam() {
-        swarm.printSwarmParam();
     }
 
     private void initFrame(int w, int h) {
-        setTitle("Swarm Chemistry Simulator");
-        setSize(new Dimension(w, h));
-        setBackground(Color.WHITE);
-        addWindowListener(new WindowAdapter() {
+        frame = new JFrame();
+        frame.setTitle("SPS-P");
+        frame.setSize(new Dimension(w, h));
+        frame.setBackground(Color.WHITE);
+        frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 printSwarmParam();
@@ -38,15 +33,14 @@ public class Environment extends JFrame implements ActionListener {
         swarm = new Swarm(60, w, h, 3);
         swarm.setBackground(Color.WHITE);
         swarm.setSize(new Dimension(w, h));
-        //TODO: Chase the middle of particles
-//        swarm.setSize(new Dimension(w-100, h-100));
-//        swarm.setLocation(100, 100);
-//        swarm.setBackground(Color.YELLOW);
-        Container container = getContentPane();
-        container.setLayout(null);
-        container.add(swarm, BorderLayout.CENTER);
+        frame.add(swarm, BorderLayout.CENTER);
+        // TODO: Keep the screen position to chase the middle of particles.
 
-        setVisible(true);
+        frame.setVisible(true);
+    }
+
+    private void printSwarmParam() {
+        swarm.printSwarmParam();
     }
 
     @Override
