@@ -10,14 +10,14 @@ public class Environment implements ActionListener {
     private Swarm swarm;
 
     public Environment() {
-        initFrame(800, 800);
+        this.frame = initFrame(800, 800);
         while (true) {
-            swarm.run();
+            this.swarm.run();
         }
     }
 
-    private void initFrame(int w, int h) {
-        frame = new JFrame();
+    private JFrame initFrame(int w, int h) {
+        JFrame frame = new JFrame();
         frame.setTitle("SPS-P");
         frame.setSize(new Dimension(w, h));
         frame.setBackground(Color.WHITE);
@@ -30,17 +30,23 @@ public class Environment implements ActionListener {
             }
         });
 
-        swarm = new Swarm(60, w, h, 3);
-        swarm.setBackground(Color.WHITE);
-        swarm.setSize(new Dimension(w, h));
-        frame.add(swarm, BorderLayout.CENTER);
+        this.swarm = initSwarm(60, w, h, 3);
+        frame.add(this.swarm, BorderLayout.CENTER);
         // TODO: Keep the screen position to chase the middle of particles.
 
         frame.setVisible(true);
+        return frame;
+    }
+
+    private Swarm initSwarm(int num, int w, int h, int type) {
+        Swarm swarm = new Swarm(num, w, h, type);
+        swarm.setBackground(Color.WHITE);
+        swarm.setSize(new Dimension(w, h));
+        return swarm;
     }
 
     private void printSwarmParam() {
-        swarm.printSwarmParam();
+        this.swarm.printSwarmParam();
     }
 
     @Override
