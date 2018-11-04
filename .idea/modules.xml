@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/kano-model.iml" filepath="$PROJECT_DIR$/kano-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sps-p.iml" filepath="$PROJECT_DIR$/sps-p.iml" />
     </modules>
   </component>
 </project>

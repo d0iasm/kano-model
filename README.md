@@ -1,5 +1,7 @@
-# Kano Model
-Minimal model of self-organization induced by asymmetric interactions.
+# SPS-P
+Social Particle Swarm based on Preference  
+
+This is a minimal model of self-organization induced by asymmetric interactions.
 
 ## References
 - [Swarm Chemistry Homepage](http://bingweb.binghamton.edu/~sayama/SwarmChemistry/)
