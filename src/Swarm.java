@@ -16,16 +16,10 @@ public class Swarm extends JPanel {
     private int pSize = 6;
     private List<Particle> particles;
 
-    private int metrics;
+    private int paramChangedCount = 0;
 
     private int count = 0;
     double[][] matrics = new double[3][3];
-
-//    double[][] matrics = {
-//            {0.0, 0.8, 1.8},
-//            {-1.0, 0.0, 0.7},
-//            {-1.0, 0.3, 0.0},
-//    };
 
 //    Balance
 //    double[][] matrics = {
@@ -146,16 +140,16 @@ public class Swarm extends JPanel {
 //        };
 
 //        Like >--< this form
-        double[][] matrics = {
-                {0.8, 1.7},
-                {0.5, 1.2}
-        };
+//        double[][] matrics = {
+//                {0.8, 1.7},
+//                {0.5, 1.2}
+//        };
 
 //        Chase blue -> red -> blue
-//        double[][] matrics = {
-//                {1.0, 1.0},
-//                {0.5, 1.3}
-//        };
+        double[][] matrics = {
+                {1.0, 1.0},
+                {0.5, 1.3}
+        };
         return matrics[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
@@ -216,7 +210,7 @@ public class Swarm extends JPanel {
         int x = 3 - perceiver - other;
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
-            System.out.println("Flip k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
+            paramChangedCount += 1;
             matrics[perceiver][other] = -matrics[perceiver][other];
         }
     }
@@ -231,7 +225,7 @@ public class Swarm extends JPanel {
         double offset = 0.1;
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
-            System.out.println("Change k param " + perceiver + " -> " + other + " : " + matrics[perceiver][other]);
+            paramChangedCount += 1;
             if (kSums[perceiver][other] < 0 && matrics[perceiver][other] < 2.0 - offset) {
                 matrics[perceiver][other] += offset;
             } else if (-2.0 + offset < matrics[perceiver][other]) {
@@ -243,18 +237,13 @@ public class Swarm extends JPanel {
     private void balanceKParamHeiderHelper(int x, int y, double kDiff, boolean isPlus) {
         double tmp = matrics[x][y];
         if (kDiff != 0) {
-            System.out.println("NOT 0: " + kDiff);
+            paramChangedCount += 1;
         }
         if (isPlus) {
-//            System.out.println("DEBUG kDiff: " + kDiff +  " isPlus true: " + Math.min(2.0, matrics[x][y] + kDiff));
             matrics[x][y] = Math.min(2.0, matrics[x][y] + kDiff);
         } else {
-//            System.out.println("DEBUG kDiff: " + kDiff +  " isPlus false: " + Math.max(-2.0, matrics[x][y] - kDiff));
             matrics[x][y] = Math.max(-2.0, matrics[x][y] - kDiff);
         }
-//        if (kDiff != 0) {
-//            System.out.println("Changed k param " + x + " -> " + y + " : " + tmp + " -> " + matrics[x][y]);
-//        }
     }
 
     private void balanceKParamHeider(double[][] kSums) {
@@ -295,7 +284,7 @@ public class Swarm extends JPanel {
                 } else {
                     balanceKParamHeiderHelper(perceiver, other, kDiff, false);
                 }
-            } else if(kSums[perceiver][other] >= 0 && kSums[perceiver][x] >= 0) {
+            } else if (kSums[perceiver][other] >= 0 && kSums[perceiver][x] >= 0) {
                 if (isKPOBigger) {
                     balanceKParamHeiderHelper(perceiver, x, kDiff, false);
                 } else {
@@ -442,27 +431,23 @@ public class Swarm extends JPanel {
 //            particles.get(i).y = 0;
         }
 //        flipKParamHeider(kSums);
-//        changeKParamHeider(kSums);
-        balanceKParamHeider(kSums);
-//        flipKParamNewcomb(kSums);
-//        changeKParamNewcomb(kSums);
-//        memeNewcomb(kSums);
+        changeKParamHeider(kSums);
+//        balanceKParamHeider(kSums);
 
         count++;
         if (count % 100 == 0) {
             repaint();
 
-//        flipKParamHeider(kSums);
-//            changeKParamHeider(kSums);
-//        flipKParamNewcomb(kSums);
-//        changeKParamNewcomb(kSums);
             if (count % 1000 == 0) {
-                System.out.println("count: " + count);
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        System.out.print(matrics[i][j] + ", ");
-                    }
-                    System.out.println(" ");
+                System.out.println(paramChangedCount);
+                paramChangedCount = 0;
+            }
+            if (count % 5000 == 0) {
+//                printSwarmParam();
+
+                if (count == 50000) {
+                    printSwarmParam();
+                    System.exit(0);
                 }
             }
         }

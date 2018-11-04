@@ -4,8 +4,8 @@ public class Particle {
     public int id;
 //    private int min = -300;
 //    private int max = 300;
-    private double min = -0.5;
-    private double max = 0.5;
+    private double min = -1;
+    private double max = 1;
 
     public Particle(int id) {
         this.id = id;
