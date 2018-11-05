@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.*;
+
 public class Parameter {
     private int dim;
     private double[][] params;
@@ -9,6 +12,13 @@ public class Parameter {
 
     public double[][] getParams() {
         return this.params;
+    }
+
+    public JLabel printParams() {
+        JLabel label = new JLabel("Params");
+        label.setFont(new Font("OpenSans", Font.BOLD, 16));
+        label.setBounds(700, 0, 100, 50);
+        return label;
     }
 
     private double[][] random() {

@@ -19,8 +19,7 @@ public class Swarm extends JPanel {
     private int paramChangedCount = 0;
 
     private int count = 0;
-    double[][] params = new double[3][3];
-
+    double[][] params;
 
     public Swarm(int num, int w, int h) {
         this.pNum = num;
@@ -34,6 +33,8 @@ public class Swarm extends JPanel {
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
+        setLayout(null);
+        add(paramCreator.printParams());
     }
 
     public Swarm(int num, int w, int h, int type) {
@@ -48,6 +49,8 @@ public class Swarm extends JPanel {
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
+        setLayout(null);
+        add(paramCreator.printParams());
     }
 
     private double getKParam(int i, int j) {
