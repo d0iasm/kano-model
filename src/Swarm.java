@@ -19,80 +19,8 @@ public class Swarm extends JPanel {
     private int paramChangedCount = 0;
 
     private int count = 0;
-    double[][] matrics = new double[3][3];
+    double[][] params = new double[3][3];
 
-//    Balance
-//    double[][] matrics = {
-//                {0.0, 1.0, 1.0},
-//                {1.0, 0.0, 1.0},
-//                {1.0, 1.0, 0.0},
-//        };
-
-//    Balance
-//    double[][] matrics = {
-//            {0.0, 1.0, -1.0},
-//            {1.0, 0.0, -1.0},
-//            {-1.0, -1.0, 0.0},
-//    };
-
-//    Balance same to the above
-//    double[][] matrics = {
-//            {0.0, -1.0, 1.0},
-//            {-1.0, 0.0, -1.0},
-//            {1.0, -1.0, 0.0},
-//    };
-
-//    Balance same to the above
-//    double[][] matrics = {
-//            {0.0, -1.0, -1.0},
-//            {-1.0, 0.0, 1.0},
-//            {-1.0, 1.0, 0.0},
-//    };
-
-//    Unbalance ?
-//    double[][] matrics = {
-//            {0.0, -1.0, -1.0},
-//            {-1.0, 0.0, -1.0},
-//            {-1.0, -1.0, 0.0},
-//    };
-
-
-//    Spin as one big cluster at the center
-//        double[][] matrics = {
-//                {0.0, 1.4, 1.5},
-//                {1.5, 0.0, 1.4},
-//                {1.4, 1.5, 0.0},
-//        };
-
-    //        Attack and complicated movement NOT SAME to a paper
-//    double[][] matrics = {
-//            {1.1, 0.0, 1.5},
-//            {1.5, 1.1, 0.0},
-//            {0.0, 1.5, 1.1},
-//    };
-
-    //        Spin as a small cluster
-    // GOOD with changeKParamNewcomb()
-//    double[][] matrics = {
-//            {-0.5, 1.0, 1.4},
-//            {1.4, -0.5, 1.0},
-//            {1.0, 1.4, -0.5},
-//    };
-
-//        Spin like a film
-//    GOOD with changeKParamNewcomb()
-//        double[][] matrics = {
-//                {-0.1, 1.0, 1.4},
-//                {1.4, -0.1, 1.0},
-//                {1.0, 1.4, -0.1},
-//        };
-
-//        Spin speedy with making a cluster with the same type
-//        double[][] matrics = {
-//                {1.3, 0.0, 1.5},
-//                {1.5, 1.3, 0.0},
-//                {0.0, 1.5, 1.3}
-//        };
 
     public Swarm(int num, int w, int h) {
         this.pNum = num;
@@ -100,7 +28,9 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = 2;
         this.pPartition = pNum / pType;
-        particles = new ArrayList<>(num);
+        Parameter paramCreator = new Parameter(3);
+        this.params = paramCreator.getParams();
+        this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
@@ -112,49 +42,16 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = type;
         this.pPartition = pNum / pType;
-        particles = new ArrayList<>(num);
+        Parameter paramCreator = new Parameter(3);
+        this.params = paramCreator.getParams();
+        this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
-
-//        Initialize random
-        double tmp;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                tmp = -2.0 + Math.random() * 4.0;
-                tmp *= 10;
-                tmp = Math.floor(tmp);
-                tmp /= 10;
-                matrics[i][j] = tmp;
-            }
-        }
-
-        printSwarmParam();
     }
 
-    private double kDouble(int i, int j) {
-//        Separation and fusion
-//        double[][] matrics = {
-//                {0.8, 1.1},
-//                {0.6, 1.0}
-//        };
-
-//        Like >--< this form
-//        double[][] matrics = {
-//                {0.8, 1.7},
-//                {0.5, 1.2}
-//        };
-
-//        Chase blue -> red -> blue
-        double[][] matrics = {
-                {1.0, 1.0},
-                {0.5, 1.3}
-        };
-        return matrics[(i - 1) / pPartition][(j - 1) / pPartition];
-    }
-
-    private double kTriple(int i, int j) {
-        return matrics[(i - 1) / pPartition][(j - 1) / pPartition];
+    private double getKParam(int i, int j) {
+        return params[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
     private double diffX(Particle pi, Particle pj) {
@@ -188,14 +85,14 @@ public class Swarm extends JPanel {
     private void flipKParamSimpleHeider(double[][] kSums) {
         if (kSums[0][1] * kSums[1][2] * kSums[2][0] < 0) {
             int base = (int) (Math.random() * 3);
-            matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
+            params[base][base + 1 > 2 ? 0 : base + 1] = -params[base][base + 1 > 2 ? 0 : base + 1];
             System.out.println("1: Flip k param " + base);
             return;
         }
 
         if (kSums[0][2] * kSums[2][1] * kSums[1][0] < 0) {
             int base = (int) (Math.random() * 3);
-            matrics[base][base + 1 > 2 ? 0 : base + 1] = -matrics[base][base + 1 > 2 ? 0 : base + 1];
+            params[base][base + 1 > 2 ? 0 : base + 1] = -params[base][base + 1 > 2 ? 0 : base + 1];
             System.out.println("2: Flip k param " + base);
             return;
         }
@@ -211,7 +108,7 @@ public class Swarm extends JPanel {
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
             paramChangedCount += 1;
-            matrics[perceiver][other] = -matrics[perceiver][other];
+            params[perceiver][other] = -params[perceiver][other];
         }
     }
 
@@ -226,23 +123,23 @@ public class Swarm extends JPanel {
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
             paramChangedCount += 1;
-            if (kSums[perceiver][other] < 0 && matrics[perceiver][other] < 2.0 - offset) {
-                matrics[perceiver][other] += offset;
-            } else if (-2.0 + offset < matrics[perceiver][other]) {
-                matrics[perceiver][other] -= offset;
+            if (kSums[perceiver][other] < 0 && params[perceiver][other] < 2.0 - offset) {
+                params[perceiver][other] += offset;
+            } else if (-2.0 + offset < params[perceiver][other]) {
+                params[perceiver][other] -= offset;
             }
         }
     }
 
     private void balanceKParamHeiderHelper(int x, int y, double kDiff, boolean isPlus) {
-        double tmp = matrics[x][y];
+        double tmp = params[x][y];
         if (kDiff != 0) {
             paramChangedCount += 1;
         }
         if (isPlus) {
-            matrics[x][y] = Math.min(2.0, matrics[x][y] + kDiff);
+            params[x][y] = Math.min(2.0, params[x][y] + kDiff);
         } else {
-            matrics[x][y] = Math.max(-2.0, matrics[x][y] - kDiff);
+            params[x][y] = Math.max(-2.0, params[x][y] - kDiff);
         }
     }
 
@@ -257,8 +154,8 @@ public class Swarm extends JPanel {
         boolean isKPOBigger;
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
-            kPO = Math.abs(matrics[perceiver][other]);
-            kPX = Math.abs(matrics[perceiver][x]);
+            kPO = Math.abs(params[perceiver][other]);
+            kPX = Math.abs(params[perceiver][x]);
             isKPOBigger = kPO > kPX ? true : false;
             kDiff = isKPOBigger ? kPO - kPX : kPX - kPO;
             kDiff /= 2;
@@ -303,8 +200,8 @@ public class Swarm extends JPanel {
         int x = 3 - a - b;
 
         if (kSums[a][x] * kSums[b][x] < 0) {
-            System.out.println("Flip k param " + a + " -> " + x + " : " + matrics[a][x]);
-            matrics[a][x] = -matrics[a][x];
+            System.out.println("Flip k param " + a + " -> " + x + " : " + params[a][x]);
+            params[a][x] = -params[a][x];
         }
     }
 
@@ -318,11 +215,11 @@ public class Swarm extends JPanel {
         double offset = 0.1;
 
         if (kSums[a][x] * kSums[b][x] < 0) {
-            System.out.println("Change k param " + a + " -> " + x + " : " + matrics[a][x]);
-            if (kSums[a][x] < 0 && matrics[a][x] < 2.0) {
-                matrics[a][x] += offset;
-            } else if (-2.0 < matrics[a][x]) {
-                matrics[a][x] -= offset;
+            System.out.println("Change k param " + a + " -> " + x + " : " + params[a][x]);
+            if (kSums[a][x] < 0 && params[a][x] < 2.0) {
+                params[a][x] += offset;
+            } else if (-2.0 < params[a][x]) {
+                params[a][x] -= offset;
             }
         }
     }
@@ -337,15 +234,15 @@ public class Swarm extends JPanel {
         double offset;
 
         if (kSums[a][x] * kSums[b][x] < 0) {
-            System.out.println("Change k param " + a + " -> " + x + " : " + matrics[a][x]);
+            System.out.println("Change k param " + a + " -> " + x + " : " + params[a][x]);
             if (kSums[a][x] < 0) {
-                offset = matrics[b][x] / 10;
-                matrics[a][x] += offset;
-                matrics[b][x] -= offset;
+                offset = params[b][x] / 10;
+                params[a][x] += offset;
+                params[b][x] -= offset;
             } else {
-                offset = matrics[a][x] / 10;
-                matrics[a][x] -= offset;
-                matrics[b][x] += offset;
+                offset = params[a][x] / 10;
+                params[a][x] -= offset;
+                params[b][x] += offset;
             }
         }
     }
@@ -378,8 +275,7 @@ public class Swarm extends JPanel {
 
                 // TODO: 事前に距離の計算をしておく
                 dis = distance(p1, p2);
-//                paramK = kDouble(p1.id, p2.id);
-                paramK = kTriple(p1.id, p2.id);
+                paramK = getKParam(p1.id, p2.id);
 
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
 //                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
@@ -458,7 +354,7 @@ public class Swarm extends JPanel {
         System.out.println("count: " + count);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                System.out.print(matrics[i][j] + ", ");
+                System.out.print(params[i][j] + ", ");
             }
             System.out.println(" ");
         }

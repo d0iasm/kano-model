@@ -1,0 +1,123 @@
+public class Parameter {
+    private int dim;
+    private double[][] params;
+
+    public Parameter(int dimension) {
+        this.dim = dimension;
+        this.params = random();
+    }
+
+    public double[][] getParams() {
+        return this.params;
+    }
+
+    private double[][] random() {
+        double[][] params = new double[this.dim][this.dim];
+        double tmp;
+        for (int i = 0; i < this.dim; i++) {
+            for (int j = 0; j < this.dim; j++) {
+                tmp = -2.0 + Math.random() * 4.0;
+                tmp *= 10;
+                tmp = Math.floor(tmp);
+                tmp /= 10;
+                params[i][j] = tmp;
+            }
+        }
+        return params;
+    }
+
+    private void initThreeDimParams() {
+//        Balance
+//    double[][] params = {
+//                {0.0, 1.0, 1.0},
+//                {1.0, 0.0, 1.0},
+//                {1.0, 1.0, 0.0},
+//        };
+
+//    Balance
+//    double[][] params = {
+//            {0.0, 1.0, -1.0},
+//            {1.0, 0.0, -1.0},
+//            {-1.0, -1.0, 0.0},
+//    };
+
+//    Balance same to the above
+//    double[][] params = {
+//            {0.0, -1.0, 1.0},
+//            {-1.0, 0.0, -1.0},
+//            {1.0, -1.0, 0.0},
+//    };
+
+//    Balance same to the above
+//    double[][] params = {
+//            {0.0, -1.0, -1.0},
+//            {-1.0, 0.0, 1.0},
+//            {-1.0, 1.0, 0.0},
+//    };
+
+//    Unbalance ?
+//    double[][] params = {
+//            {0.0, -1.0, -1.0},
+//            {-1.0, 0.0, -1.0},
+//            {-1.0, -1.0, 0.0},
+//    };
+
+
+//    Spin as one big cluster at the center
+//        double[][] params = {
+//                {0.0, 1.4, 1.5},
+//                {1.5, 0.0, 1.4},
+//                {1.4, 1.5, 0.0},
+//        };
+
+        //        Attack and complicated movement NOT SAME to a paper
+//    double[][] params = {
+//            {1.1, 0.0, 1.5},
+//            {1.5, 1.1, 0.0},
+//            {0.0, 1.5, 1.1},
+//    };
+
+        //        Spin as a small cluster
+        // GOOD with changeKParamNewcomb()
+//    double[][] params = {
+//            {-0.5, 1.0, 1.4},
+//            {1.4, -0.5, 1.0},
+//            {1.0, 1.4, -0.5},
+//    };
+
+//        Spin like a film
+//    GOOD with changeKParamNewcomb()
+//        double[][] params = {
+//                {-0.1, 1.0, 1.4},
+//                {1.4, -0.1, 1.0},
+//                {1.0, 1.4, -0.1},
+//        };
+
+//        Spin speedy with making a cluster with the same type
+//        double[][] params = {
+//                {1.3, 0.0, 1.5},
+//                {1.5, 1.3, 0.0},
+//                {0.0, 1.5, 1.3}
+//        };
+    }
+
+    private void initTwoDimParams() {
+        //        Separation and fusion
+//        double[][] params = {
+//                {0.8, 1.1},
+//                {0.6, 1.0}
+//        };
+
+//        Like >--< this form
+//        double[][] params = {
+//                {0.8, 1.7},
+//                {0.5, 1.2}
+//        };
+
+//        Chase blue -> red -> blue
+        double[][] params = {
+                {1.0, 1.0},
+                {0.5, 1.3}
+        };
+    }
+}
