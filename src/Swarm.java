@@ -19,6 +19,7 @@ public class Swarm extends JPanel {
     private int paramChangedCount = 0;
 
     private int count = 0;
+    Parameter paramManager;
     double[][] params;
 
     public Swarm(int num, int w, int h) {
@@ -27,15 +28,15 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = 2;
         this.pPartition = pNum / pType;
-        Parameter paramCreator = new Parameter(3);
-        this.params = paramCreator.getParams();
+
+        this.paramManager = new Parameter(3);
+        this.params = paramManager.getParams();
+        setParamsText();
+
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
-        this.setLayout(null);
-        this.add(paramCreator.getTitle());
-        this.add(paramCreator.getParamsText());
     }
 
     public Swarm(int num, int w, int h, int type) {
@@ -44,15 +45,21 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = type;
         this.pPartition = pNum / pType;
-        Parameter paramCreator = new Parameter(3);
-        this.params = paramCreator.getParams();
+
+        this.paramManager = new Parameter(3);
+        this.params = paramManager.getParams();
+        setParamsText();
+
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
+    }
+
+    private void setParamsText() {
         this.setLayout(null);
-        this.add(paramCreator.getTitle());
-        this.add(paramCreator.getParamsText());
+        this.add(paramManager.getTitle());
+        this.add(paramManager.getParamsText());
     }
 
     private double getKParam(int i, int j) {

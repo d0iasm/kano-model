@@ -32,6 +32,9 @@ public class Parameter {
         StringBuilder str = new StringBuilder();
         for (int i=0; i<dim; i++) {
             for (int j=0; j<dim; j++) {
+                if (params[i][j] >= 0) {
+                    str.append(" ");
+                }
                 str.append(params[i][j]);
                 if (j != dim - 1) {
                     str.append(", ");
