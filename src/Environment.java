@@ -16,6 +16,10 @@ public class Environment implements ActionListener {
         }
     }
 
+    public JFrame getEnvironment() {
+        return this.frame;
+    }
+
     private JFrame initFrame(int w, int h) {
         JFrame frame = new JFrame();
         frame.setTitle("SPS-P");

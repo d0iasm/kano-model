@@ -14,7 +14,7 @@ public class Parameter {
         return this.params;
     }
 
-    public JLabel printParams() {
+    public JLabel getParamsLabel() {
         JLabel label = new JLabel("Params");
         label.setFont(new Font("OpenSans", Font.BOLD, 16));
         label.setBounds(700, 0, 100, 50);
