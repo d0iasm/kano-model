@@ -34,7 +34,8 @@ public class Swarm extends JPanel {
             particles.add(new Particle(i));
         }
         this.setLayout(null);
-        this.add(paramCreator.getParamsLabel());
+        this.add(paramCreator.getTitle());
+        this.add(paramCreator.getParamsText());
     }
 
     public Swarm(int num, int w, int h, int type) {
@@ -50,7 +51,8 @@ public class Swarm extends JPanel {
             particles.add(new Particle(i));
         }
         this.setLayout(null);
-        this.add(paramCreator.getParamsLabel());
+        this.add(paramCreator.getTitle());
+        this.add(paramCreator.getParamsText());
     }
 
     private double getKParam(int i, int j) {

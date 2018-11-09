@@ -14,11 +14,32 @@ public class Parameter {
         return this.params;
     }
 
-    public JLabel getParamsLabel() {
+    public JLabel getTitle() {
         JLabel label = new JLabel("Params");
         label.setFont(new Font("OpenSans", Font.BOLD, 16));
-        label.setBounds(700, 0, 100, 50);
+        label.setBounds(670, 10, 100, 30);
         return label;
+    }
+
+    public JTextArea getParamsText() {
+        JTextArea textArea = createParamsText();
+        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        textArea.setBounds(650, 40, 200, 200);
+        return textArea;
+    }
+
+    private JTextArea createParamsText() {
+        StringBuilder str = new StringBuilder();
+        for (int i=0; i<dim; i++) {
+            for (int j=0; j<dim; j++) {
+                str.append(params[i][j]);
+                if (j != dim - 1) {
+                    str.append(", ");
+                }
+            }
+            str.append("\n");
+        }
+        return new JTextArea(str.toString());
     }
 
     private double[][] random() {
