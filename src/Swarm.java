@@ -20,6 +20,7 @@ public class Swarm extends JPanel {
 
     private int count = 0;
     Parameter paramManager;
+    JTextArea paramsText;
     double[][] params;
 
     public Swarm(int num, int w, int h) {
@@ -31,7 +32,7 @@ public class Swarm extends JPanel {
 
         this.paramManager = new Parameter(3);
         this.params = paramManager.getParams();
-        setParamsText();
+        showParams();
 
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
@@ -48,7 +49,7 @@ public class Swarm extends JPanel {
 
         this.paramManager = new Parameter(3);
         this.params = paramManager.getParams();
-        setParamsText();
+        showParams();
 
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
@@ -56,10 +57,19 @@ public class Swarm extends JPanel {
         }
     }
 
-    private void setParamsText() {
+    private void showParams() {
         this.setLayout(null);
         this.add(paramManager.getTitle());
-        this.add(paramManager.getParamsText());
+        this.paramsText = paramManager.getParamsText();
+        this.add(paramsText);
+        JButton button = paramManager.getButton();
+        button.addActionListener(e -> {
+            this.remove(paramsText);
+            this.paramsText = paramManager.getRandomParamsText();
+            this.add(paramsText);
+            printSwarmParam(paramManager.getParams());
+        });
+        this.add(button);
     }
 
     private double getKParam(int i, int j) {
@@ -362,6 +372,18 @@ public class Swarm extends JPanel {
     }
 
     public void printSwarmParam() {
+        System.out.println("Print current kParams---------------------------");
+        System.out.println("count: " + count);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(params[i][j] + ", ");
+            }
+            System.out.println(" ");
+        }
+        System.out.println("Print current kParams---------------------------");
+    }
+
+    public void printSwarmParam(double[][] params) {
         System.out.println("Print current kParams---------------------------");
         System.out.println("count: " + count);
         for (int i = 0; i < 3; i++) {

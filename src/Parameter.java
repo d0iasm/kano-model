@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Parameter {
+
+public class Parameter{
     private int dim;
     private double[][] params;
 
@@ -24,14 +25,30 @@ public class Parameter {
     public JTextArea getParamsText() {
         JTextArea textArea = createParamsText();
         textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        textArea.setBounds(650, 40, 200, 200);
+        textArea.setBounds(650, 40, 120, 70);
         return textArea;
+    }
+
+    public JTextArea getRandomParamsText() {
+        this.params = random();
+        JTextArea textArea = createParamsText();
+        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        textArea.setBounds(650, 40, 120, 70);
+        return textArea;
+    }
+
+    public JButton getButton() {
+        JButton button = new JButton("Change");
+        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        button.setBounds(650, 110, 120, 30);
+        button.setBackground(Color.WHITE);
+        return button;
     }
 
     private JTextArea createParamsText() {
         StringBuilder str = new StringBuilder();
-        for (int i=0; i<dim; i++) {
-            for (int j=0; j<dim; j++) {
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
                 if (params[i][j] >= 0) {
                     str.append(" ");
                 }
