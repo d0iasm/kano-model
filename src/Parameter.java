@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class Parameter{
+public class Parameter {
     private int dim;
     private double[][] params;
     private int paramChangedCount = 0;
@@ -34,22 +34,32 @@ public class Parameter{
     public JTextArea getParamsText() {
         JTextArea textArea = createParamsText();
         textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        textArea.setBounds(650, 40, 120, 70);
+        textArea.setBounds(650, 40, 120, 60);
         return textArea;
+    }
+
+    public JTextArea getUpdateParamsText() {
+        this.params = initThreeDimParams();
+        return getParamsText();
     }
 
     public JTextArea getRandomParamsText() {
         this.params = random();
-        JTextArea textArea = createParamsText();
-        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        textArea.setBounds(650, 40, 120, 70);
-        return textArea;
+        return getParamsText();
     }
 
-    public JButton getButton() {
-        JButton button = new JButton("Change");
+    public JButton getUpdateButton() {
+        JButton button = new JButton("Update");
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
         button.setBounds(650, 110, 120, 30);
+        button.setBackground(Color.WHITE);
+        return button;
+    }
+
+    public JButton getRandomButton() {
+        JButton button = new JButton("Random");
+        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        button.setBounds(650, 140, 120, 30);
         button.setBackground(Color.WHITE);
         return button;
     }
@@ -254,7 +264,7 @@ public class Parameter{
     }
 
 
-    private void initThreeDimParams() {
+    private double[][] initThreeDimParams() {
 //        Balance
 //    double[][] params = {
 //                {0.0, 1.0, 1.0},
@@ -307,11 +317,11 @@ public class Parameter{
 
         //        Spin as a small cluster
         // GOOD with changeKParamNewcomb()
-//    double[][] params = {
-//            {-0.5, 1.0, 1.4},
-//            {1.4, -0.5, 1.0},
-//            {1.0, 1.4, -0.5},
-//    };
+        double[][] params = {
+                {-0.5, 1.0, 1.4},
+                {1.4, -0.5, 1.0},
+                {1.0, 1.4, -0.5},
+        };
 
 //        Spin like a film
 //    GOOD with changeKParamNewcomb()
@@ -327,6 +337,7 @@ public class Parameter{
 //                {1.5, 1.3, 0.0},
 //                {0.0, 1.5, 1.3}
 //        };
+        return params;
     }
 
     private void initTwoDimParams() {

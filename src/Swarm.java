@@ -60,14 +60,22 @@ public class Swarm extends JPanel {
         this.add(paramManager.getTitle());
         this.paramsText = paramManager.getParamsText();
         this.add(paramsText);
-        JButton button = paramManager.getButton();
-        button.addActionListener(e -> {
+
+        JButton updateButton = paramManager.getUpdateButton();
+        updateButton.addActionListener(e -> {
+            this.remove(paramsText);
+            this.paramsText = paramManager.getUpdateParamsText();
+            this.add(paramsText);
+        });
+        this.add(updateButton);
+
+        JButton randomButton = paramManager.getRandomButton();
+        randomButton.addActionListener(e -> {
             this.remove(paramsText);
             this.paramsText = paramManager.getRandomParamsText();
             this.add(paramsText);
-            printSwarmParam(paramManager.getParams());
         });
-        this.add(button);
+        this.add(randomButton);
     }
 
     private double getKParam(int i, int j) {
@@ -233,11 +241,12 @@ public class Swarm extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 //        TODO: Draw gray lines to make it easier to know scale
-//        g2.setColor(Color.LIGHT_GRAY);
-//        for (int i = scale; i < h; i += scale) {
-//            g2.drawLine(0, i, w, i);
-//            g2.drawLine(i, 0, i, h);
-//        }
+        g2.setColor(Color.LIGHT_GRAY);
+        int l = 10;
+        for (int i = l; i < h; i += l) {
+            g2.drawLine(0, i, w, i);
+            g2.drawLine(i, 0, i, h);
+        }
 
         for (Particle p : particles) {
             if (p.id <= pPartition) {
