@@ -259,7 +259,6 @@ public class Swarm extends JPanel {
                 g2.setColor(Color.GREEN);
             }
 
-            System.out.println("");
             g2.fill(new Ellipse2D.Double(
                     p.x * scale + w / 2,
                     p.y * scale + h / 2,

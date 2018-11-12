@@ -12,4 +12,8 @@ public class Particle {
         x = min + Math.random() * (max - min);
         y = min + Math.random() * (max - min);
     }
+
+    public void printPosition() {
+        System.out.println("x: " + x + ", y: " + y);
+    }
 }
