@@ -9,11 +9,14 @@ public class Swarm extends JPanel {
     private int w;
     private int h;
 
+    private int scale = 10;
+    private int l = 10;
     private double timeStep = 0.002;
+
     private int pNum;
     private int pType;
     private int pPartition;
-    private int pSize = 6;
+    private int pSize = 1;
     private List<Particle> particles;
 
     private int count = 0;
@@ -240,10 +243,9 @@ public class Swarm extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-//        TODO: Draw gray lines to make it easier to know scale
+
         g2.setColor(Color.LIGHT_GRAY);
-        int l = 10;
-        for (int i = l; i < h; i += l) {
+        for (int i = 0; i < h; i += (l * scale)) {
             g2.drawLine(0, i, w, i);
             g2.drawLine(i, 0, i, h);
         }
@@ -257,10 +259,11 @@ public class Swarm extends JPanel {
                 g2.setColor(Color.GREEN);
             }
 
+            System.out.println("");
             g2.fill(new Ellipse2D.Double(
-                    p.x * 10 - (pSize / 2) + w / 2,
-                    p.y * 10 - (pSize / 2) + h / 2,
-                    pSize, pSize));
+                    p.x * scale + w / 2,
+                    p.y * scale + h / 2,
+                    pSize * scale, pSize * scale));
         }
     }
 }
