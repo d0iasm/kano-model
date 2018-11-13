@@ -105,6 +105,21 @@ public class Swarm extends JPanel {
         return distance(x1, y1, x2, y2);
     }
 
+    private double distanceClosest(Particle pi, Particle pj) {
+        double tmp;
+        int d[] = {-1, 0, 1};
+        double closest = distance(pi, pj);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tmp = distance(l * d[i] + pi.x, l * d[j] + pi.y, pj.x, pj.y);
+                if (tmp < closest) {
+                    closest = tmp;
+                }
+            }
+        }
+        return closest;
+    }
+
     private double calcRungeKutta(double x) {
         double k1 = x;
         double k2 = x + k1 * timeStep * 0.5;
@@ -193,7 +208,7 @@ public class Swarm extends JPanel {
 //            particles.get(i).y = 0;
         }
 //        flipKParamHeider(kSums);
-        paramManager.changeKParamHeider(kSums);
+//        paramManager.changeKParamHeider(kSums);
         this.params = paramManager.getParams();
 //        balanceKParamHeider(kSums);
 
