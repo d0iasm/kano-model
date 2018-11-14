@@ -158,6 +158,12 @@ public class Swarm extends JPanel {
         return closest;
     }
 
+    private double imaging(double x) {
+        if (x < 0) return x + l;
+        else if (x > l) return x - l;
+        return x;
+    }
+
     private double calcRungeKutta(double x) {
         double k1 = x;
         double k2 = x + k1 * timeStep * 0.5;
@@ -226,8 +232,8 @@ public class Swarm extends JPanel {
         }
 
         for (int i = 0; i < pNum; i++) {
-            particles.get(i).x = newX.get(i);
-            particles.get(i).y = newY.get(i);
+            particles.get(i).x = imaging(newX.get(i));
+            particles.get(i).y = imaging(newY.get(i));
         }
 
 //        flipKParamHeider(kSums);

@@ -317,11 +317,11 @@ public class Parameter {
 
         //        Spin as a small cluster
         // GOOD with changeKParamNewcomb()
-        double[][] params = {
-                {-0.5, 1.0, 1.4},
-                {1.4, -0.5, 1.0},
-                {1.0, 1.4, -0.5},
-        };
+//        double[][] params = {
+//                {-0.5, 1.0, 1.4},
+//                {1.4, -0.5, 1.0},
+//                {1.0, 1.4, -0.5},
+//        };
 
 //        Spin like a film
 //    GOOD with changeKParamNewcomb()
@@ -337,6 +337,15 @@ public class Parameter {
 //                {1.5, 1.3, 0.0},
 //                {0.0, 1.5, 1.3}
 //        };
+
+        // Periodic boundary
+        // each type lines up.
+        double[][] params = {
+                {0.0, -0.2, -0.4},
+                {-0.4, 0.0, -0.2},
+                {-0.2, -0.4, 0.0},
+        };
+
         return params;
     }
 
