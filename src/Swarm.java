@@ -89,6 +89,40 @@ public class Swarm extends JPanel {
         return pj.x - pi.x;
     }
 
+    private double diffXClosest(Particle pi, Particle pj) {
+        /*
+         * Pi doesn't change its position and Pj changes its position.
+         * Return the closest X difference between Pi and moved 9 types Pj.
+         */
+        double tmp;
+        int d[] = {-1, 0, 1};
+        double diffX = diffX(pi, pj);
+        for (int i = 0; i < 3; i++) {
+            tmp = pj.x + l * d[i] - pi.x;
+            if (Math.abs(tmp) < Math.abs(diffX)) {
+                diffX = tmp;
+            }
+        }
+        return diffX;
+    }
+
+    private double diffYClosest(Particle pi, Particle pj) {
+        /*
+         * Pi doesn't change its position and Pj changes its position.
+         * Return the closest Y difference between Pi and moved 9 types Pj.
+         */
+        double tmp;
+        int d[] = {-1, 0, 1};
+        double diffY = diffY(pi, pj);
+        for (int i = 0; i < 3; i++) {
+            tmp = pj.y + l * d[i] - pi.y;
+            if (Math.abs(tmp) < Math.abs(diffY)) {
+                diffY = tmp;
+            }
+        }
+        return diffY;
+    }
+
     private double diffY(Particle pi, Particle pj) {
         return pj.y - pi.y;
     }
@@ -160,7 +194,8 @@ public class Swarm extends JPanel {
 
                 // TODO: 事前に距離の計算をしておく
                 // dis: |Rij|.
-                dis = distance(p1, p2);
+//                dis = distance(p1, p2);
+                dis = distanceClosest(p1, p2);
 
                 // paramK: kij.
                 paramK = getKParam(p1.id, p2.id);
@@ -171,8 +206,11 @@ public class Swarm extends JPanel {
 //                tmpX = (diffX(p1, p2) / dis);
 //                tmpY = (diffY(p1, p2) / dis);
 
-                tmpX = (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
-                tmpY = (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                tmpX = (diffXClosest(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                tmpY = (diffYClosest(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+
+//                tmpX = (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+//                tmpY = (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
 
 //                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
 
@@ -188,32 +226,10 @@ public class Swarm extends JPanel {
         }
 
         for (int i = 0; i < pNum; i++) {
-            // TODO: Periodic boundary
-//            if (newX.get(i) * 4 - (pSize / 2) + w / 2 < 0) {
-//                System.out.println("x: " + newX.get(i));
-//                particles.get(i).x = newX.get(i) + w;
-//
-//                System.out.println("NEW x: " + particles.get(i).x);
-//            } else if (newX.get(i) * 4 - (pSize / 2) + w / 2 > w) {
-//                particles.get(i).x = newX.get(i) - w;
-//            } else {
-//                particles.get(i).x = newX.get(i);
-//            }
-//
-//            if (newY.get(i) * 4 - (pSize / 2) + h / 2 < 0) {
-//                particles.get(i).y = newY.get(i) + h;
-//            } else if (newY.get(i) * 4 - (pSize / 2) + h / 2 > h) {
-//                particles.get(i).y = newY.get(i) - h;
-//            } else {
-//                particles.get(i).y = newY.get(i);
-//            }
-
-//            System.out.println("X:" + newX.get(i) + " calced X: " + particles.get(i).x);
-//            Open boundary
             particles.get(i).x = newX.get(i);
             particles.get(i).y = newY.get(i);
-//            particles.get(i).y = 0;
         }
+
 //        flipKParamHeider(kSums);
 //        paramManager.changeKParamHeider(kSums);
         this.params = paramManager.getParams();
