@@ -106,12 +106,16 @@ public class Swarm extends JPanel {
     }
 
     private double distanceClosest(Particle pi, Particle pj) {
+        /*
+         * Pi doesn't change its position and Pj changes its position.
+         * Return the closest distance between Pi and moved 9 types Pj.
+         */
         double tmp;
         int d[] = {-1, 0, 1};
         double closest = distance(pi, pj);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                tmp = distance(l * d[i] + pi.x, l * d[j] + pi.y, pj.x, pj.y);
+                tmp = distance(pi.x, pi.y, l * d[i] + pj.x, l * d[j] + pj.y);
                 if (tmp < closest) {
                     closest = tmp;
                 }
@@ -155,7 +159,10 @@ public class Swarm extends JPanel {
                 if (p1 == p2) continue;
 
                 // TODO: 事前に距離の計算をしておく
+                // dis: |Rij|.
                 dis = distance(p1, p2);
+
+                // paramK: kij.
                 paramK = getKParam(p1.id, p2.id);
 
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
@@ -167,7 +174,7 @@ public class Swarm extends JPanel {
                 tmpX = (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
                 tmpY = (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
 
-                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
+//                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
 
                 sumX += tmpX;
                 sumY += tmpY;
