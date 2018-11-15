@@ -340,10 +340,24 @@ public class Parameter {
 
         // Periodic boundary
         // each type lines up.
+//        double[][] params = {
+//                {0.0, -0.2, -0.4},
+//                {-0.4, 0.0, -0.2},
+//                {-0.2, -0.4, 0.0},
+//        };
+
+        // Periodic boundary
+        // Each cluster moves to the same direction
+//        double[][] params = {
+//                {1.1, 0.0, 1.5},
+//                {1.5, 1.1, 0.0},
+//                {0.0, 1.5, 1.1},
+//        };
+
         double[][] params = {
-                {0.0, -0.2, -0.4},
-                {-0.4, 0.0, -0.2},
-                {-0.2, -0.4, 0.0},
+                {0.0, -0.7, 0.7},
+                {0.7, 0.0, -0.7},
+                {-0.7, 0.7, 0.0},
         };
 
         return params;

@@ -2,10 +2,10 @@
 public class Particle {
     public double x, y;
     public int id;
-    private int min = -40;
-    private int max = 40;
-//    private double min = -1;
-//    private double max = 1;
+//    private int min = -40;
+//    private int max = 40;
+    private double min = -1;
+    private double max = 1;
 
     public Particle(int id) {
         this.id = id;
