@@ -89,6 +89,22 @@ public class Swarm extends JPanel {
         return pj.x - pi.x;
     }
 
+    private double diffY(Particle pi, Particle pj) {
+        return pj.y - pi.y;
+    }
+
+    private double distance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    }
+
+    private double distance(Particle pi, Particle pj) {
+        double x1 = pi.x;
+        double y1 = pi.y;
+        double x2 = pj.x;
+        double y2 = pj.y;
+        return distance(x1, y1, x2, y2);
+    }
+
     private double diffXClosest(Particle pi, Particle pj) {
         /*
          * Pi doesn't change its position and Pj changes its position.
@@ -127,22 +143,6 @@ public class Swarm extends JPanel {
             }
         }
         return diffY;
-    }
-
-    private double diffY(Particle pi, Particle pj) {
-        return pj.y - pi.y;
-    }
-
-    private double distance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-    }
-
-    private double distance(Particle pi, Particle pj) {
-        double x1 = pi.x;
-        double y1 = pi.y;
-        double x2 = pj.x;
-        double y2 = pj.y;
-        return distance(x1, y1, x2, y2);
     }
 
     private double distanceClosest(Particle pi, Particle pj) {
