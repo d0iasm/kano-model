@@ -9,7 +9,7 @@ public class Parameter {
 
     public Parameter(int dimension) {
         this.dim = dimension;
-        this.params = random();
+        this.params = initThreeDimParams();
     }
 
     public double[][] getParams() {

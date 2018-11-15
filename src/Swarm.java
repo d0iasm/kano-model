@@ -95,10 +95,13 @@ public class Swarm extends JPanel {
          * Return the closest X difference between Pi and moved 9 types Pj.
          */
         double tmp;
+        double iX, jX;
+        iX = pi.x % l;
+        jX = pj.x % l;
         int d[] = {-1, 0, 1};
         double diffX = diffX(pi, pj);
         for (int i = 0; i < 3; i++) {
-            tmp = pj.x + l * d[i] - pi.x;
+            tmp = jX + l * d[i] - iX;
             if (Math.abs(tmp) < Math.abs(diffX)) {
                 diffX = tmp;
             }
@@ -112,10 +115,13 @@ public class Swarm extends JPanel {
          * Return the closest Y difference between Pi and moved 9 types Pj.
          */
         double tmp;
+        double iY, jY;
+        iY = pi.y % l;
+        jY = pj.y % l;
         int d[] = {-1, 0, 1};
         double diffY = diffY(pi, pj);
         for (int i = 0; i < 3; i++) {
-            tmp = pj.y + l * d[i] - pi.y;
+            tmp = jY + l * d[i] - iY;
             if (Math.abs(tmp) < Math.abs(diffY)) {
                 diffY = tmp;
             }
@@ -145,11 +151,16 @@ public class Swarm extends JPanel {
          * Return the closest distance between Pi and moved 9 types Pj.
          */
         double tmp;
+        double iX, iY, jX, jY;
+        iX = pi.x % l;
+        iY = pi.y % l;
+        jX = pj.x % l;
+        jY = pj.y % l;
         int d[] = {-1, 0, 1};
         double closest = distance(pi, pj);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                tmp = distance(pi.x, pi.y, l * d[i] + pj.x, l * d[j] + pj.y);
+                tmp = distance(iX, iY, l * d[i] + jX, l * d[j] + jY);
                 if (tmp < closest) {
                     closest = tmp;
                 }
@@ -159,6 +170,7 @@ public class Swarm extends JPanel {
     }
 
     private double imaging(double x) {
+        // TODO: Imaging when a particle goes outside a window.
         if (x < 0) return x + l;
         else if (x > l) return x - l;
         return x;
