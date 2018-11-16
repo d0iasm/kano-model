@@ -405,10 +405,17 @@ public class Parameter {
 //        };
 
         // Periodic boundary
-        // Divide paricles into red and blue
+        // Divide particles into red and blue
+//        double[][] params = {
+//                {1.0, 0.8},
+//                {0.8, 0.9},
+//        };
+
+        // Periodic boundary
+        // Red particles chase blue ones
         double[][] params = {
-                {1.0, 0.8},
-                {0.8, 0.9},
+                {1.0, 0.5},
+                {1.0, 1.3},
         };
 
         return params;
