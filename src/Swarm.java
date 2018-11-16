@@ -170,8 +170,10 @@ public class Swarm extends JPanel {
     }
 
     private double imaging(double x) {
-        if (x < (0 - (w / scale) / 2)) return x + w / scale;
-        else if (x > (w / scale) / 2) return x - w / scale;
+//        if (x < (0 - (w / scale) / 2)) return x + w / scale;
+//        else if (x > (w / scale) / 2) return x - w / scale;
+        if (x < 0) return x + l;
+        if (x > l) return x - l;
         return x;
     }
 

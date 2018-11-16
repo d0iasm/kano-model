@@ -392,9 +392,23 @@ public class Parameter {
 
         // Periodic boundary
         // Move to the same direction while keeping their position.
+//        double[][] params = {
+//                {0.9, 0.5},
+//                {1.2, 0.9},
+//        };
+
+        // Periodic boundary
+        // Create a circle
+//        double[][] params = {
+//                {1.0, 0.9},
+//                {0.9, 0.8},
+//        };
+
+        // Periodic boundary
+        // Divide paricles into red and blue
         double[][] params = {
-                {0.9, 0.5},
-                {1.2, 0.9},
+                {1.0, 0.8},
+                {0.8, 0.9},
         };
 
         return params;
