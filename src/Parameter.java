@@ -9,7 +9,8 @@ public class Parameter {
 
     public Parameter(int dimension) {
         this.dim = dimension;
-        this.params = initThreeDimParams();
+//        this.params = initThreeDimParams();
+        this.params = initTwoDimParams();
     }
 
     public double[][] getParams() {
@@ -363,7 +364,7 @@ public class Parameter {
         return params;
     }
 
-    private void initTwoDimParams() {
+    private double[][] initTwoDimParams() {
         //        Separation and fusion
 //        double[][] params = {
 //                {0.8, 1.1},
@@ -377,9 +378,25 @@ public class Parameter {
 //        };
 
 //        Chase blue -> red -> blue
+//        double[][] params = {
+//                {1.0, 1.0},
+//                {0.5, 1.3}
+//        };
+
+        // Periodic boundary
+        // Keep each particle's position
+//        double[][] params = {
+//                {0.7, 0.5},
+//                {1.2, 0.7},
+//        };
+
+        // Periodic boundary
+        // Move to the same direction while keeping their position.
         double[][] params = {
-                {1.0, 1.0},
-                {0.5, 1.3}
+                {0.9, 0.5},
+                {1.2, 0.9},
         };
+
+        return params;
     }
 }

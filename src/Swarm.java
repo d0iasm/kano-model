@@ -31,7 +31,7 @@ public class Swarm extends JPanel {
         this.pType = 2;
         this.pPartition = pNum / pType;
 
-        this.paramManager = new Parameter(3);
+        this.paramManager = new Parameter(2);
         this.params = paramManager.getParams();
         showParams();
 
@@ -48,7 +48,7 @@ public class Swarm extends JPanel {
         this.pType = type;
         this.pPartition = pNum / pType;
 
-        this.paramManager = new Parameter(3);
+        this.paramManager = new Parameter(pType);
         this.params = paramManager.getParams();
         showParams();
 
@@ -273,8 +273,8 @@ public class Swarm extends JPanel {
     public void printSwarmParam() {
         System.out.println("Print current kParams---------------------------");
         System.out.println("count: " + count);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
                 System.out.print(params[i][j] + ", ");
             }
             System.out.println(" ");
@@ -285,8 +285,8 @@ public class Swarm extends JPanel {
     public void printSwarmParam(double[][] params) {
         System.out.println("Print current kParams---------------------------");
         System.out.println("count: " + count);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
                 System.out.print(params[i][j] + ", ");
             }
             System.out.println(" ");
