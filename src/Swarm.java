@@ -395,7 +395,5 @@ public class Swarm extends JPanel {
 
             }
         }
-
-        updateParamsText();
     }
 }
