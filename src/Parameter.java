@@ -1,20 +1,39 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class Parameter {
     private int dim;
     private double[][] params;
     private int paramChangedCount = 0;
+    JTextArea textArea;
 
     public Parameter(int dimension) {
         this.dim = dimension;
 //        this.params = initThreeDimParams();
         this.params = initTwoDimParams();
+
+        this.textArea = createParamsText();
+        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        textArea.setBounds(650, 40, 120, 60);
     }
 
     public double[][] getParams() {
         return this.params;
+    }
+
+    public void setParams(String[] paramsStr) {
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                params[i][j] = Double.parseDouble(paramsStr[dim * i + j]);
+            }
+        }
+    }
+
+    public void setParams(double[][] params) {
+        this.params = params;
     }
 
     public int getParamChangedCount() {
@@ -33,10 +52,20 @@ public class Parameter {
     }
 
     public JTextArea getParamsText() {
-        JTextArea textArea = createParamsText();
-        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        textArea.setBounds(650, 40, 120, 60);
         return textArea;
+    }
+
+    public List<String> parseParamsText() {
+        System.out.println(textArea.getText());
+        List<String> splited = new ArrayList<>();
+
+        for (String s : textArea.getText().split("\\s+")) {
+            if (s.equals("")) continue;
+            System.out.println(s);
+            s = s.replace(",", "");
+            splited.add(s);
+        }
+        return splited;
     }
 
     public JButton getUpdateButton() {
@@ -234,11 +263,6 @@ public class Parameter {
         }
         return params;
     }
-
-    public void setParams(double[][] params) {
-        this.params = params;
-    }
-
 
 
     // ------------------- Private --------------------

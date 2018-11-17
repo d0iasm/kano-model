@@ -67,21 +67,23 @@ public class Swarm extends JPanel {
         JButton updateButton = paramManager.getUpdateButton();
         updateButton.addActionListener(e -> {
             // TODO: Implement update params depends on the content in a textarea.
-            updateParams();
+            paramManager.parseParamsText();
+            updateParamsText();
         });
         this.add(updateButton);
 
         JButton randomButton = paramManager.getRandomButton();
         randomButton.addActionListener(e -> {
-            paramManager.setParams(paramManager.random());
+            double[][] rnd = paramManager.random();
+            paramManager.setParams(rnd);
             this.params = paramManager.getParams();
-            updateParams();
+            updateParamsText();
             printSwarmParam(this.params);
         });
         this.add(randomButton);
     }
 
-    private void updateParams() {
+    private void updateParamsText() {
         this.remove(paramsText);
         this.paramsText = paramManager.getParamsText();
         this.add(paramsText);
@@ -225,11 +227,11 @@ public class Swarm extends JPanel {
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
-        double[][] kSums = new double[][]{
-                {0, 0, 0},
-                {0, 0, 0},
-                {0, 0, 0},
-        };
+//        double[][] kSums = new double[][]{
+//                {0, 0, 0},
+//                {0, 0, 0},
+//                {0, 0, 0},
+//        };
 
         for (Particle p1 : particles) {
             sumX = 0;
@@ -395,6 +397,6 @@ public class Swarm extends JPanel {
             }
         }
 
-
+        updateParamsText();
     }
 }
