@@ -2,8 +2,8 @@
 public class Particle {
     public double x, y;
     public int id;
-    private int min = -30;
-    private int max = 30;
+    private int min = -100;
+    private int max = 100;
 //    private double min = -1;
 //    private double max = 1;
 

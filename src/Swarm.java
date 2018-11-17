@@ -66,19 +66,25 @@ public class Swarm extends JPanel {
 
         JButton updateButton = paramManager.getUpdateButton();
         updateButton.addActionListener(e -> {
-            this.remove(paramsText);
-            this.paramsText = paramManager.getUpdateParamsText();
-            this.add(paramsText);
+            // TODO: Implement update params depends on the content in a textarea.
+            updateParams();
         });
         this.add(updateButton);
 
         JButton randomButton = paramManager.getRandomButton();
         randomButton.addActionListener(e -> {
-            this.remove(paramsText);
-            this.paramsText = paramManager.getRandomParamsText();
-            this.add(paramsText);
+            paramManager.setParams(paramManager.random());
+            this.params = paramManager.getParams();
+            updateParams();
+            printSwarmParam(this.params);
         });
         this.add(randomButton);
+    }
+
+    private void updateParams() {
+        this.remove(paramsText);
+        this.paramsText = paramManager.getParamsText();
+        this.add(paramsText);
     }
 
     private void showBoundaryButton() {
@@ -348,7 +354,6 @@ public class Swarm extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.LIGHT_GRAY);
-
         switch (boundary) {
             case OPEN:
                 for (int i = 0; i < h; i += (10 * scale)) {
@@ -366,7 +371,6 @@ public class Swarm extends JPanel {
                 break;
         }
 
-
         for (Particle p : particles) {
             if (p.id <= pPartition) {
                 g2.setColor(Color.RED);
@@ -379,8 +383,8 @@ public class Swarm extends JPanel {
             switch (boundary) {
                 case OPEN:
                     g2.fill(new Ellipse2D.Double(
-                            p.x * scale + w / 2,
-                            p.y * scale + h / 2,
+                            p.x * scale,
+                            p.y * scale,
                             pSize * scale, pSize * scale));
                 case PERIODIC:
                     g2.fill(new Ellipse2D.Double(
@@ -390,5 +394,7 @@ public class Swarm extends JPanel {
 
             }
         }
+
+
     }
 }

@@ -39,16 +39,6 @@ public class Parameter {
         return textArea;
     }
 
-    public JTextArea getUpdateParamsText() {
-        this.params = initThreeDimParams();
-        return getParamsText();
-    }
-
-    public JTextArea getRandomParamsText() {
-        this.params = random();
-        return getParamsText();
-    }
-
     public JButton getUpdateButton() {
         JButton button = new JButton("Update");
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
@@ -230,6 +220,26 @@ public class Parameter {
         }
     }
 
+    public double[][] random() {
+        double[][] params = new double[this.dim][this.dim];
+        double tmp;
+        for (int i = 0; i < this.dim; i++) {
+            for (int j = 0; j < this.dim; j++) {
+                tmp = -2.0 + Math.random() * 4.0;
+                tmp *= 10;
+                tmp = Math.floor(tmp);
+                tmp /= 10;
+                params[i][j] = tmp;
+            }
+        }
+        return params;
+    }
+
+    public void setParams(double[][] params) {
+        this.params = params;
+    }
+
+
 
     // ------------------- Private --------------------
     private JTextArea createParamsText() {
@@ -248,22 +258,6 @@ public class Parameter {
         }
         return new JTextArea(str.toString());
     }
-
-    private double[][] random() {
-        double[][] params = new double[this.dim][this.dim];
-        double tmp;
-        for (int i = 0; i < this.dim; i++) {
-            for (int j = 0; j < this.dim; j++) {
-                tmp = -2.0 + Math.random() * 4.0;
-                tmp *= 10;
-                tmp = Math.floor(tmp);
-                tmp /= 10;
-                params[i][j] = tmp;
-            }
-        }
-        return params;
-    }
-
 
     private double[][] initThreeDimParams() {
 //        Balance
@@ -416,6 +410,13 @@ public class Parameter {
 //        double[][] params = {
 //                {1.0, 1.0},
 //                {0.5, 1.3},
+//        };
+
+        // Periodic boundary
+        // Funny
+//        double[][] params = {
+//                {1.3, 1.4},
+//                {0.7, 0.8},
 //        };
 
         return params;
