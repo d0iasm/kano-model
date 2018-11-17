@@ -87,23 +87,22 @@ public class Swarm extends JPanel {
         tb.setBackground(Color.pink);
         tb.setBounds(650, 700, 120, 30);
         tb.addChangeListener(e -> {
-            System.out.println(e);
-            tb.setText(toggleBoundary(tb));
+            toggleBoundary();
+            tb.setText(boundary.toString());
         });
 
         this.add(tb);
     }
 
-    private String toggleBoundary(JToggleButton tb) {
+    private void toggleBoundary() {
         switch (boundary) {
             case OPEN:
                 boundary = Boundary.PERIODIC;
-                return boundary.toString();
+                break;
             case PERIODIC:
                 boundary = Boundary.OPEN;
-                return boundary.toString();
+                break;
         }
-        throw new UnsupportedOperationException("Not Implemented yet.");
     }
 
     private double getKParam(int i, int j) {
@@ -209,12 +208,11 @@ public class Swarm extends JPanel {
     }
 
     public void run() {
-        double sumX;
-        double sumY;
+        double sumX, sumY;
         double dis;
+        double diffX, diffY;
         double paramK;
-        double rungeSumX;
-        double rungeSumY;
+        double rungeSumX, rungeSumY;
 
         double tmpX, tmpY;
 
@@ -234,10 +232,27 @@ public class Swarm extends JPanel {
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
 
-                // TODO: 事前に距離の計算をしておく
-                // dis: |Rij|.
-//                dis = distance(p1, p2);
-                dis = distanceClosest(p1, p2);
+                // TODO: Calculate a distance table before this.
+                switch (boundary) {
+                    case OPEN:
+                        // dis: |Rij|.
+                        // {diffX, diffY}: Rij.
+                        dis = distance(p1, p2);
+                        diffX = diffX(p1, p2);
+                        diffY = diffY(p1, p2);
+                        break;
+                    case PERIODIC:
+                        // dis: |Rij|.
+                        // {diffX, diffY}: Rij.
+                        dis = distanceClosest(p1, p2);
+                        diffX = diffXClosest(p1, p2);
+                        diffY = diffYClosest(p1, p2);
+                        break;
+                    default:
+                        dis = distance(p1, p2);
+                        diffX = diffX(p1, p2);
+                        diffY = diffY(p1, p2);
+                }
 
                 // paramK: kij.
                 paramK = getKParam(p1.id, p2.id);
@@ -248,8 +263,8 @@ public class Swarm extends JPanel {
 //                tmpX = (diffX(p1, p2) / dis);
 //                tmpY = (diffY(p1, p2) / dis);
 
-                tmpX = (diffXClosest(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
-                tmpY = (diffYClosest(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                tmpX = (diffX / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                tmpY = (diffY / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
 
 //                tmpX = (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
 //                tmpY = (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
