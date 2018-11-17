@@ -24,21 +24,15 @@ public class Swarm extends JPanel {
     JTextArea paramsText;
     double[][] params;
 
+    private Boundary boundary;
+
+    private enum Boundary {
+        OPEN,
+        PERIODIC
+    }
+
     public Swarm(int num, int w, int h) {
-        this.pNum = num;
-        this.w = w;
-        this.h = h;
-        this.pType = 2;
-        this.pPartition = pNum / pType;
-
-        this.paramManager = new Parameter(2);
-        this.params = paramManager.getParams();
-        showParams();
-
-        this.particles = new ArrayList<>(num);
-        for (int i = 1; i <= num; i++) {
-            particles.add(new Particle(i));
-        }
+        this(num, w, h, 2);
     }
 
     public Swarm(int num, int w, int h, int type) {
@@ -51,6 +45,8 @@ public class Swarm extends JPanel {
         this.paramManager = new Parameter(pType);
         this.params = paramManager.getParams();
         showParams();
+
+        this.boundary = Boundary.OPEN;
 
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
@@ -170,8 +166,6 @@ public class Swarm extends JPanel {
     }
 
     private double imaging(double x) {
-//        if (x < (0 - (w / scale) / 2)) return x + w / scale;
-//        else if (x > (w / scale) / 2) return x - w / scale;
         if (x < 0) return x + l;
         if (x > l) return x - l;
         return x;
@@ -264,10 +258,10 @@ public class Swarm extends JPanel {
             }
             if (count % 5000 == 0) {
                 printSwarmParam();
-                if (count == 50000) {
-                    printSwarmParam();
-                    System.exit(0);
-                }
+//                if (count == 50000) {
+//                    printSwarmParam();
+//                    System.exit(0);
+//                }
             }
         }
     }
@@ -302,10 +296,14 @@ public class Swarm extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.LIGHT_GRAY);
-        for (int i = 0; i < h; i += (l * scale)) {
-            g2.drawLine(0, i, w, i);
-            g2.drawLine(i, 0, i, h);
-        }
+        // When Open Boundary.
+//        for (int i = 0; i < h; i += (10 * scale)) {
+//            g2.drawLine(0, i, w, i);
+//            g2.drawLine(i, 0, i, h);
+//        }
+
+        g2.drawLine(0, h / 2, w, h / 2);
+        g2.drawLine(w / 2, 0, w / 2, h);
 
         for (Particle p : particles) {
             if (p.id <= pPartition) {
@@ -316,9 +314,16 @@ public class Swarm extends JPanel {
                 g2.setColor(Color.GREEN);
             }
 
+//            g2.fill(new Ellipse2D.Double(
+//                    p.x * scale + w / 2,
+//                    p.y * scale + h / 2,
+//                    pSize * scale, pSize * scale));
+
+
+            // When Periodic boundary.
             g2.fill(new Ellipse2D.Double(
-                    p.x * scale + w / 2,
-                    p.y * scale + h / 2,
+                    p.x * scale * 8,
+                    p.y * scale * 8,
                     pSize * scale, pSize * scale));
         }
     }

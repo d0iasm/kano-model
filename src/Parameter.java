@@ -385,16 +385,16 @@ public class Parameter {
 
         // Periodic boundary
         // Keep each particle's position
-//        double[][] params = {
-//                {0.7, 0.5},
-//                {1.2, 0.7},
-//        };
+        double[][] params = {
+                {0.7, 1.2},
+                {0.5, 0.7},
+        };
 
         // Periodic boundary
         // Move to the same direction while keeping their position.
 //        double[][] params = {
-//                {0.9, 0.5},
-//                {1.2, 0.9},
+//                {0.9, 1.2},
+//                {0.5, 0.9},
 //        };
 
         // Periodic boundary
@@ -413,10 +413,10 @@ public class Parameter {
 
         // Periodic boundary
         // Red particles chase blue ones
-        double[][] params = {
-                {1.0, 0.5},
-                {1.0, 1.3},
-        };
+//        double[][] params = {
+//                {1.0, 1.0},
+//                {0.5, 1.3},
+//        };
 
         return params;
     }
