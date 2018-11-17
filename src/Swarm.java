@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ public class Swarm extends JPanel {
         this.paramManager = new Parameter(pType);
         this.params = paramManager.getParams();
         showParams();
+        showBoundaryButton();
 
         this.boundary = Boundary.OPEN;
 
@@ -75,6 +79,31 @@ public class Swarm extends JPanel {
             this.add(paramsText);
         });
         this.add(randomButton);
+    }
+
+    private void showBoundaryButton() {
+        JToggleButton tb = new JToggleButton("Open");
+        tb.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        tb.setBackground(Color.pink);
+        tb.setBounds(650, 700, 120, 30);
+        tb.addChangeListener(e -> {
+            System.out.println(e);
+            tb.setText(toggleBoundary(tb));
+        });
+
+        this.add(tb);
+    }
+
+    private String toggleBoundary(JToggleButton tb) {
+        switch (boundary) {
+            case OPEN:
+                boundary = Boundary.PERIODIC;
+                return boundary.toString();
+            case PERIODIC:
+                boundary = Boundary.OPEN;
+                return boundary.toString();
+        }
+        throw new UnsupportedOperationException("Not Implemented yet.");
     }
 
     private double getKParam(int i, int j) {
