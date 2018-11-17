@@ -14,20 +14,17 @@ public class Parameter {
         this.dim = dimension;
 //        this.params = initThreeDimParams();
         this.params = initTwoDimParams();
-
         this.textArea = createParamsText();
-        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        textArea.setBounds(650, 40, 120, 60);
     }
 
     public double[][] getParams() {
         return this.params;
     }
 
-    public void setParams(String[] paramsStr) {
+    public void setParams(List<String> paramsList) {
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                params[i][j] = Double.parseDouble(paramsStr[dim * i + j]);
+                params[i][j] = Double.parseDouble(paramsList.get(dim * i + j));
             }
         }
     }
@@ -52,16 +49,19 @@ public class Parameter {
     }
 
     public JTextArea getParamsText() {
+        this.textArea = createParamsText();
+        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        textArea.setBounds(650, 40, 120, 60);
+        textArea.setEditable(true);
+        textArea.requestFocus();
         return textArea;
     }
 
     public List<String> parseParamsText() {
-        System.out.println(textArea.getText());
         List<String> splited = new ArrayList<>();
 
         for (String s : textArea.getText().split("\\s+")) {
             if (s.equals("")) continue;
-            System.out.println(s);
             s = s.replace(",", "");
             splited.add(s);
         }

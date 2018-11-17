@@ -1,7 +1,4 @@
 import javax.swing.*;
-import javax.swing.colorchooser.ColorSelectionModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -66,9 +63,11 @@ public class Swarm extends JPanel {
 
         JButton updateButton = paramManager.getUpdateButton();
         updateButton.addActionListener(e -> {
-            // TODO: Implement update params depends on the content in a textarea.
-            paramManager.parseParamsText();
+            List<String> pt = paramManager.parseParamsText();
+            paramManager.setParams(pt);
+            this.params = paramManager.getParams();
             updateParamsText();
+            printSwarmParam(this.params);
         });
         this.add(updateButton);
 
