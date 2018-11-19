@@ -251,14 +251,18 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
-    private boolean isLike(double preDis, double newDis) {
+    private int isLike(double preDis, double newDis) {
         if (newDis <= preDis) {
-            return true;
+            return 1;
         }
-        return false;
+        return -1;
     }
 
-    private void nbal(List<Double> preX, List<Double> preY, List<Double> newX, List<Double> newY) {
+    private boolean isBalance(double preDisIJ, double newDisIJ, double preDisIK, double newDisIK, double preDisJK, double newDisJK) {
+        return isLike(preDisIJ, newDisIJ) * isLike(preDisIK, newDisIK) * isLike(preDisJK, newDisJK) > 0;
+    }
+
+    private int[] nbal(List<Double> preX, List<Double> preY, List<Double> newX, List<Double> newY) {
         /*
          * > The function nbal counted the number of all triads that were balanced,
          * > imbalanced or incomplete (contained at least one null relation).
@@ -267,15 +271,31 @@ public class Swarm extends JPanel {
          * > It was not a part of the regular simulation.
          * 2.4 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
          */
+
+        // The first element means the number of balanced triads.
+        // The second one means the number of imbalanced triads.
+        int count[] = {0, 0};
         for (int i = 0; i < pNum; i++) {
-            for (int j = 0; j < pNum; j++) {
-                if (i == j) continue;
-                for (int k = 0; k < pNum; k++) {
-                    if (j == k) continue;
-                    // TODO: Count the number of all triads that were balanced or imbalanced.
+            for (int j = i + 1; j < pNum; j++) {
+                for (int k = j + 1; k < pNum; k++) {
+                    // TODO: This function only be correct when an open boundary state.
+                    if (isBalance(
+                            distance(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
+                            distance(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
+                            distance(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
+                            distance(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
+                            distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
+                            distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
+                            )) {
+                        count[0] += 1;
+                    } else {
+                        count[1] += 1;
+                    }
                 }
             }
         }
+        System.out.println("Balance: " + count[0] + " , Imbalance: " + count[1]);
+        return count;
     }
 
     private void subgroups() {

@@ -34,7 +34,7 @@ public class Environment implements ActionListener {
             }
         });
 
-        this.swarm = initSwarm(60, w, h, 3);
+        this.swarm = initSwarm(10, w, h, 2);
         frame.add(this.swarm, BorderLayout.CENTER);
         // TODO: Keep the screen position to chase the middle of particles.
 
