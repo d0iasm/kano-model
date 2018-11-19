@@ -240,6 +240,12 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
+    private void reset() {
+        count = 0;
+        printSwarmParam(this.params);
+        System.out.println("============ Reset current count =========");
+    }
+
     private void showParams() {
         this.setLayout(null);
         this.add(paramManager.getTitle());
@@ -252,7 +258,7 @@ public class Swarm extends JPanel {
             paramManager.setParams(pt);
             this.params = paramManager.getParams();
             updateParamsText();
-            printSwarmParam(this.params);
+            reset();
         });
         this.add(updateButton);
 
@@ -262,7 +268,7 @@ public class Swarm extends JPanel {
             paramManager.setParams(rnd);
             this.params = paramManager.getParams();
             updateParamsText();
-            printSwarmParam(this.params);
+            reset();
         });
         this.add(randomButton);
     }
@@ -278,9 +284,10 @@ public class Swarm extends JPanel {
         tb.setFont(new Font("OpenSans", Font.PLAIN, 16));
         tb.setBackground(Color.pink);
         tb.setBounds(650, 700, 120, 30);
-        tb.addChangeListener(e -> {
+        tb.addActionListener(e -> {
             toggleBoundary();
             tb.setText(boundary.toString());
+            reset();
         });
 
         this.add(tb);
