@@ -31,6 +31,8 @@ public class Swarm extends JPanel {
         PERIODIC
     }
 
+    List<int[]> nbals = new ArrayList<>(1000);
+
     public Swarm(int num, int w, int h) {
         this(num, w, h, 2);
     }
@@ -157,23 +159,28 @@ public class Swarm extends JPanel {
 //        balanceKParamHeider(kSums);
 
         // TODO: This is for metrics. Remove these after a measurement.
-        nbal(preX, preY, newX, newY);
+        nbals.add(nbal(preX, preY, newX, newY));
 
         count++;
-        if (count % 100 == 0) {
+        if (count % 10 == 0) {
             repaint();
 
+            if (count % 1000 == 0) {
+                printNbals();
+                printSwarmParam();
+                System.exit(0);
+            }
 //            if (count % 1000 == 0) {
 //                System.out.println(paramManager.getParamChangedCount());
 //                paramManager.setParamChangedCount(0);
 //            }
-            if (count % 5000 == 0) {
-                printSwarmParam();
-                if (count == 50000) {
-                    printSwarmParam();
-                    System.exit(0);
-                }
-            }
+//            if (count % 5000 == 0) {
+//                printSwarmParam();
+//                if (count == 50000) {
+//                    printSwarmParam();
+//                    System.exit(0);
+//                }
+//            }
         }
     }
 
@@ -251,6 +258,17 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
+    private void printNbals() {
+        System.out.println("===================== Balance ========================");
+        for(int[] nbal : nbals) {
+            System.out.println(nbal[0]);
+        }
+        System.out.println("===================== Imbalance ========================");
+        for(int[] nbal : nbals) {
+            System.out.println(nbal[1]);
+        }
+    }
+
     private int isLike(double preDis, double newDis) {
         if (newDis <= preDis) {
             return 1;
@@ -325,7 +343,6 @@ public class Swarm extends JPanel {
                 }
             }
         }
-        System.out.println("Balance: " + count[0] + " , Imbalance: " + count[1]);
         return count;
     }
 
