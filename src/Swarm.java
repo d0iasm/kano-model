@@ -49,7 +49,8 @@ public class Swarm extends JPanel {
         showParams();
         showBoundaryButton();
 
-        this.boundary = Boundary.OPEN;
+//        this.boundary = Boundary.OPEN;
+        this.boundary = Boundary.PERIODIC;
 
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
@@ -158,14 +159,14 @@ public class Swarm extends JPanel {
         this.params = paramManager.getParams();
 //        balanceKParamHeider(kSums);
 
-        // TODO: This is for metrics. Remove these after a measurement.
-        nbals.add(nbal(preX, preY, newX, newY));
 
         count++;
-        if (count % 10 == 0) {
+        if (count % 100 == 0) {
             repaint();
+            // TODO: This is for metrics. Remove these after a measurement.
+            nbals.add(nbal(preX, preY, newX, newY));
 
-            if (count % 1000 == 0) {
+            if (count % 10000 == 0) {
                 printNbals();
                 printSwarmParam();
                 System.exit(0);

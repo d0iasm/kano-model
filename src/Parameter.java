@@ -391,19 +391,22 @@ public class Parameter {
 //        };
 
 //        Like >--< this form
+        // Fig. 8 in the thesis.
 //        double[][] params = {
 //                {0.8, 1.7},
 //                {0.5, 1.2}
 //        };
 
 //        Chase blue -> red -> blue
+        // Fig. 3 in the thesis.
 //        double[][] params = {
 //                {1.0, 1.0},
 //                {0.5, 1.3}
 //        };
 
         // Periodic boundary
-        // Keep each particle's position
+        // Fig. 6 in the thesis.
+        // Keep each particle's position.
         double[][] params = {
                 {0.7, 1.2},
                 {0.5, 0.7},
@@ -417,7 +420,8 @@ public class Parameter {
 //        };
 
         // Periodic boundary
-        // Create a circle
+        // Fig. 1 in the thesis.
+        // Create a circle.
 //        double[][] params = {
 //                {1.0, 0.9},
 //                {0.9, 0.8},
