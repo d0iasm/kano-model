@@ -152,10 +152,10 @@ public class Swarm extends JPanel {
         if (count % 100 == 0) {
             repaint();
 
-            if (count % 1000 == 0) {
-                System.out.println(paramManager.getParamChangedCount());
-                paramManager.setParamChangedCount(0);
-            }
+//            if (count % 1000 == 0) {
+//                System.out.println(paramManager.getParamChangedCount());
+//                paramManager.setParamChangedCount(0);
+//            }
             if (count % 5000 == 0) {
                 printSwarmParam();
                 if (count == 50000) {
