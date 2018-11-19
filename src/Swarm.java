@@ -279,17 +279,48 @@ public class Swarm extends JPanel {
             for (int j = i + 1; j < pNum; j++) {
                 for (int k = j + 1; k < pNum; k++) {
                     // TODO: This function only be correct when an open boundary state.
-                    if (isBalance(
-                            distance(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
-                            distance(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
-                            distance(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
-                            distance(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
-                            distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
-                            distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
+                    switch (boundary) {
+                        case OPEN:
+                            if (isBalance(
+                                    distance(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
+                                    distance(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
+                                    distance(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
+                                    distance(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
+                                    distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
+                                    distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
                             )) {
-                        count[0] += 1;
-                    } else {
-                        count[1] += 1;
+                                count[0] += 1;
+                            } else {
+                                count[1] += 1;
+                            }
+                            break;
+                        case PERIODIC:
+                            if (isBalance(
+                                    distanceClosest(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
+                                    distanceClosest(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
+                                    distanceClosest(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
+                                    distanceClosest(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
+                                    distanceClosest(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
+                                    distanceClosest(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
+                            )) {
+                                count[0] += 1;
+                            } else {
+                                count[1] += 1;
+                            }
+                            break;
+                        default:
+                            if (isBalance(
+                                    distance(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
+                                    distance(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
+                                    distance(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
+                                    distance(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
+                                    distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
+                                    distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
+                            )) {
+                                count[0] += 1;
+                            } else {
+                                count[1] += 1;
+                            }
                     }
                 }
             }
@@ -377,6 +408,7 @@ public class Swarm extends JPanel {
     }
 
     private double getKParam(int i, int j) {
+        // TODO: Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException happens when the number of particles cannot divide |pType|
         return params[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
@@ -440,19 +472,15 @@ public class Swarm extends JPanel {
         return diffY;
     }
 
-    private double distanceClosest(Particle pi, Particle pj) {
-        /*
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest distance between Pi and moved 9 types Pj.
-         */
+    private double distanceClosest(double x1, double y1, double x2, double y2) {
         double tmp;
         double iX, iY, jX, jY;
-        iX = pi.x % l;
-        iY = pi.y % l;
-        jX = pj.x % l;
-        jY = pj.y % l;
+        iX = x1 % l;
+        iY = y1 % l;
+        jX = x2 % l;
+        jY = y2 % l;
         int d[] = {-1, 0, 1};
-        double closest = distance(pi, pj);
+        double closest = distance(x1, y1, x2, y2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 tmp = distance(iX, iY, l * d[i] + jX, l * d[j] + jY);
@@ -462,6 +490,14 @@ public class Swarm extends JPanel {
             }
         }
         return closest;
+    }
+
+    private double distanceClosest(Particle pi, Particle pj) {
+        /*
+         * Pi doesn't change its position and Pj changes its position.
+         * Return the closest distance between Pi and moved 9 types Pj.
+         */
+        return distanceClosest(pi.x, pi.y, pj.x, pj.y);
     }
 
     private double imaging(double x) {

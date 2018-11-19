@@ -12,8 +12,9 @@ public class Parameter {
 
     public Parameter(int dimension) {
         this.dim = dimension;
-        this.params = initThreeDimParams();
-//        this.params = initTwoDimParams();
+//        this.params = random();
+//        this.params = initThreeDimParams();
+        this.params = initTwoDimParams();
         this.textArea = createParamsText();
     }
 
