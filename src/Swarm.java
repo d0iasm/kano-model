@@ -67,6 +67,10 @@ public class Swarm extends JPanel {
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
+        // TODO: These two variables are for metrics. Remove these after a measurement.
+        List<Double> preX = new ArrayList<>(pNum);
+        List<Double> preY = new ArrayList<>(pNum);
+
 //        double[][] kSums = new double[][]{
 //                {0, 0, 0},
 //                {0, 0, 0},
@@ -76,6 +80,10 @@ public class Swarm extends JPanel {
         for (Particle p1 : particles) {
             sumX = 0;
             sumY = 0;
+
+            // TODO: These operations are for metrics. Remove these after a measurement.
+            preX.add(p1.x);
+            preY.add(p1.y);
 
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
@@ -147,6 +155,9 @@ public class Swarm extends JPanel {
 //        paramManager.changeKParamHeider(kSums);
         this.params = paramManager.getParams();
 //        balanceKParamHeider(kSums);
+
+        // TODO: This is for metrics. Remove these after a measurement.
+        nbal(preX, preY, newX, newY);
 
         count++;
         if (count % 100 == 0) {
@@ -240,6 +251,47 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
+    private boolean isLike(double preDis, double newDis) {
+        if (newDis <= preDis) {
+            return true;
+        }
+        return false;
+    }
+
+    private void nbal(List<Double> preX, List<Double> preY, List<Double> newX, List<Double> newY) {
+        /*
+         * > The function nbal counted the number of all triads that were balanced,
+         * > imbalanced or incomplete (contained at least one null relation).
+         * > The nbal function was used only to determine how many iterations were
+         * > needed inside the balance function before changes in relations ceased.
+         * > It was not a part of the regular simulation.
+         * 2.4 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
+         */
+        for (int i = 0; i < pNum; i++) {
+            for (int j = 0; j < pNum; j++) {
+                if (i == j) continue;
+                for (int k = 0; k < pNum; k++) {
+                    if (j == k) continue;
+                    // TODO: Count the number of all triads that were balanced or imbalanced.
+                }
+            }
+        }
+    }
+
+    private void subgroups() {
+        /*
+         * > The function subgroups employed a cheap programming trick to determine
+         * > which persons in a 9-person or a 16-person group or a 25-person group
+         * > liked and disliked the same people. Two people were considered to be part
+         * > of the same subgroup if (1) they liked each other, and (2) they liked and
+         * > disliked the same remaining people. The output of the balance function
+         * > became the input of the subgroups function. The output of the subgroups
+         * > function was a list of who was in each of the subgroups found. From this list,
+         * > the number of groups and their size could be calculated.
+         * 2.5 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
+         */
+    }
+
     private void reset() {
         count = 0;
         printSwarmParam(this.params);
