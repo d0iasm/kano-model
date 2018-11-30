@@ -257,11 +257,12 @@ public class Swarm extends JPanel {
          * > needed inside the balance function before changes in relations ceased.
          * > It was not a part of the regular simulation.
          * 2.4 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
+         *
+         * @return counts The first element means the number of balanced triads and
+         *  the second one means the number of imbalanced triads.
          */
 
-        // The first element means the number of balanced triads.
-        // The second one means the number of imbalanced triads.
-        int count[] = {0, 0};
+        int counts[] = {0, 0};
         for (int i = 0; i < pNum; i++) {
             for (int j = i + 1; j < pNum; j++) {
                 for (int k = j + 1; k < pNum; k++) {
@@ -276,9 +277,9 @@ public class Swarm extends JPanel {
                                     distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
                                     distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
                             )) {
-                                count[0] += 1;
+                                counts[0] += 1;
                             } else {
-                                count[1] += 1;
+                                counts[1] += 1;
                             }
                             break;
                         case PERIODIC:
@@ -290,9 +291,9 @@ public class Swarm extends JPanel {
                                     distanceClosest(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
                                     distanceClosest(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
                             )) {
-                                count[0] += 1;
+                                counts[0] += 1;
                             } else {
-                                count[1] += 1;
+                                counts[1] += 1;
                             }
                             break;
                         default:
@@ -304,30 +305,15 @@ public class Swarm extends JPanel {
                                     distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
                                     distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
                             )) {
-                                count[0] += 1;
+                                counts[0] += 1;
                             } else {
-                                count[1] += 1;
+                                counts[1] += 1;
                             }
                     }
                 }
             }
         }
-        return count;
-    }
-
-    // TODO: Move to Metrics class.
-    private void subgroups() {
-        /*
-         * > The function subgroups employed a cheap programming trick to determine
-         * > which persons in a 9-person or a 16-person group or a 25-person group
-         * > liked and disliked the same people. Two people were considered to be part
-         * > of the same subgroup if (1) they liked each other, and (2) they liked and
-         * > disliked the same remaining people. The output of the balance function
-         * > became the input of the subgroups function. The output of the subgroups
-         * > function was a list of who was in each of the subgroups found. From this list,
-         * > the number of groups and their size could be calculated.
-         * 2.5 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
-         */
+        return counts;
     }
 
     private void reset() {
