@@ -26,12 +26,12 @@ public class Swarm extends JPanel {
 
     private Boundary boundary;
 
+    private Metrics metrics = Metrics.getInstance();
+
     private enum Boundary {
         OPEN,
         PERIODIC
     }
-
-    List<int[]> nbals = new ArrayList<>(1000);
 
     public Swarm(int num, int w, int h) {
         this(num, w, h, 2);
@@ -50,7 +50,6 @@ public class Swarm extends JPanel {
         showBoundaryButton();
 
         this.boundary = Boundary.OPEN;
-//        this.boundary = Boundary.PERIODIC;
 
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
@@ -164,7 +163,7 @@ public class Swarm extends JPanel {
         if (count % 100 == 0) {
             repaint();
             // TODO: This is for metrics. Remove these after a measurement.
-//            nbals.add(nbal(preX, preY, newX, newY));
+            metrics.addNbals(nbal(preX, preY, newX, newY));
 
 //            if (count % 10000 == 0) {
 //                printNbals();
@@ -235,17 +234,8 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
-    private void printNbals() {
-        System.out.println("===================== Balance ========================");
-        for(int[] nbal : nbals) {
-            System.out.println(nbal[0]);
-        }
-        System.out.println("===================== Imbalance ========================");
-        for(int[] nbal : nbals) {
-            System.out.println(nbal[1]);
-        }
-    }
 
+    // TODO: Move to Metrics class.
     private int isLike(double preDis, double newDis) {
         if (newDis <= preDis) {
             return 1;
@@ -253,10 +243,12 @@ public class Swarm extends JPanel {
         return -1;
     }
 
+    // TODO: Move to Metrics class.
     private boolean isBalance(double preDisIJ, double newDisIJ, double preDisIK, double newDisIK, double preDisJK, double newDisJK) {
         return isLike(preDisIJ, newDisIJ) * isLike(preDisIK, newDisIK) * isLike(preDisJK, newDisJK) > 0;
     }
 
+    // TODO: Move to Metrics class.
     private int[] nbal(List<Double> preX, List<Double> preY, List<Double> newX, List<Double> newY) {
         /*
          * > The function nbal counted the number of all triads that were balanced,
@@ -323,6 +315,7 @@ public class Swarm extends JPanel {
         return count;
     }
 
+    // TODO: Move to Metrics class.
     private void subgroups() {
         /*
          * > The function subgroups employed a cheap programming trick to determine
