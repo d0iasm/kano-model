@@ -70,8 +70,8 @@ public class Swarm extends JPanel {
         List<Double> newY = new ArrayList<>(pNum);
 
         // TODO: These two variables are for metrics. Remove these after a measurement.
-        List<Double> preX = new ArrayList<>(pNum);
-        List<Double> preY = new ArrayList<>(pNum);
+//        List<Double> preX = new ArrayList<>(pNum);
+//        List<Double> preY = new ArrayList<>(pNum);
 
 //        double[][] kSums = new double[][]{
 //                {0, 0, 0},
@@ -84,8 +84,8 @@ public class Swarm extends JPanel {
             sumY = 0;
 
             // TODO: These operations are for metrics. Remove these after a measurement.
-            preX.add(p1.x);
-            preY.add(p1.y);
+//            preX.add(p1.x);
+//            preY.add(p1.y);
 
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
@@ -163,17 +163,8 @@ public class Swarm extends JPanel {
         if (count % 100 == 0) {
             repaint();
             // TODO: This is for metrics. Remove these after a measurement.
-            metrics.addNbals(nbal(preX, preY, newX, newY));
-
-//            if (count % 10000 == 0) {
-//                printNbals();
-//                printSwarmParam();
-//                System.exit(0);
-//            }
-//            if (count % 1000 == 0) {
-//                System.out.println(paramManager.getParamChangedCount());
-//                paramManager.setParamChangedCount(0);
-//            }
+//            metrics.addNbals(nbal(preX, preY, newX, newY));
+            
             if (count % 5000 == 0) {
                 Extension.printSwarmParam(params, count);
 //                if (count == 50000) {
