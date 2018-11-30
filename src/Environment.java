@@ -28,13 +28,12 @@ public class Environment implements ActionListener {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                printSwarmParam();
                 super.windowClosing(e);
                 System.exit(0);
             }
         });
 
-        this.swarm = initSwarm(6, w, h, 2);
+        this.swarm = initSwarm(50, w, h, 2);
         frame.add(this.swarm, BorderLayout.CENTER);
         // TODO: Keep the screen position to chase the middle of particles.
 
@@ -47,10 +46,6 @@ public class Environment implements ActionListener {
         swarm.setBackground(Color.WHITE);
         swarm.setSize(new Dimension(w, h));
         return swarm;
-    }
-
-    private void printSwarmParam() {
-        this.swarm.printSwarmParam();
     }
 
     @Override

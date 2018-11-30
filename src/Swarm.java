@@ -49,8 +49,8 @@ public class Swarm extends JPanel {
         showParams();
         showBoundaryButton();
 
-//        this.boundary = Boundary.OPEN;
-        this.boundary = Boundary.PERIODIC;
+        this.boundary = Boundary.OPEN;
+//        this.boundary = Boundary.PERIODIC;
 
         this.particles = new ArrayList<>(num);
         for (int i = 1; i <= num; i++) {
@@ -164,49 +164,25 @@ public class Swarm extends JPanel {
         if (count % 100 == 0) {
             repaint();
             // TODO: This is for metrics. Remove these after a measurement.
-            nbals.add(nbal(preX, preY, newX, newY));
+//            nbals.add(nbal(preX, preY, newX, newY));
 
-            if (count % 10000 == 0) {
-                printNbals();
-                printSwarmParam();
-                System.exit(0);
-            }
+//            if (count % 10000 == 0) {
+//                printNbals();
+//                printSwarmParam();
+//                System.exit(0);
+//            }
 //            if (count % 1000 == 0) {
 //                System.out.println(paramManager.getParamChangedCount());
 //                paramManager.setParamChangedCount(0);
 //            }
-//            if (count % 5000 == 0) {
-//                printSwarmParam();
+            if (count % 5000 == 0) {
+                Extension.printSwarmParam(params, count);
 //                if (count == 50000) {
 //                    printSwarmParam();
 //                    System.exit(0);
 //                }
-//            }
-        }
-    }
-
-    public void printSwarmParam() {
-        System.out.println("Print current kParams---------------------------");
-        System.out.println("count: " + count);
-        for (int i = 0; i < pType; i++) {
-            for (int j = 0; j < pType; j++) {
-                System.out.print(params[i][j] + ", ");
             }
-            System.out.println(" ");
         }
-        System.out.println("Print current kParams---------------------------");
-    }
-
-    public void printSwarmParam(double[][] params) {
-        System.out.println("Print current kParams---------------------------");
-        System.out.println("count: " + count);
-        for (int i = 0; i < pType; i++) {
-            for (int j = 0; j < pType; j++) {
-                System.out.print(params[i][j] + ", ");
-            }
-            System.out.println(" ");
-        }
-        System.out.println("Print current kParams---------------------------");
     }
 
     @Override
@@ -362,9 +338,9 @@ public class Swarm extends JPanel {
     }
 
     private void reset() {
+        Extension.printSwarmParam(this.params, this.count);
+        System.out.println("============= Reset current count ==============");
         count = 0;
-        printSwarmParam(this.params);
-        System.out.println("============ Reset current count =========");
     }
 
     private void showParams() {
