@@ -13,6 +13,11 @@ final class SocialMitosisMetrics implements Metrics {
         return instance;
     }
 
+    @Override
+    public void debug() {
+        System.out.println("Social Mitosis Metrics");
+    }
+
     public void addNbals(int[] counts) {
         /*
          * > The function nbal counted the number of all triads that were balanced,
