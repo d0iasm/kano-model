@@ -26,7 +26,7 @@ public class Swarm extends JPanel {
 
     private Boundary boundary;
 
-    private Metrics metrics = Metrics.getInstance();
+    private Metrics metrics = SocialMitosisMetrics.getInstance();
 
     private enum Boundary {
         OPEN,
