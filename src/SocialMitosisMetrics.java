@@ -7,7 +7,8 @@ final class SocialMitosisMetrics implements Metrics {
     private List<int[]> nbals = new ArrayList<>(1000);
 
     // This constructor disallow to create multiple instances because of a private constructor.
-    private SocialMitosisMetrics() {}
+    private SocialMitosisMetrics() {
+    }
 
     public static Metrics getInstance() {
         return instance;
