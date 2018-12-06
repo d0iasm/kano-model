@@ -26,7 +26,7 @@ public class Swarm extends JPanel {
 
     private Boundary boundary;
 
-    private Metrics metrics = SocialMitosisMetrics.getInstance();
+    private Metrics metrics = KanoKBalanceMetrics.getInstance();
 
     private enum Boundary {
         OPEN,
@@ -167,6 +167,8 @@ public class Swarm extends JPanel {
 
             if (count % 5000 == 0) {
                 Extension.printSwarmParam(params, count);
+                ((KanoKBalanceMetrics) metrics).calcHeiderBalance(params);
+                System.exit(0);
 //                if (count == 50000) {
 //                    printSwarmParam();
 //                    System.exit(0);
