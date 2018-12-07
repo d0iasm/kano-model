@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Parameter {
     private int dim;
+    // TODO: Replace to BigDecimal because "double" type is unstable.
     private double[][] params;
     private int paramChangedCount = 0;
     JTextArea textArea;
