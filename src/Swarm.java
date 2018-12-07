@@ -167,7 +167,7 @@ public class Swarm extends JPanel {
 
             if (count % 500 == 0) {
                 Extension.printSwarmParam(params, count);
-                ((KanoKBalanceMetrics) metrics).calcHeiderBalance(params);
+                ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(params, pNum, pType);
                 System.exit(0);
 //                if (count == 50000) {
 //                    printSwarmParam();

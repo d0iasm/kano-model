@@ -21,7 +21,44 @@ public class KanoKBalanceMetrics implements Metrics {
         System.out.println("Kano Kij Balance Metrics");
     }
 
-    public double calcHeiderBalance(double[][] k) {
+    public double calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
+        /*
+         * This function calculates the index of Heider balance state based on all triangles in particles.
+         *
+         * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+         * @return The index of Heider balance state.
+         */
+        Combination combination = new Combination(n, ELEMENT_NUM);
+
+        System.out.println("combination results");
+        List<int[]> l = combination.list();
+        combination.print();
+
+        System.out.println(n);
+        System.out.println(combination.size());
+        System.out.println(50 / 2);
+        System.out.println(25 / 2);
+
+
+        double balance = 0;
+        double tmpBalance = 1;
+
+        for (int[] c : l) {
+            for (int key = 0; key < ELEMENT_NUM; key++) {
+                // TODO: Consider how to calculate the balance of one triangle.
+            }
+        }
+
+        return 0;
+    }
+
+    public double calcHeiderBalanceBasedOnK(double[][] k) {
+        /*
+         * This function calculates the index of Heider balance state based on a combination of K params.
+         *
+         * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+         * @return The index of Heider balance state.
+         */
         Combination combination = new Combination(k.length * k[0].length, ELEMENT_NUM);
 
         System.out.println("combination results");
@@ -36,7 +73,7 @@ public class KanoKBalanceMetrics implements Metrics {
         for (int[] c : l) {
             for (int key = 0; key < ELEMENT_NUM; key++) {
                 if (!memo.containsKey(c[key])) {
-                    memo.put(c[key], index(c[key], k.length));
+                    memo.put(c[key], indexes(c[key], k.length));
                 }
                 int i = memo.get(c[key])[0];
                 int j = memo.get(c[key])[1];
@@ -52,17 +89,27 @@ public class KanoKBalanceMetrics implements Metrics {
         return balance;
     }
 
-    private Integer[] index(int n, int len) {
-        Integer index[] = new Integer[2];
+    private int index(int i, int n, int t) {
+        /*
+         * Note that this method only handle 2 type particles.
+         */
+        if (i <= n / t)
+            return 0;
+        else
+            return 1;
+    }
+
+    private Integer[] indexes(int n, int len) {
+        Integer indexes[] = new Integer[2];
         int i = 0;
         while (true) {
             if (n < i * len) {
-                index[0] = i - 1;
-                index[1] = n - (index[0] * len);
+                indexes[0] = i - 1;
+                indexes[1] = n - (indexes[0] * len);
                 break;
             }
             i++;
         }
-        return index;
+        return indexes;
     }
 }
