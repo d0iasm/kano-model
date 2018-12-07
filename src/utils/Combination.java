@@ -56,13 +56,15 @@ public class Combination {
 
     private List<int[]> combination() {
         for (int u = 0; u < 1 << n; u++) {
-            System.out.println(u);
             if (bitcount(u) == k) comb.add(findOne(u));
         }
         return comb;
     }
 
     public static void main(String[] args) {
+        /*
+         * This is the example usage of this class.
+         */
         Combination c = new Combination(4, 3);
         List<int[]> l = c.list();
         System.out.println("The number of combinations is " + c.size());
