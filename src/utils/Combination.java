@@ -27,7 +27,7 @@ public class Combination {
 
     public void print() {
         for (int[] i : comb) {
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < k; j++) {
                 System.out.print(i[j] + ", ");
             }
             System.out.println(" ");

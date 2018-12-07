@@ -1,5 +1,6 @@
 import utils.Combination;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 public class KanoKBalanceMetrics implements Metrics {
     private static Metrics instance = new KanoKBalanceMetrics();
     private final int ELEMENT_NUM = 3;
+    private List<int[]> memo3C2 = new Combination(3, 2).list();
 
     public static Metrics getInstance() {
         return instance;
@@ -29,25 +31,24 @@ public class KanoKBalanceMetrics implements Metrics {
          * @return The index of Heider balance state.
          */
         Combination combination = new Combination(n, ELEMENT_NUM);
-
-        System.out.println("combination results");
         List<int[]> l = combination.list();
-        combination.print();
 
-        System.out.println(n);
-        System.out.println(combination.size());
-        System.out.println(50 / 2);
-        System.out.println(25 / 2);
-
+        new Combination(3, 2).print();
 
         double balance = 0;
         double tmpBalance = 1;
 
-        for (int[] c : l) {
-            for (int key = 0; key < ELEMENT_NUM; key++) {
-                // TODO: Consider how to calculate the balance of one triangle.
-            }
-        }
+        System.out.println(l.get(0)[0]);
+        System.out.println(l.get(0)[1]);
+        System.out.println(l.get(0)[2]);
+        System.out.println("-----------------");
+
+        balanceWithAverage(k, l.get(0), n, type);
+//        for (int[] c : l) {
+//            for (int key = 0; key < ELEMENT_NUM; key++) {
+        // TODO: Consider how to calculate the balance of one triangle.
+//            }
+//        }
 
         return 0;
     }
@@ -86,6 +87,28 @@ public class KanoKBalanceMetrics implements Metrics {
         }
         System.out.println("--------- balance -----------");
         System.out.println(balance);
+        return balance;
+    }
+
+    private BigDecimal balanceWithAverage(double[][] k, int c[], int n, int t) {
+//        double balance = 1;w
+        BigDecimal balance = new BigDecimal("1.0");
+        int iIdx;
+        int jIdx;
+        BigDecimal tmp1, tmp2;
+        for (int comb[] : memo3C2) {
+            iIdx = index(c[comb[0]], n, t);
+            jIdx = index(c[comb[1]], n, t);
+            System.out.println("B: " + balance.doubleValue() + " {i, j} : " + iIdx + ", " + jIdx);
+            // TODO: Fix |tmp1| is 1.42 when 0.7 + 0.7.
+            tmp1 = BigDecimal.valueOf(k[iIdx][jIdx]).add(BigDecimal.valueOf(k[jIdx][iIdx]));
+            System.out.println("kij : " + BigDecimal.valueOf(k[iIdx][jIdx]).doubleValue());
+            System.out.println("kji : " + BigDecimal.valueOf(k[jIdx][iIdx]).doubleValue());
+            tmp2 = tmp1.divide(BigDecimal.valueOf(2.0));
+            System.out.println("1 : " + tmp1 + "2 : " + tmp2);
+            balance.multiply(tmp2);
+            System.out.println("B: " + balance);
+        }
         return balance;
     }
 
