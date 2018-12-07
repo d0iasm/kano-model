@@ -1,6 +1,8 @@
 import utils.Combination;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 
 public class KanoKBalanceMetrics implements Metrics {
@@ -27,12 +29,31 @@ public class KanoKBalanceMetrics implements Metrics {
         combination.print();
         System.out.println(combination.size());
 
+        double balance = 0;
+        double tmpBalance = 1;
 
-        return 0;
+        Map<Integer, Integer[]> memo = new HashMap<>();
+        for (int[] c : l) {
+            for (int key = 0; key < ELEMENT_NUM; key++) {
+                if (!memo.containsKey(c[key])) {
+                    memo.put(c[key], index(c[key], k.length));
+                }
+                int i = memo.get(c[key])[0];
+                int j = memo.get(c[key])[1];
+                tmpBalance *= k[i][j];
+                System.out.print(k[i][j] + ", ");
+            }
+            balance += tmpBalance;
+            tmpBalance = 1;
+            System.out.println(" ");
+        }
+        System.out.println("--------- balance -----------");
+        System.out.println(balance);
+        return balance;
     }
 
-    private int[] index(int n, int len) {
-        int index[] = new int[2];
+    private Integer[] index(int n, int len) {
+        Integer index[] = new Integer[2];
         int i = 0;
         while (true) {
             if (n < i * len) {
