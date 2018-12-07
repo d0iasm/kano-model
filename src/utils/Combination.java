@@ -34,6 +34,7 @@ public class Combination {
             }
             System.out.println(" ");
         }
+        System.out.println("size is " + size());
     }
 
     private int[] findOne(int u) {
@@ -48,8 +49,8 @@ public class Combination {
         return r;
     }
 
-    private int bitcount(int u) {
-        int n;
+    private double bitcount(int u) {
+        double n;
         for (n = 0; u > 0; ++n, u &= (u - 1)) ;
         return n;
     }
@@ -65,14 +66,7 @@ public class Combination {
         /*
          * This is the example usage of this class.
          */
-        Combination c = new Combination(4, 3);
-        List<int[]> l = c.list();
-        System.out.println("The number of combinations is " + c.size());
-        for (int[] i : l) {
-            for (int j=0; j<3; j++) {
-                System.out.print(i[j] + ", ");
-            }
-            System.out.println(" ");
-        }
+        Combination c = new Combination(30, 3);
+        c.print();
     }
 }
