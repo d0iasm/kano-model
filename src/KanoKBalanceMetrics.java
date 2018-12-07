@@ -24,7 +24,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     public double calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
-        /*
+        /**
          * This function calculates the index of Heider balance state based on all triangles in particles.
          *
          * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
@@ -54,7 +54,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     public double calcHeiderBalanceBasedOnK(double[][] k) {
-        /*
+        /**
          * This function calculates the index of Heider balance state based on a combination of K params.
          *
          * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
@@ -91,30 +91,47 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     private BigDecimal balanceWithAverage(double[][] k, int c[], int n, int t) {
-//        double balance = 1;w
-        BigDecimal balance = new BigDecimal("1.0");
+        /**
+         * Calculate the Heider balance state with an average of Kij and Kji.
+         * i.e. c[] = {1, 4, 39};
+         *      There is the 3 connections in c[] defined memo3C2.
+         *      {1, 4}, {1, 39}, {4, 39}
+         *      Calculate the average of each combination.
+         *      (K(1->4) + K(4->1)) / 2
+         *      (K(1->39) + K(39->1)) / 2
+         *      (K(4->39) + K(39->3)) / 2
+         *      Then, multiply all averages.
+         *
+         * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+         * @param c The 3 particle's indexes.
+         * @param n The total number of particles.
+         * @param t The number of type.
+         * @return result of Heider balance state.
+         */
+        BigDecimal balance = new BigDecimal(1);
         int iIdx;
         int jIdx;
-        BigDecimal tmp1, tmp2;
+        BigDecimal tmp1;
+        BigDecimal tmp2;
+        BigDecimal DIVISOR = new BigDecimal(2);
         for (int comb[] : memo3C2) {
             iIdx = index(c[comb[0]], n, t);
             jIdx = index(c[comb[1]], n, t);
-            System.out.println("B: " + balance.doubleValue() + " {i, j} : " + iIdx + ", " + jIdx);
-            // TODO: Fix |tmp1| is 1.42 when 0.7 + 0.7.
             tmp1 = BigDecimal.valueOf(k[iIdx][jIdx]).add(BigDecimal.valueOf(k[jIdx][iIdx]));
-            System.out.println("kij : " + BigDecimal.valueOf(k[iIdx][jIdx]).doubleValue());
-            System.out.println("kji : " + BigDecimal.valueOf(k[jIdx][iIdx]).doubleValue());
-            tmp2 = tmp1.divide(BigDecimal.valueOf(2.0));
-            System.out.println("1 : " + tmp1 + "2 : " + tmp2);
-            balance.multiply(tmp2);
-            System.out.println("B: " + balance);
+            tmp2 = tmp1.divide(DIVISOR);
+            balance = balance.multiply(tmp2);
         }
         return balance;
     }
 
     private int index(int i, int n, int t) {
-        /*
+        /**
          * Note that this method only handle 2 type particles.
+         *
+         * @param i The index of a particle.
+         * @param n The total number of particles.
+         * @param t The number of type.
+         * @return The index for Kij array.
          */
         if (i <= n / t)
             return 0;
