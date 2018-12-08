@@ -1,6 +1,8 @@
 import utils.Combination;
+import utils.Permutation;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -9,8 +11,8 @@ import java.util.HashMap;
 public class KanoKBalanceMetrics implements Metrics {
     private static Metrics instance = new KanoKBalanceMetrics();
     private final int TRIANGLE = 3;
-    private final int PERMUTATION_PATTERN = 6;
     private final List<int[]> MEMO_3C2 = new Combination(3, 2).list();
+    private final List<int[]> MEMO_3P3 = new Permutation(3, 3).list();
 
     public static Metrics getInstance() {
         return instance;
@@ -37,6 +39,7 @@ public class KanoKBalanceMetrics implements Metrics {
 
         BigDecimal balance = new BigDecimal(0);
         for (int[] c : l) {
+//            balance = balance.add(balanceWithPOX(k, c, n, type));
             balance = balance.add(balanceWithAverage(k, c, n, type));
         }
 
@@ -115,7 +118,8 @@ public class KanoKBalanceMetrics implements Metrics {
      * Calculate the Heider balance state with 6 pattens average of POX.
      * In HB theory, only P->O, P->X, O->X directions are valid.
      * i.e. c[] = {1, 4, 39};
-     * All possible patterns are 3! = 6. The numeber of patterns is always 6.
+     * All possible patterns are 3! = 3P3 = 6.
+     * The number of patterns is always 6 and defined by MEMO_3P3.
      * P  |  O  |  X
      * ===============
      * 1  |  4  |  39
@@ -139,7 +143,26 @@ public class KanoKBalanceMetrics implements Metrics {
      * @return result of Heider balance state.
      */
     private BigDecimal balanceWithPOX(double[][] k, int c[], int n, int t) {
-        BigDecimal balance = new BigDecimal(1);
+        BigDecimal balance = new BigDecimal(0);
+        int pIdx;
+        int oIdx;
+        int xIdx;
+        BigDecimal tmp;
+        BigDecimal DIVISOR = new BigDecimal(6);
+
+        for (int[] perm : MEMO_3P3) {
+            pIdx = index(c[perm[0]], n, t);
+            oIdx = index(c[perm[1]], n, t);
+            xIdx = index(c[perm[2]], n, t);
+            tmp = BigDecimal.valueOf(k[pIdx][oIdx])
+                    .multiply(BigDecimal.valueOf(k[pIdx][xIdx]))
+                    .multiply(BigDecimal.valueOf(k[oIdx][xIdx]));
+            balance = balance.add(tmp);
+        }
+        // > DECIMAL32 (https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)
+        // > "A MathContext object with a precision setting matching the IEEE 754R Decimal32 format,
+        // 7 digits, and a rounding mode of HALF_EVEN, the IEEE 754R default."
+        balance = balance.divide(DIVISOR, MathContext.DECIMAL32);
         return balance;
     }
 
