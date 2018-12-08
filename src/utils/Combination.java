@@ -35,11 +35,10 @@ public class Combination {
         System.out.println("size is " + size());
     }
 
+    /**
+     * Reference: http://hmkcode.com/calculate-find-all-possible-combinations-of-an-array-using-java/
+     */
     private List<int[]> combination() {
-        /*
-         * Reference: http://hmkcode.com/calculate-find-all-possible-combinations-of-an-array-using-java/
-         */
-
         List<int[]> comb = new ArrayList<>();
         int one[] = new int[k];
         int r = 0;
@@ -68,10 +67,10 @@ public class Combination {
         return comb;
     }
 
+    /**
+     * This is the example usage of this class.
+     */
     public static void main(String[] args) {
-        /*
-         * This is the example usage of this class.
-         */
         Combination c = new Combination(50, 3);
         c.print();
     }
