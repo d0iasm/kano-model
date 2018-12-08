@@ -236,88 +236,6 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
-
-    // TODO: Move to Metrics class.
-    private int isLike(double preDis, double newDis) {
-        if (newDis <= preDis) {
-            return 1;
-        }
-        return -1;
-    }
-
-    // TODO: Move to Metrics class.
-    private boolean isBalance(double preDisIJ, double newDisIJ, double preDisIK, double newDisIK, double preDisJK, double newDisJK) {
-        return isLike(preDisIJ, newDisIJ) * isLike(preDisIK, newDisIK) * isLike(preDisJK, newDisJK) > 0;
-    }
-
-    // TODO: Move to Metrics class.
-    private int[] nbal(List<Double> preX, List<Double> preY, List<Double> newX, List<Double> newY) {
-        /*
-         * > The function nbal counted the number of all triads that were balanced,
-         * > imbalanced or incomplete (contained at least one null relation).
-         * > The nbal function was used only to determine how many iterations were
-         * > needed inside the balance function before changes in relations ceased.
-         * > It was not a part of the regular simulation.
-         * 2.4 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
-         *
-         * @return counts The first element means the number of balanced triads and
-         *  the second one means the number of imbalanced triads.
-         */
-
-        int counts[] = {0, 0};
-        for (int i = 0; i < pNum; i++) {
-            for (int j = i + 1; j < pNum; j++) {
-                for (int k = j + 1; k < pNum; k++) {
-                    // TODO: This function only be correct when an open boundary state.
-                    switch (boundary) {
-                        case OPEN:
-                            if (isBalance(
-                                    distance(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
-                                    distance(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
-                                    distance(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
-                                    distance(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
-                                    distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
-                                    distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
-                            )) {
-                                counts[0] += 1;
-                            } else {
-                                counts[1] += 1;
-                            }
-                            break;
-                        case PERIODIC:
-                            if (isBalance(
-                                    distanceClosest(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
-                                    distanceClosest(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
-                                    distanceClosest(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
-                                    distanceClosest(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
-                                    distanceClosest(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
-                                    distanceClosest(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
-                            )) {
-                                counts[0] += 1;
-                            } else {
-                                counts[1] += 1;
-                            }
-                            break;
-                        default:
-                            if (isBalance(
-                                    distance(preX.get(i), preY.get(i), preX.get(j), preY.get(i)),
-                                    distance(newX.get(i), newY.get(i), newX.get(j), newY.get(j)),
-                                    distance(preX.get(i), preY.get(i), preX.get(k), preY.get(k)),
-                                    distance(newX.get(i), newY.get(i), newX.get(k), newY.get(k)),
-                                    distance(preX.get(j), preY.get(j), preX.get(k), preY.get(k)),
-                                    distance(newX.get(j), newY.get(j), newX.get(k), newY.get(k))
-                            )) {
-                                counts[0] += 1;
-                            } else {
-                                counts[1] += 1;
-                            }
-                    }
-                }
-            }
-        }
-        return counts;
-    }
-
     private void reset() {
         Extension.printSwarmParam(this.params, this.count);
         System.out.println("============= Reset current count ==============");
@@ -407,7 +325,7 @@ public class Swarm extends JPanel {
     }
 
     private double diffXClosest(Particle pi, Particle pj) {
-        /*
+        /**
          * Pi doesn't change its position and Pj changes its position.
          * Return the closest X difference between Pi and moved 9 types Pj.
          */
@@ -427,7 +345,7 @@ public class Swarm extends JPanel {
     }
 
     private double diffYClosest(Particle pi, Particle pj) {
-        /*
+        /**
          * Pi doesn't change its position and Pj changes its position.
          * Return the closest Y difference between Pi and moved 9 types Pj.
          */
@@ -467,7 +385,7 @@ public class Swarm extends JPanel {
     }
 
     private double distanceClosest(Particle pi, Particle pj) {
-        /*
+        /**
          * Pi doesn't change its position and Pj changes its position.
          * Return the closest distance between Pi and moved 9 types Pj.
          */
