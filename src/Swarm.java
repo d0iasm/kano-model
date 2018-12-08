@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,7 +173,10 @@ public class Swarm extends JPanel {
 
             if (count % 500 == 0) {
                 Extension.printSwarmParam(params, count);
-                ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(params, pNum, pType);
+                BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(params, pNum, pType);
+                Extension.printArgs(
+                        new Extension.Pair<>("HB result", result.toString())
+                );
                 System.exit(0);
 //                if (count == 50000) {
 //                    printSwarmParam();

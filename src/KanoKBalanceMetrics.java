@@ -23,34 +23,23 @@ public class KanoKBalanceMetrics implements Metrics {
         System.out.println("Kano Kij Balance Metrics");
     }
 
-    public double calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
+    public BigDecimal calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
         /**
          * This function calculates the index of Heider balance state based on all triangles in particles.
          *
          * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
-         * @return The index of Heider balance state.
+         * @return The average of Heider balance state per a triangle.
          */
         Combination combination = new Combination(n, ELEMENT_NUM);
         List<int[]> l = combination.list();
+        int tNum = combination.size();
 
-        new Combination(3, 2).print();
+        BigDecimal balance = new BigDecimal(0);
+        for (int[] c : l) {
+            balance = balance.add(balanceWithAverage(k, c, n, type));
+        }
 
-        double balance = 0;
-        double tmpBalance = 1;
-
-        System.out.println(l.get(0)[0]);
-        System.out.println(l.get(0)[1]);
-        System.out.println(l.get(0)[2]);
-        System.out.println("-----------------");
-
-        balanceWithAverage(k, l.get(0), n, type);
-//        for (int[] c : l) {
-//            for (int key = 0; key < ELEMENT_NUM; key++) {
-        // TODO: Consider how to calculate the balance of one triangle.
-//            }
-//        }
-
-        return 0;
+        return balance.divide(new BigDecimal(tNum));
     }
 
     public double calcHeiderBalanceBasedOnK(double[][] k) {
@@ -79,14 +68,10 @@ public class KanoKBalanceMetrics implements Metrics {
                 int i = memo.get(c[key])[0];
                 int j = memo.get(c[key])[1];
                 tmpBalance *= k[i][j];
-                System.out.print(k[i][j] + ", ");
             }
             balance += tmpBalance;
             tmpBalance = 1;
-            System.out.println(" ");
         }
-        System.out.println("--------- balance -----------");
-        System.out.println(balance);
         return balance;
     }
 
@@ -114,6 +99,7 @@ public class KanoKBalanceMetrics implements Metrics {
         BigDecimal tmp1;
         BigDecimal tmp2;
         BigDecimal DIVISOR = new BigDecimal(2);
+
         for (int comb[] : memo3C2) {
             iIdx = index(c[comb[0]], n, t);
             jIdx = index(c[comb[1]], n, t);
