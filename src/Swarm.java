@@ -43,6 +43,11 @@ public class Swarm extends JPanel {
         this.h = h;
         this.pType = type;
         this.pPartition = pNum / pType;
+        Extension.printArgs(pNum,pType,pPartition);
+        Extension.printArgs(
+                new Extension.Pair<>("pNum", pNum),
+                new Extension.Pair<>("pType", pType),
+                new Extension.Pair<>("pParition", pPartition));
 
         this.paramManager = new Parameter(pType);
         this.params = paramManager.getParams();
@@ -375,6 +380,7 @@ public class Swarm extends JPanel {
 
     private double getKParam(int i, int j) {
         // TODO: Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException happens when the number of particles cannot divide |pType|
+        System.out.println("{i,j} : " + i + ", " + j + " idx{i,j}: " + (i - 1) / pPartition + ", " + (j - 1) / pPartition);
         return params[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
