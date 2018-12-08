@@ -8,8 +8,9 @@ import java.util.HashMap;
 
 public class KanoKBalanceMetrics implements Metrics {
     private static Metrics instance = new KanoKBalanceMetrics();
-    private final int ELEMENT_NUM = 3;
-    private List<int[]> memo3C2 = new Combination(3, 2).list();
+    private final int TRIANGLE = 3;
+    private final int PERMUTATION_PATTERN = 6;
+    private final List<int[]> MEMO_3C2 = new Combination(3, 2).list();
 
     public static Metrics getInstance() {
         return instance;
@@ -23,14 +24,14 @@ public class KanoKBalanceMetrics implements Metrics {
         System.out.println("Kano Kij Balance Metrics");
     }
 
+    /**
+     * This function calculates the index of Heider balance state based on all triangles in particles.
+     *
+     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @return The average of Heider balance state per a triangle.
+     */
     public BigDecimal calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
-        /**
-         * This function calculates the index of Heider balance state based on all triangles in particles.
-         *
-         * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
-         * @return The average of Heider balance state per a triangle.
-         */
-        Combination combination = new Combination(n, ELEMENT_NUM);
+        Combination combination = new Combination(n, TRIANGLE);
         List<int[]> l = combination.list();
         int tNum = combination.size();
 
@@ -42,14 +43,14 @@ public class KanoKBalanceMetrics implements Metrics {
         return balance.divide(new BigDecimal(tNum));
     }
 
+    /**
+     * This function calculates the index of Heider balance state based on a combination of K params.
+     *
+     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @return The index of Heider balance state.
+     */
     public double calcHeiderBalanceBasedOnK(double[][] k) {
-        /**
-         * This function calculates the index of Heider balance state based on a combination of K params.
-         *
-         * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
-         * @return The index of Heider balance state.
-         */
-        Combination combination = new Combination(k.length * k[0].length, ELEMENT_NUM);
+        Combination combination = new Combination(k.length * k[0].length, TRIANGLE);
 
         System.out.println("combination results");
         List<int[]> l = combination.list();
@@ -61,7 +62,7 @@ public class KanoKBalanceMetrics implements Metrics {
 
         Map<Integer, Integer[]> memo = new HashMap<>();
         for (int[] c : l) {
-            for (int key = 0; key < ELEMENT_NUM; key++) {
+            for (int key = 0; key < TRIANGLE; key++) {
                 if (!memo.containsKey(c[key])) {
                     memo.put(c[key], indexes(c[key], k.length));
                 }
@@ -75,24 +76,24 @@ public class KanoKBalanceMetrics implements Metrics {
         return balance;
     }
 
+    /**
+     * Calculate the Heider balance state with an average of Kij and Kji.
+     * i.e. c[] = {1, 4, 39};
+     * There is the 3 connections in c[] defined MEMO_3C2.
+     * {1, 4}, {1, 39}, {4, 39}
+     * Calculate the average of each combination.
+     * (K(1->4) + K(4->1)) / 2
+     * (K(1->39) + K(39->1)) / 2
+     * (K(4->39) + K(39->3)) / 2
+     * Then, multiply all averages.
+     *
+     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param c The 3 particle's indexes.
+     * @param n The total number of particles.
+     * @param t The number of type.
+     * @return result of Heider balance state.
+     */
     private BigDecimal balanceWithAverage(double[][] k, int c[], int n, int t) {
-        /**
-         * Calculate the Heider balance state with an average of Kij and Kji.
-         * i.e. c[] = {1, 4, 39};
-         *      There is the 3 connections in c[] defined memo3C2.
-         *      {1, 4}, {1, 39}, {4, 39}
-         *      Calculate the average of each combination.
-         *      (K(1->4) + K(4->1)) / 2
-         *      (K(1->39) + K(39->1)) / 2
-         *      (K(4->39) + K(39->3)) / 2
-         *      Then, multiply all averages.
-         *
-         * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
-         * @param c The 3 particle's indexes.
-         * @param n The total number of particles.
-         * @param t The number of type.
-         * @return result of Heider balance state.
-         */
         BigDecimal balance = new BigDecimal(1);
         int iIdx;
         int jIdx;
@@ -100,7 +101,7 @@ public class KanoKBalanceMetrics implements Metrics {
         BigDecimal tmp2;
         BigDecimal DIVISOR = new BigDecimal(2);
 
-        for (int comb[] : memo3C2) {
+        for (int comb[] : MEMO_3C2) {
             iIdx = index(c[comb[0]], n, t);
             jIdx = index(c[comb[1]], n, t);
             tmp1 = BigDecimal.valueOf(k[iIdx][jIdx]).add(BigDecimal.valueOf(k[jIdx][iIdx]));
@@ -110,15 +111,52 @@ public class KanoKBalanceMetrics implements Metrics {
         return balance;
     }
 
+    /**
+     * Calculate the Heider balance state with 6 pattens average of POX.
+     * In HB theory, only P->O, P->X, O->X directions are valid.
+     * i.e. c[] = {1, 4, 39};
+     * All possible patterns are 3! = 6. The numeber of patterns is always 6.
+     * P  |  O  |  X
+     * ===============
+     * 1  |  4  |  39
+     * 1  |  39 |  4
+     * 4  |  1  |  39
+     * 4  |  39 |  1
+     * 39 |  1  |  4
+     * 39 |  4  |  1
+     * <p>
+     * Calculate the average of the sum of each pattern.
+     * (  K(1->4) * K(1->39) * K(4->39)
+     * + K(1->39) * K(1->4) * K(4->39)
+     * + K(4->1) * K(4->39) * K(1->39)
+     * + ....
+     * ) / 6
+     *
+     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param c The 3 particle's indexes.
+     * @param n The total number of particles.
+     * @param t The number of type.
+     * @return result of Heider balance state.
+     */
+    private BigDecimal balanceWithPOX(double[][] k, int c[], int n, int t) {
+        BigDecimal balance = new BigDecimal(1);
+        return balance;
+    }
+
+    private BigDecimal balanceWithAllDirections(double[][] k, int c[], int n, int t) {
+        BigDecimal balance = new BigDecimal(1);
+        return balance;
+    }
+
+    /**
+     * Note that this method only handle 2 type particles.
+     *
+     * @param i The index of a particle.
+     * @param n The total number of particles.
+     * @param t The number of type.
+     * @return The index for Kij array.
+     */
     private int index(int i, int n, int t) {
-        /**
-         * Note that this method only handle 2 type particles.
-         *
-         * @param i The index of a particle.
-         * @param n The total number of particles.
-         * @param t The number of type.
-         * @return The index for Kij array.
-         */
         if (i <= n / t)
             return 0;
         else
