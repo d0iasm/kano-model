@@ -20,6 +20,9 @@ public class KanoKBalanceMetrics implements Metrics {
         return instance;
     }
 
+    /**
+     * This constructor disallow to create multiple instances because of a private constructor.
+     */
     private KanoKBalanceMetrics() {
     }
 
