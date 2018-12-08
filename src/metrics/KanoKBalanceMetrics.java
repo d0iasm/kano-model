@@ -1,3 +1,5 @@
+package metrics;
+
 import utils.Combination;
 import utils.Permutation;
 
@@ -23,7 +25,7 @@ public class KanoKBalanceMetrics implements Metrics {
 
     @Override
     public void debug() {
-        System.out.println("Kano Kij Balance Metrics");
+        System.out.println("Kano Kij Balance metrics.Metrics");
     }
 
     /**
@@ -47,6 +49,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     /**
+     * [DEPRECATED and NOT IMPLEMENTED YET]
      * This function calculates the index of Heider balance state based on a combination of K params.
      *
      * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
@@ -128,9 +131,9 @@ public class KanoKBalanceMetrics implements Metrics {
      * 4  |  39 |  1
      * 39 |  1  |  4
      * 39 |  4  |  1
-     * <p>
+     *
      * Calculate the average of the sum of each pattern.
-     * (  K(1->4) * K(1->39) * K(4->39)
+     * ( K(1->4) * K(1->39) * K(4->39)
      * + K(1->39) * K(1->4) * K(4->39)
      * + K(4->1) * K(4->39) * K(1->39)
      * + ....
@@ -166,6 +169,13 @@ public class KanoKBalanceMetrics implements Metrics {
         return balance;
     }
 
+    /**
+     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param c The 3 particle's indexes.
+     * @param n The total number of particles.
+     * @param t The number of type.
+     * @return result of Heider balance state.
+     */
     private BigDecimal balanceWithAllDirections(double[][] k, int c[], int n, int t) {
         BigDecimal balance = new BigDecimal(1);
         return balance;

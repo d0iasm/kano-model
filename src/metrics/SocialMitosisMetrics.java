@@ -1,3 +1,5 @@
+package metrics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ final class SocialMitosisMetrics implements Metrics {
 
     @Override
     public void debug() {
-        System.out.println("Social Mitosis Metrics");
+        System.out.println("Social Mitosis metrics.Metrics");
     }
 
     private int isLike(double preDis, double newDis) {
