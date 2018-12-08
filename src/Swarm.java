@@ -42,12 +42,12 @@ public class Swarm extends JPanel {
         this.w = w;
         this.h = h;
         this.pType = type;
-        this.pPartition = pNum / pType;
-        Extension.printArgs(pNum,pType,pPartition);
-        Extension.printArgs(
-                new Extension.Pair<>("pNum", pNum),
-                new Extension.Pair<>("pType", pType),
-                new Extension.Pair<>("pParition", pPartition));
+        // |pPartition| means the first index for second type.
+        // i.e. 1. pNum = 4, pType = 2, pPartition = 2
+        //      The second type's index starts 2( = pParition).
+        //      2. pNum = 5, pType = 2, pPartition = 3
+        //      The second type's index starts 3( = pParition).
+        this.pPartition = (pNum + pType - 1) / pType;
 
         this.paramManager = new Parameter(pType);
         this.params = paramManager.getParams();
@@ -208,7 +208,7 @@ public class Swarm extends JPanel {
         for (Particle p : particles) {
             if (p.id <= pPartition) {
                 g2.setColor(Color.RED);
-            } else if (pPartition < p.id && p.id <= pPartition * 2) {
+            } else if (p.id < pPartition * 2) {
                 g2.setColor(Color.BLUE);
             } else {
                 g2.setColor(Color.GREEN);
@@ -379,8 +379,6 @@ public class Swarm extends JPanel {
     }
 
     private double getKParam(int i, int j) {
-        // TODO: Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException happens when the number of particles cannot divide |pType|
-        System.out.println("{i,j} : " + i + ", " + j + " idx{i,j}: " + (i - 1) / pPartition + ", " + (j - 1) / pPartition);
         return params[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
