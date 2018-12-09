@@ -16,10 +16,10 @@ abstract class Parameter {
         this.dim = dimension;
         switch (dim) {
             case 2:
-                this.params = initTwoDimParams();
+                this.params = initTwoDim();
                 break;
             case 3:
-                this.params = initThreeDimParams();
+                this.params = initThreeDim();
                 break;
             default:
                 this.params = random();
@@ -28,8 +28,8 @@ abstract class Parameter {
         this.textArea = createParamsText();
     }
 
-    abstract double[][] initTwoDimParams();
-    abstract double[][] initThreeDimParams();
+    abstract double[][] initTwoDim();
+    abstract double[][] initThreeDim();
     abstract double[][] random();
 
     double[][] getParams() {

@@ -179,7 +179,7 @@ public class Kij extends Parameter{
     }
 
     @Override
-    double[][] initTwoDimParams() {
+    double[][] initTwoDim() {
         // Periodic boundary
         // Fig. 1 in the thesis.
         // Create a circle.
@@ -245,7 +245,7 @@ public class Kij extends Parameter{
     }
 
     @Override
-    double[][] initThreeDimParams() {
+    double[][] initThreeDim() {
 //        Balance
 //    double[][] params = {
 //                {0.0, 1.0, 1.0},
