@@ -25,7 +25,7 @@ public class Swarm extends JPanel {
     private List<Particle> particles;
 
     private int count = 0;
-    Parameter paramManager;
+    Kij paramManager;
     JTextArea paramsText;
     double[][] params;
 
@@ -54,7 +54,7 @@ public class Swarm extends JPanel {
         //      The second type's index starts 3( = pParition).
         this.pPartition = (pNum + pType - 1) / pType;
 
-        this.paramManager = new Parameter(pType);
+        this.paramManager = new Kij(pType);
         this.params = paramManager.getParams();
         showParams();
         showBoundaryButton();
