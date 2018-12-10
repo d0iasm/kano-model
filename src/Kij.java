@@ -1,7 +1,9 @@
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIGlobalBinding;
+
 import java.math.BigDecimal;
 
 
-public class Kij<pulic> extends Parameter{
+public class Kij<pulic> extends Parameter {
     private int paramChangedCount = 0;
 
     Kij(int dimension) {
@@ -90,7 +92,6 @@ public class Kij<pulic> extends Parameter{
         BigDecimal kPO, kPX, kDiff;
         boolean isKPOBigger;
         final BigDecimal TWO = new BigDecimal(2);
-        final BigDecimal TEN = new BigDecimal(10);
 
         if (kSums[perceiver][other] * kSums[perceiver][x] * kSums[other][x] < 0) {
             kPO = params[perceiver][other].abs();
@@ -98,10 +99,10 @@ public class Kij<pulic> extends Parameter{
             isKPOBigger = kPO.compareTo(kPX) > 0;
             kDiff = isKPOBigger ? kPO.subtract(kPX) : kPX.subtract(kPO);
             kDiff = kDiff.divide(TWO);
-            kDiff = kDiff.multiply(TEN);
+            kDiff = kDiff.multiply(BigDecimal.TEN);
             // TODO: Fix this. Are these operations necessary?
 //            kDiff = Math.floor(kDiff);
-            kDiff = kDiff.divide(TEN);
+            kDiff = kDiff.divide(BigDecimal.TEN);
 
             if (kSums[perceiver][other] < 0 && kSums[other][x] < 0) {
                 if (isKPOBigger) {
@@ -166,7 +167,6 @@ public class Kij<pulic> extends Parameter{
     }
 
     public void memeNewcomb(double[][] kSums) {
-        final BigDecimal TEN = new BigDecimal(10);
         int a = (int) (Math.random() * 3);
         int b = (int) (Math.random() * 3);
         while (a == b) {
@@ -178,11 +178,11 @@ public class Kij<pulic> extends Parameter{
         if (kSums[a][x] * kSums[b][x] < 0) {
             System.out.println("Change k param " + a + " -> " + x + " : " + params[a][x]);
             if (kSums[a][x] < 0) {
-                offset = params[b][x].divide(TEN);
+                offset = params[b][x].divide(BigDecimal.TEN);
                 params[a][x] = params[a][x].add(offset);
                 params[b][x] = params[b][x].subtract(offset);
             } else {
-                offset = params[a][x].divide(TEN);
+                offset = params[a][x].divide(BigDecimal.TEN);
                 params[b][x] = params[b][x].add(offset);
                 params[a][x] = params[a][x].subtract(offset);
             }
@@ -234,8 +234,8 @@ public class Kij<pulic> extends Parameter{
         // Separation and fusion
         // Fig.7 in the thesis.
 //        BigDecimal[][] params = {
-//                {0.8, 1.1},
-//                {0.6, 1.0}
+//        {new BigDecimal(0.8), new BigDecimal(1.1)},
+//        {new BigDecimal(0.6), new BigDecimal(1.0)}
 //        };
 
 //        Like >--< this form
