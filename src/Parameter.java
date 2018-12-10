@@ -7,9 +7,10 @@ import java.util.List;
 
 abstract class Parameter {
     int dim;
-    // TODO: Replace to BigDecimal because "double" type is unstable.
-    double[][] params;
-//    private BigDecimal[][] params;
+    // TODO: Replace to BigDecimal because "BigDecimal" type is unstable.
+//    BigDecimal[][] params;
+    final BigDecimal ZERO = new BigDecimal(0);
+    BigDecimal[][] params;
     JTextArea textArea;
 
     Parameter(int dimension) {
@@ -28,23 +29,23 @@ abstract class Parameter {
         this.textArea = createParamsText();
     }
 
-    abstract double[][] initTwoDim();
-    abstract double[][] initThreeDim();
-    abstract double[][] random();
+    abstract BigDecimal[][] initTwoDim();
+    abstract BigDecimal[][] initThreeDim();
+    abstract BigDecimal[][] random();
 
-    double[][] getParams() {
+    BigDecimal[][] getParams() {
         return this.params;
     }
 
     void setParams(List<String> paramsList) {
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                params[i][j] = Double.parseDouble(paramsList.get(dim * i + j));
+                params[i][j] = new BigDecimal(paramsList.get(dim * i + j));
             }
         }
     }
 
-    void setParams(double[][] params) {
+    void setParams(BigDecimal[][] params) {
         this.params = params;
     }
 
@@ -95,7 +96,7 @@ abstract class Parameter {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if (params[i][j] >= 0) {
+                if (params[i][j].compareTo(ZERO) >= 0) {
                     str.append(" ");
                 }
                 str.append(params[i][j]);

@@ -1,6 +1,8 @@
 package utils;
 
 
+import java.math.BigDecimal;
+
 final public class Extension {
     static public final class Pair<V> {
         String key;
@@ -8,6 +10,17 @@ final public class Extension {
         public Pair (String k, V v) {
             key = k;
             val = v;
+        }
+    }
+
+    static public void printSwarmParam(BigDecimal[][] params, int count) {
+        System.out.println("----------- Print current kParams --------------");
+        System.out.println("count: " + count);
+        for (BigDecimal[] param : params) {
+            for (int j = 0; j < params[0].length; j++) {
+                System.out.print(param[j] + ", ");
+            }
+            System.out.println(" ");
         }
     }
 

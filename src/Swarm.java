@@ -1,11 +1,13 @@
 import metrics.KanoKBalanceMetrics;
 import metrics.Metrics;
+import thirdparty.anc.org.nevec.rjm.BigDecimalMath;
 import utils.Extension;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class Swarm extends JPanel {
 
     private int scale = 10;
     private int l = 10;
-    private double timeStep = 0.002;
+    private BigDecimal timeStep = new BigDecimal(0.002);
 
     private int pNum;
     private int pType;
@@ -27,11 +29,19 @@ public class Swarm extends JPanel {
     private int count = 0;
     Kij paramManager;
     JTextArea paramsText;
-    double[][] params;
+    BigDecimal[][] params;
 
     private Boundary boundary;
 
     private Metrics metrics = KanoKBalanceMetrics.getInstance();
+
+    final BigDecimal MINUS_ZERO_POINT_EIGHT = new BigDecimal(-0.8);
+    final BigDecimal MINUS_ONE = BigDecimal.ONE.negate();
+    final BigDecimal MINUS_TWO = new BigDecimal(-2);
+    final BigDecimal ZERO_POINT_FIVE = new BigDecimal(0.5);
+    final BigDecimal TWO = new BigDecimal(2);
+    final BigDecimal SIX = new BigDecimal(6);
+
 
     private enum Boundary {
         OPEN,
@@ -68,16 +78,20 @@ public class Swarm extends JPanel {
     }
 
     public void run() {
-        double sumX, sumY;
-        double dis;
-        double diffX, diffY;
-        double paramK;
-        double rungeSumX, rungeSumY;
+        BigDecimal sumX, sumY;
+        BigDecimal dis;
+        BigDecimal diffX, diffY;
+        BigDecimal paramK;
+        BigDecimal rungeSumX, rungeSumY;
 
-        double tmpX, tmpY;
+        BigDecimal tmpX, tmpY;
+        BigDecimal RhatX, RhatY;
+        BigDecimal excludedVolumeEffect;
+        BigDecimal reputation;
 
-        List<Double> newX = new ArrayList<>(pNum);
-        List<Double> newY = new ArrayList<>(pNum);
+
+        List<BigDecimal> newX = new ArrayList<>(pNum);
+        List<BigDecimal> newY = new ArrayList<>(pNum);
 
         // TODO: These two variables are for metrics. Remove these after a measurement.
 //        List<Double> preX = new ArrayList<>(pNum);
@@ -90,8 +104,8 @@ public class Swarm extends JPanel {
 //        };
 
         for (Particle p1 : particles) {
-            sumX = 0;
-            sumY = 0;
+            sumX = BigDecimal.ZERO;
+            sumY = BigDecimal.ZERO;
 
             // TODO: These operations are for metrics. Remove these after a measurement.
 //            preX.add(p1.x);
@@ -131,35 +145,47 @@ public class Swarm extends JPanel {
 //                tmpX = (diffX(p1, p2) / dis);
 //                tmpY = (diffY(p1, p2) / dis);
 
-                tmpX = (diffX / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
-                tmpY = (diffY / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                // Rˆij : Rˆij = Rij / |Rij|
+                RhatX = diffX.divide(dis, MathContext.DECIMAL32);
+                RhatY = diffY.divide(dis, MathContext.DECIMAL32);
+
+                //|Rij|^(−1)
+                excludedVolumeEffect = BigDecimalMath.pow(dis, MINUS_ONE);
+
+                // kij*|Rij|^(−μ)
+                reputation = paramK.multiply(BigDecimalMath.pow(dis, MINUS_ZERO_POINT_EIGHT));
+
+                // Rˆij{kij*|Rij|^(−μ) - |Rij|^(−1)}
+                tmpX = RhatX.multiply(reputation.subtract(excludedVolumeEffect));
+                tmpY = RhatY.multiply(reputation.subtract(excludedVolumeEffect));
 
 //                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
 
-                sumX += tmpX;
-                sumY += tmpY;
+                // ∑(j!=i) Rˆij{kij*|Rij|^(−μ) - |Rij|^(−1)}
+                sumX = sumX.add(tmpX);
+                sumY = sumY.add(tmpY);
             }
 
-            rungeSumX = calcRungeKutta(sumX);
-            rungeSumY = calcRungeKutta(sumY);
+            rungeSumX = rungeKutta(sumX);
+            rungeSumY = rungeKutta(sumY);
 
-            newX.add(p1.x + rungeSumX);
-            newY.add(p1.y + rungeSumY);
+            newX.add(BigDecimal.valueOf(p1.x).add(rungeSumX));
+            newY.add(BigDecimal.valueOf(p1.y).add(rungeSumY));
         }
 
         for (int i = 0; i < pNum; i++) {
             switch (boundary) {
                 case OPEN:
-                    particles.get(i).x = newX.get(i);
-                    particles.get(i).y = newY.get(i);
+                    particles.get(i).x = newX.get(i).doubleValue();
+                    particles.get(i).y = newY.get(i).doubleValue();
                     break;
                 case PERIODIC:
-                    particles.get(i).x = imaging(newX.get(i));
-                    particles.get(i).y = imaging(newY.get(i));
+                    particles.get(i).x = imaging(newX.get(i).doubleValue());
+                    particles.get(i).y = imaging(newY.get(i).doubleValue());
                     break;
                 default:
-                    particles.get(i).x = newX.get(i);
-                    particles.get(i).y = newY.get(i);
+                    particles.get(i).x = newX.get(i).doubleValue();
+                    particles.get(i).y = newY.get(i).doubleValue();
             }
         }
 
@@ -170,6 +196,7 @@ public class Swarm extends JPanel {
 
 
         count++;
+        Extension.printSwarmParam(params, count);
         if (count % 100 == 0) {
             repaint();
             // TODO: This is for metrics. Remove these after a measurement.
@@ -264,7 +291,7 @@ public class Swarm extends JPanel {
 
         JButton randomButton = paramManager.getRandomButton();
         randomButton.addActionListener(e -> {
-            double[][] rnd = paramManager.random();
+            BigDecimal[][] rnd = paramManager.random();
             paramManager.setParams(rnd);
             this.params = paramManager.getParams();
             updateParamsText();
@@ -304,23 +331,27 @@ public class Swarm extends JPanel {
         }
     }
 
-    private double getKParam(int i, int j) {
+    private BigDecimal getKParam(int i, int j) {
         return params[(i - 1) / pPartition][(j - 1) / pPartition];
     }
 
-    private double diffX(Particle pi, Particle pj) {
-        return pj.x - pi.x;
+    private BigDecimal diffX(Particle pi, Particle pj) {
+        // FIXME: 12/10/18 Particle should have BigDecimal instead of double.
+        return new BigDecimal(pj.x - pi.x);
     }
 
-    private double diffY(Particle pi, Particle pj) {
-        return pj.y - pi.y;
+    private BigDecimal diffY(Particle pi, Particle pj) {
+        // FIXME: 12/10/18 Particle should have BigDecimal instead of double.
+        return new BigDecimal(pj.y - pi.y);
     }
 
-    private double distance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    private BigDecimal distance(double x1, double y1, double x2, double y2) {
+        // FIXME: 12/10/18 Particle should have BigDecimal instead of double.
+        return new BigDecimal(Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
     }
 
-    private double distance(Particle pi, Particle pj) {
+    private BigDecimal distance(Particle pi, Particle pj) {
+        // FIXME: 12/10/18 Particle should have BigDecimal instead of double.
         double x1 = pi.x;
         double y1 = pi.y;
         double x2 = pj.x;
@@ -328,59 +359,59 @@ public class Swarm extends JPanel {
         return distance(x1, y1, x2, y2);
     }
 
-    private double diffXClosest(Particle pi, Particle pj) {
-        /**
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest X difference between Pi and moved 9 types Pj.
-         */
-        double tmp;
+    /**
+     * Pi doesn't change its position and Pj changes its position.
+     * Return the closest X difference between Pi and moved 9 types Pj.
+     */
+    private BigDecimal diffXClosest(Particle pi, Particle pj) {
+        BigDecimal tmp;
         double iX, jX;
         iX = pi.x % l;
         jX = pj.x % l;
         int d[] = {-1, 0, 1};
-        double diffX = diffX(pi, pj);
+        BigDecimal diffX = diffX(pi, pj);
         for (int i = 0; i < 3; i++) {
-            tmp = jX + l * d[i] - iX;
-            if (Math.abs(tmp) < Math.abs(diffX)) {
+            tmp = new BigDecimal(jX + l * d[i] - iX);
+            if (tmp.abs().compareTo(diffX.abs()) < 0) {
                 diffX = tmp;
             }
         }
         return diffX;
     }
 
-    private double diffYClosest(Particle pi, Particle pj) {
-        /**
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest Y difference between Pi and moved 9 types Pj.
-         */
-        double tmp;
+    /**
+     * Pi doesn't change its position and Pj changes its position.
+     * Return the closest Y difference between Pi and moved 9 types Pj.
+     */
+    private BigDecimal diffYClosest(Particle pi, Particle pj) {
+        BigDecimal tmp;
         double iY, jY;
         iY = pi.y % l;
         jY = pj.y % l;
         int d[] = {-1, 0, 1};
-        double diffY = diffY(pi, pj);
+        BigDecimal diffY = diffY(pi, pj);
         for (int i = 0; i < 3; i++) {
-            tmp = jY + l * d[i] - iY;
-            if (Math.abs(tmp) < Math.abs(diffY)) {
+            tmp = new BigDecimal(jY + l * d[i] - iY);
+            if (tmp.abs().compareTo(diffY.abs()) < 0) {
                 diffY = tmp;
             }
         }
         return diffY;
     }
 
-    private double distanceClosest(double x1, double y1, double x2, double y2) {
-        double tmp;
+    private BigDecimal distanceClosest(double x1, double y1, double x2, double y2) {
+        BigDecimal tmp;
         double iX, iY, jX, jY;
         iX = x1 % l;
         iY = y1 % l;
         jX = x2 % l;
         jY = y2 % l;
         int d[] = {-1, 0, 1};
-        double closest = distance(x1, y1, x2, y2);
+        BigDecimal closest = distance(x1, y1, x2, y2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 tmp = distance(iX, iY, l * d[i] + jX, l * d[j] + jY);
-                if (tmp < closest) {
+                if (tmp.compareTo(closest) < 0) {
                     closest = tmp;
                 }
             }
@@ -388,11 +419,11 @@ public class Swarm extends JPanel {
         return closest;
     }
 
-    private double distanceClosest(Particle pi, Particle pj) {
-        /**
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest distance between Pi and moved 9 types Pj.
-         */
+    /**
+     * Pi doesn't change its position and Pj changes its position.
+     * Return the closest distance between Pi and moved 9 types Pj.
+     */
+    private BigDecimal distanceClosest(Particle pi, Particle pj) {
         return distanceClosest(pi.x, pi.y, pj.x, pj.y);
     }
 
@@ -402,11 +433,22 @@ public class Swarm extends JPanel {
         return x;
     }
 
-    private double calcRungeKutta(double x) {
-        double k1 = x;
-        double k2 = x + k1 * timeStep * 0.5;
-        double k3 = x + k2 * timeStep * 0.5;
-        double k4 = x + k3 * timeStep;
-        return (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0);
+    /**
+     * k1 = f(tn, yn)
+     * k2 = f(tn + h/2, yn + h/2*k1)
+     * k3 = f(tn + h/2, yn + h/2*k2)
+     * k4 = f(tn + h, yn + hk3)
+     * yn+1 = yn + ((k1 + 2*k2 + 2*k3 + k4) * (h/6)).
+     *
+     * @param x original number.
+     * @return The difference between yn+1 and yn.
+     */
+    private BigDecimal rungeKutta(BigDecimal x) {
+        BigDecimal k1 = x;
+        BigDecimal k2 = x.add(k1.multiply(timeStep).multiply(ZERO_POINT_FIVE));
+        BigDecimal k3 = x.add(k2.multiply(timeStep).multiply(ZERO_POINT_FIVE));
+        BigDecimal k4 = x.add(k3.multiply(timeStep));
+        // (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0)
+        return k1.add(TWO.multiply(k2)).add(TWO.multiply(k3)).add(k4).multiply(timeStep.divide(SIX, MathContext.DECIMAL32));
     }
 }
