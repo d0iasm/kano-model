@@ -216,7 +216,7 @@ public class Swarm extends JPanel {
         for (Particle p : particles) {
             if (p.id <= pPartition) {
                 g2.setColor(Color.RED);
-            } else if (p.id < pPartition * 2) {
+            } else if (p.id <= pPartition * 2) {
                 g2.setColor(Color.BLUE);
             } else {
                 g2.setColor(Color.GREEN);
