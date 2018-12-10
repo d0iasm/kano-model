@@ -1,5 +1,3 @@
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIGlobalBinding;
-
 import java.math.BigDecimal;
 
 
@@ -241,8 +239,8 @@ public class Kij<pulic> extends Parameter {
 //        Like >--< this form
         // Fig. 8 in the thesis.
         BigDecimal[][] params = {
-                {new BigDecimal(0.8), new BigDecimal(1.7)},
-                {new BigDecimal(0.5), new BigDecimal(1.2)}
+                {BigDecimal.valueOf(0.8), BigDecimal.valueOf(1.7)},
+                {BigDecimal.valueOf(0.5), BigDecimal.valueOf(1.2)}
         };
 
         // Periodic boundary

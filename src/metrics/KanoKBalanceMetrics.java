@@ -5,9 +5,9 @@ import utils.Permutation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 
 public class KanoKBalanceMetrics implements Metrics {
@@ -37,7 +37,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The average of Heider balance state per a triangle.
      */
-    public BigDecimal calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
+    public BigDecimal calcHeiderBalanceBasedOnAllTriangle(BigDecimal[][] k, int n, int type) {
         Combination combination = new Combination(n, TRIANGLE);
         List<int[]> l = combination.list();
         int tNum = combination.size();
@@ -102,7 +102,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param t The number of type.
      * @return result of Heider balance state.
      */
-    private BigDecimal balanceWithAverage(double[][] k, int c[], int n, int t) {
+    private BigDecimal balanceWithAverage(BigDecimal[][] k, int c[], int n, int t) {
         BigDecimal balance = new BigDecimal(1);
         int iIdx;
         int jIdx;
@@ -113,7 +113,7 @@ public class KanoKBalanceMetrics implements Metrics {
         for (int comb[] : MEMO_3C2) {
             iIdx = index(c[comb[0]], n, t);
             jIdx = index(c[comb[1]], n, t);
-            tmp1 = BigDecimal.valueOf(k[iIdx][jIdx]).add(BigDecimal.valueOf(k[jIdx][iIdx]));
+            tmp1 = k[iIdx][jIdx].add(k[jIdx][iIdx]);
             tmp2 = tmp1.divide(DIVISOR);
             balance = balance.multiply(tmp2);
         }
@@ -134,7 +134,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * 4  |  39 |  1
      * 39 |  1  |  4
      * 39 |  4  |  1
-     *
+     * <p>
      * Calculate the average of the sum of each pattern.
      * ( K(1->4) * K(1->39) * K(4->39)
      * + K(1->39) * K(1->4) * K(4->39)
@@ -148,7 +148,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param t The number of type.
      * @return result of Heider balance state.
      */
-    private BigDecimal balanceWithPOX(double[][] k, int c[], int n, int t) {
+    private BigDecimal balanceWithPOX(BigDecimal[][] k, int c[], int n, int t) {
         BigDecimal balance = new BigDecimal(0);
         int pIdx;
         int oIdx;
@@ -160,9 +160,7 @@ public class KanoKBalanceMetrics implements Metrics {
             pIdx = index(c[perm[0]], n, t);
             oIdx = index(c[perm[1]], n, t);
             xIdx = index(c[perm[2]], n, t);
-            tmp = BigDecimal.valueOf(k[pIdx][oIdx])
-                    .multiply(BigDecimal.valueOf(k[pIdx][xIdx]))
-                    .multiply(BigDecimal.valueOf(k[oIdx][xIdx]));
+            tmp = k[pIdx][oIdx].multiply(k[pIdx][xIdx]).multiply(k[oIdx][xIdx]);
             balance = balance.add(tmp);
         }
         // > DECIMAL32 (https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)

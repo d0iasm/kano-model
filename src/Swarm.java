@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,8 +146,8 @@ public class Swarm extends JPanel {
 //                tmpY = (diffY(p1, p2) / dis);
 
                 // Rˆij : Rˆij = Rij / |Rij|
-                RhatX = diffX.divide(dis);
-                RhatY = diffY.divide(dis);
+                RhatX = diffX.divide(dis, MathContext.DECIMAL32);
+                RhatY = diffY.divide(dis, MathContext.DECIMAL32);
 
                 //|Rij|^(−1)
                 excludedVolumeEffect = BigDecimalMath.pow(dis, MINUS_ONE);
@@ -195,6 +196,7 @@ public class Swarm extends JPanel {
 
 
         count++;
+        Extension.printSwarmParam(params, count);
         if (count % 100 == 0) {
             repaint();
             // TODO: This is for metrics. Remove these after a measurement.
@@ -289,7 +291,7 @@ public class Swarm extends JPanel {
 
         JButton randomButton = paramManager.getRandomButton();
         randomButton.addActionListener(e -> {
-            double[][] rnd = paramManager.random();
+            BigDecimal[][] rnd = paramManager.random();
             paramManager.setParams(rnd);
             this.params = paramManager.getParams();
             updateParamsText();
@@ -437,6 +439,7 @@ public class Swarm extends JPanel {
      * k3 = f(tn + h/2, yn + h/2*k2)
      * k4 = f(tn + h, yn + hk3)
      * yn+1 = yn + ((k1 + 2*k2 + 2*k3 + k4) * (h/6)).
+     *
      * @param x original number.
      * @return The difference between yn+1 and yn.
      */
@@ -446,6 +449,6 @@ public class Swarm extends JPanel {
         BigDecimal k3 = x.add(k2.multiply(timeStep).multiply(ZERO_POINT_FIVE));
         BigDecimal k4 = x.add(k3.multiply(timeStep));
         // (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0)
-        return k1.add(TWO.multiply(k2)).add(TWO.multiply(k3)).add(k4).multiply(timeStep.divide(SIX));
+        return k1.add(TWO.multiply(k2)).add(TWO.multiply(k3)).add(k4).multiply(timeStep.divide(SIX, MathContext.DECIMAL32));
     }
 }
