@@ -13,6 +13,15 @@ public class Kij extends Parameter{
         this.paramChangedCount = n;
     }
 
+    /**
+     * Change parameters depends on kSum.
+     *   double[][] kSums = new double[][]{
+     *     {0, 0, 0},
+     *     {0, 0, 0},
+     *     {0, 0, 0},
+     *   };
+     * @param kSums Define as "kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;" in Swarm::run().
+     */
     public void flipKParamSimpleHeider(double[][] kSums) {
         if (kSums[0][1] * kSums[1][2] * kSums[2][0] < 0) {
             int base = (int) (Math.random() * 3);

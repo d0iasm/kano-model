@@ -16,6 +16,9 @@ class Environment {
         frame.add(swarm, BorderLayout.CENTER);
     }
 
+    /**
+     * Keep to update Swarm's state.
+     */
     void run() {
         // TODO: Keep the screen position to chase the middle of particles while running.
         while (true) swarm.run();

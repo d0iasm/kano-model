@@ -111,6 +111,19 @@ final class SocialMitosisMetrics implements Metrics {
      * > It was not a part of the regular simulation.
      * 2.4 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
      *
+     * Usage:
+     *   Create new variables to store previous step position and in Swarm::run().
+     *     List<Double> preX = new ArrayList<>(pNum);
+     *     List<Double> preY = new ArrayList<>(pNum);
+     *
+     *     for (Particle p1 : particles) {
+     *       preX.add(p1.x);
+     *       preY.add(p1.y);
+     *       ....
+     *     }
+     *
+     *     metrics.addNbals(nbal(preX, preY, newX, newY));
+     *
      * @param counts The first element means the number of balanced triads and
      *               the second one means the number of imbalanced triads.
      */

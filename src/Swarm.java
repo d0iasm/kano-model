@@ -11,28 +11,29 @@ import java.util.List;
 
 
 /**
- * Swarm is a
+ * Swarm is a main class that calculate next position for each particle and paint them.
+ * There are 2 ways to calculate next position. The one is open boundary and the second is periodic boundary.
  */
 public class Swarm extends JPanel {
-    private int w;
-    private int h;
+    private int width;
+    private int height;
 
-    private int scale = 10;
-    private int l = 10;
-    private double timeStep = 0.002;
+    private static final int SCALE = 10;
+    private static final int CYCLE_L = 10;
+    private static final double TIME_STEP = 0.002;
+    private static final int P_SIZE = 1;
 
     private int pNum;
     private int pType;
     private int pPartition;
-    private int pSize = 1;
     private List<Particle> particles;
 
-    private int count = 0;
-    Parameter paramManager;
-    JTextArea paramsText;
-    double[][] params;
-
     private Boundary boundary;
+
+    private int count = 0;
+    private Parameter paramManager;
+    private JTextArea paramsText;
+    private double[][] params;
 
     private Metrics metrics = KanoKBalanceMetrics.getInstance();
 
@@ -41,10 +42,10 @@ public class Swarm extends JPanel {
         PERIODIC
     }
 
-    public Swarm(int w, int h, int n, int type) {
-        this.pNum = n;
-        this.w = w;
-        this.h = h;
+    public Swarm(int width, int height, int num, int type) {
+        this.pNum = num;
+        this.width = width;
+        this.height = height;
         this.pType = type;
         // |pPartition| means the first index for second type.
         // i.e. 1. pNum = 4, pType = 2, pPartition = 2
@@ -60,8 +61,8 @@ public class Swarm extends JPanel {
 
         this.boundary = Boundary.OPEN;
 
-        this.particles = new ArrayList<>(n);
-        for (int i = 1; i <= n; i++) {
+        this.particles = new ArrayList<>(num);
+        for (int i = 1; i <= num; i++) {
             particles.add(new Particle(i));
         }
     }
@@ -78,23 +79,9 @@ public class Swarm extends JPanel {
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
-        // TODO: These two variables are for metrics. Remove these after a measurement.
-//        List<Double> preX = new ArrayList<>(pNum);
-//        List<Double> preY = new ArrayList<>(pNum);
-
-//        double[][] kSums = new double[][]{
-//                {0, 0, 0},
-//                {0, 0, 0},
-//                {0, 0, 0},
-//        };
-
         for (Particle p1 : particles) {
             sumX = 0;
             sumY = 0;
-
-            // TODO: These operations are for metrics. Remove these after a measurement.
-//            preX.add(p1.x);
-//            preY.add(p1.y);
 
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
@@ -133,8 +120,6 @@ public class Swarm extends JPanel {
                 tmpX = (diffX / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
                 tmpY = (diffY / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
 
-//                kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;
-
                 sumX += tmpX;
                 sumY += tmpY;
             }
@@ -162,17 +147,11 @@ public class Swarm extends JPanel {
             }
         }
 
-//        flipKParamHeider(kSums);
-//        paramManager.changeKParamHeider(kSums);
         this.params = paramManager.getParams();
-//        balanceKParamHeider(kSums);
-
 
         count++;
         if (count % 100 == 0) {
             repaint();
-            // TODO: This is for metrics. Remove these after a measurement.
-//            metrics.addNbals(nbal(preX, preY, newX, newY));
 
             if (count % 10000 == 0) {
                 Extension.printSwarmParam(params, count);
@@ -193,17 +172,17 @@ public class Swarm extends JPanel {
         g2.setColor(Color.LIGHT_GRAY);
         switch (boundary) {
             case OPEN:
-                for (int i = 0; i < h; i += (10 * scale)) {
-                    g2.drawLine(0, i, w, i);
-                    g2.drawLine(i, 0, i, h);
+                for (int i = 0; i < height; i += (10 * SCALE)) {
+                    g2.drawLine(0, i, width, i);
+                    g2.drawLine(i, 0, i, height);
                 }
                 break;
             case PERIODIC:
                 Stroke def = g2.getStroke();
                 Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
                 g2.setStroke(dashed);
-                g2.drawLine(0, h / 2, w, h / 2);
-                g2.drawLine(w / 2, 0, w / 2, h);
+                g2.drawLine(0, height / 2, width, height / 2);
+                g2.drawLine(width / 2, 0, width / 2, height);
                 g2.setStroke(def);
                 break;
         }
@@ -220,14 +199,14 @@ public class Swarm extends JPanel {
             switch (boundary) {
                 case OPEN:
                     g2.fill(new Ellipse2D.Double(
-                            p.x * scale,
-                            p.y * scale,
-                            pSize * scale, pSize * scale));
+                            p.x * SCALE,
+                            p.y * SCALE,
+                            P_SIZE * SCALE, P_SIZE * SCALE));
                 case PERIODIC:
                     g2.fill(new Ellipse2D.Double(
-                            p.x * scale * 8,
-                            p.y * scale * 8,
-                            pSize * scale, pSize * scale));
+                            p.x * SCALE * 8,
+                            p.y * SCALE * 8,
+                            P_SIZE * SCALE, P_SIZE * SCALE));
 
             }
         }
@@ -323,19 +302,23 @@ public class Swarm extends JPanel {
         return distance(x1, y1, x2, y2);
     }
 
+    /**
+     * Calculate the closest X difference between Pi and moved 9 types Pj.
+     * Pi doesn't change its position and Pj changes its position.
+     *
+     * @param pi Particle I.
+     * @param pj Particle J.
+     * @return The closest X difference between Pi and moved 9 types Pj.
+     */
     private double diffXClosest(Particle pi, Particle pj) {
-        /**
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest X difference between Pi and moved 9 types Pj.
-         */
         double tmp;
         double iX, jX;
-        iX = pi.x % l;
-        jX = pj.x % l;
+        iX = pi.x % CYCLE_L;
+        jX = pj.x % CYCLE_L;
         int d[] = {-1, 0, 1};
         double diffX = diffX(pi, pj);
         for (int i = 0; i < 3; i++) {
-            tmp = jX + l * d[i] - iX;
+            tmp = jX + CYCLE_L * d[i] - iX;
             if (Math.abs(tmp) < Math.abs(diffX)) {
                 diffX = tmp;
             }
@@ -343,19 +326,23 @@ public class Swarm extends JPanel {
         return diffX;
     }
 
+    /**
+     * Calculate the closest Y difference between Pi and moved 9 types Pj.
+     * Pi doesn't change its position and Pj changes its position.
+     *
+     * @param pi Particle I.
+     * @param pj Particle J.
+     * @return The closest Y difference between Pi and moved 9 types Pj.
+     */
     private double diffYClosest(Particle pi, Particle pj) {
-        /**
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest Y difference between Pi and moved 9 types Pj.
-         */
         double tmp;
         double iY, jY;
-        iY = pi.y % l;
-        jY = pj.y % l;
+        iY = pi.y % CYCLE_L;
+        jY = pj.y % CYCLE_L;
         int d[] = {-1, 0, 1};
         double diffY = diffY(pi, pj);
         for (int i = 0; i < 3; i++) {
-            tmp = jY + l * d[i] - iY;
+            tmp = jY + CYCLE_L * d[i] - iY;
             if (Math.abs(tmp) < Math.abs(diffY)) {
                 diffY = tmp;
             }
@@ -363,18 +350,28 @@ public class Swarm extends JPanel {
         return diffY;
     }
 
+    /**
+     * Calculate the closest distance between Pi and moved 9 types Pj.
+     * Pi doesn't change its position and Pj changes its position.
+     *
+     * @param x1 The position x of particle I.
+     * @param y1 The position y of particle I.
+     * @param x2 The position x of particle J.
+     * @param y2 The position y of particle J.
+     * @return The closest distance between Pi and moved 9 types Pj.
+     */
     private double distanceClosest(double x1, double y1, double x2, double y2) {
         double tmp;
         double iX, iY, jX, jY;
-        iX = x1 % l;
-        iY = y1 % l;
-        jX = x2 % l;
-        jY = y2 % l;
+        iX = x1 % CYCLE_L;
+        iY = y1 % CYCLE_L;
+        jX = x2 % CYCLE_L;
+        jY = y2 % CYCLE_L;
         int d[] = {-1, 0, 1};
         double closest = distance(x1, y1, x2, y2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                tmp = distance(iX, iY, l * d[i] + jX, l * d[j] + jY);
+                tmp = distance(iX, iY, CYCLE_L * d[i] + jX, CYCLE_L * d[j] + jY);
                 if (tmp < closest) {
                     closest = tmp;
                 }
@@ -383,25 +380,34 @@ public class Swarm extends JPanel {
         return closest;
     }
 
+    /**
+     * Calculate the closest distance between Pi and moved 9 types Pj.
+     * Pi doesn't change its position and Pj changes its position.
+     *
+     * @param pi Particle I.
+     * @param pj Particle J.
+     * @return The closest distance between Pi and moved 9 types Pj.
+     */
     private double distanceClosest(Particle pi, Particle pj) {
-        /**
-         * Pi doesn't change its position and Pj changes its position.
-         * Return the closest distance between Pi and moved 9 types Pj.
-         */
         return distanceClosest(pi.x, pi.y, pj.x, pj.y);
     }
 
+    /**
+     * Move the range of from 0 to CYCLE_L.
+     * @param x Current position.
+     * @return Moved position.
+     */
     private double imaging(double x) {
-        if (x < 0) return (x % l) + l;
-        if (x > l) return x % l;
+        if (x < 0) return (x % CYCLE_L) + CYCLE_L;
+        if (x > CYCLE_L) return x % CYCLE_L;
         return x;
     }
 
     private double calcRungeKutta(double x) {
         double k1 = x;
-        double k2 = x + k1 * timeStep * 0.5;
-        double k3 = x + k2 * timeStep * 0.5;
-        double k4 = x + k3 * timeStep;
-        return (k1 + 2 * k2 + 2 * k3 + k4) * (timeStep / 6.0);
+        double k2 = x + k1 * TIME_STEP * 0.5;
+        double k3 = x + k2 * TIME_STEP * 0.5;
+        double k4 = x + k3 * TIME_STEP;
+        return (k1 + 2 * k2 + 2 * k3 + k4) * (TIME_STEP / 6.0);
     }
 }
