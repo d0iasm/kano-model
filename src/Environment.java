@@ -3,13 +3,16 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Environment is a base class for displaying a window. The main task of this class is to initialize two main components, JFrame and JPanel, and combine them.
+ */
 class Environment {
     private JFrame frame;
     private Swarm swarm;
 
-    Environment(int w, int h, int n, int type) {
-        this.frame = initFrame(w, h);
-        this.swarm = initSwarm(w, h, n, type);
+    Environment(int width, int height, int num, int type) {
+        this.frame = initFrame(width, height);
+        this.swarm = initSwarm(width, height, num, type);
         frame.add(swarm, BorderLayout.CENTER);
     }
 
@@ -18,10 +21,17 @@ class Environment {
         while (true) swarm.run();
     }
 
-    private JFrame initFrame(int w, int h) {
+    /**
+     * Initialize JFrame.
+     *
+     * @param width The width of a window.
+     * @param height The height of a window.
+     * @return Initialized JFrame.
+     */
+    private JFrame initFrame(int width, int height) {
         JFrame frame = new JFrame();
         frame.setTitle("SPS-P");
-        frame.setSize(new Dimension(w, h));
+        frame.setSize(new Dimension(width, height));
         frame.setBackground(Color.WHITE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -34,10 +44,19 @@ class Environment {
         return frame;
     }
 
-    private Swarm initSwarm(int w, int h, int n, int type) {
-        Swarm swarm = new Swarm(n, w, h, type);
+    /**
+     * Initialize Swarm that extends JPanel.
+     *
+     * @param width The width of a window.
+     * @param height The height of a window.
+     * @param num The number of particles.
+     * @param type The number of type of particles.
+     * @return Initialized Swarm.
+     */
+    private Swarm initSwarm(int width, int height, int num, int type) {
+        Swarm swarm = new Swarm(width, height, num, type);
         swarm.setBackground(Color.WHITE);
-        swarm.setSize(new Dimension(w, h));
+        swarm.setSize(new Dimension(width, height));
         return swarm;
     }
 }

@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Swarm is a
+ */
 public class Swarm extends JPanel {
     private int w;
     private int h;
@@ -25,7 +28,7 @@ public class Swarm extends JPanel {
     private List<Particle> particles;
 
     private int count = 0;
-    Kij paramManager;
+    Parameter paramManager;
     JTextArea paramsText;
     double[][] params;
 
@@ -38,12 +41,8 @@ public class Swarm extends JPanel {
         PERIODIC
     }
 
-    public Swarm(int num, int w, int h) {
-        this(num, w, h, 2);
-    }
-
-    public Swarm(int num, int w, int h, int type) {
-        this.pNum = num;
+    public Swarm(int w, int h, int n, int type) {
+        this.pNum = n;
         this.w = w;
         this.h = h;
         this.pType = type;
@@ -61,8 +60,8 @@ public class Swarm extends JPanel {
 
         this.boundary = Boundary.OPEN;
 
-        this.particles = new ArrayList<>(num);
-        for (int i = 1; i <= num; i++) {
+        this.particles = new ArrayList<>(n);
+        for (int i = 1; i <= n; i++) {
             particles.add(new Particle(i));
         }
     }

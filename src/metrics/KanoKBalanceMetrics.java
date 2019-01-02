@@ -100,7 +100,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
-     * @return result of Heider balance state.
+     * @return Result of Heider balance state.
      */
     private BigDecimal balanceWithAverage(double[][] k, int c[], int n, int t) {
         BigDecimal balance = new BigDecimal(1);
@@ -146,7 +146,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
-     * @return result of Heider balance state.
+     * @return Result of Heider balance state.
      */
     private BigDecimal balanceWithPOX(double[][] k, int c[], int n, int t) {
         BigDecimal balance = new BigDecimal(0);
@@ -177,7 +177,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
-     * @return result of Heider balance state.
+     * @return Result of Heider balance state.
      */
     private BigDecimal balanceWithAllDirections(double[][] k, int c[], int n, int t) {
         BigDecimal balance = new BigDecimal(1);
