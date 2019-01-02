@@ -1,4 +1,3 @@
-
 public class Particle {
     public double x, y;
     public int id;

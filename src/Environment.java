@@ -7,11 +7,15 @@ class Environment {
     private JFrame frame;
     private Swarm swarm;
 
-    Environment() {
-        this.frame = initFrame(800, 800);
-        while (true) {
-            this.swarm.run();
-        }
+    Environment(int w, int h, int n, int type) {
+        this.frame = initFrame(w, h);
+        this.swarm = initSwarm(w, h, n, type);
+        frame.add(swarm, BorderLayout.CENTER);
+    }
+
+    void run() {
+        // TODO: Keep the screen position to chase the middle of particles while running.
+        while (true) swarm.run();
     }
 
     private JFrame initFrame(int w, int h) {
@@ -26,17 +30,12 @@ class Environment {
                 System.exit(0);
             }
         });
-
-        this.swarm = initSwarm(50, w, h, 2);
-        frame.add(this.swarm, BorderLayout.CENTER);
-        // TODO: Keep the screen position to chase the middle of particles.
-
         frame.setVisible(true);
         return frame;
     }
 
-    private Swarm initSwarm(int num, int w, int h, int type) {
-        Swarm swarm = new Swarm(num, w, h, type);
+    private Swarm initSwarm(int w, int h, int n, int type) {
+        Swarm swarm = new Swarm(n, w, h, type);
         swarm.setBackground(Color.WHITE);
         swarm.setSize(new Dimension(w, h));
         return swarm;
