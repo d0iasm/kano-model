@@ -1,23 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Environment implements ActionListener {
+class Environment {
     private JFrame frame;
     private Swarm swarm;
 
-    public Environment() {
+    Environment() {
         this.frame = initFrame(800, 800);
         while (true) {
             this.swarm.run();
         }
-    }
-
-    public JFrame getEnvironment() {
-        return this.frame;
     }
 
     private JFrame initFrame(int w, int h) {
@@ -46,10 +40,5 @@ public class Environment implements ActionListener {
         swarm.setBackground(Color.WHITE);
         swarm.setSize(new Dimension(w, h));
         return swarm;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO: Implement action event
     }
 }

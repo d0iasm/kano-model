@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ abstract class Parameter {
     int dim;
     // TODO: Replace to BigDecimal because "double" type is unstable.
     double[][] params;
-//    private BigDecimal[][] params;
     JTextArea textArea;
 
     Parameter(int dimension) {
@@ -64,15 +62,15 @@ abstract class Parameter {
         return textArea;
     }
 
-    java.util.List<String> parseParamsText() {
-        List<String> splited = new ArrayList<>();
+    List<String> parseParamsText() {
+        List<String> l = new ArrayList<>();
 
         for (String s : textArea.getText().split("\\s+")) {
             if (s.equals("")) continue;
             s = s.replace(",", "");
-            splited.add(s);
+            l.add(s);
         }
-        return splited;
+        return l;
     }
 
     JButton getUpdateButton() {
