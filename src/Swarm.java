@@ -175,17 +175,13 @@ public class Swarm extends JPanel {
             // TODO: This is for metrics. Remove these after a measurement.
 //            metrics.addNbals(nbal(preX, preY, newX, newY));
 
-            if (count % 500 == 0) {
+            if (count % 10000 == 0) {
                 Extension.printSwarmParam(params, count);
                 BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(params, pNum, pType);
                 Extension.printArgs(
                         new Extension.Pair<>("HB result", result.toString())
                 );
-                System.exit(0);
-//                if (count == 50000) {
-//                    printSwarmParam();
-//                    System.exit(0);
-//                }
+//                System.exit(0);
             }
         }
     }

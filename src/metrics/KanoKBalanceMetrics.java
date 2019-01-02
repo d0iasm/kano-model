@@ -48,7 +48,7 @@ public class KanoKBalanceMetrics implements Metrics {
             balance = balance.add(balanceWithAverage(k, c, n, type));
         }
 
-        return balance.divide(new BigDecimal(tNum));
+        return balance.divide(new BigDecimal(tNum), MathContext.DECIMAL32);
     }
 
     /**
