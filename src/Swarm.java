@@ -54,7 +54,7 @@ public class Swarm extends JPanel {
         //      The second type's index starts 3( = pParition).
         this.pPartition = (pNum + pType - 1) / pType;
 
-        this.paramManager = new Kij(pType);
+        this.paramManager = new KaKmKp(pType);
         this.params = paramManager.getParams();
         showParams();
         showBoundaryButton();

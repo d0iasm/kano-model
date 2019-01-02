@@ -7,7 +7,7 @@ public class KaKmKp extends Parameter {
     private final BigDecimal a = new BigDecimal(0.7);
     private final BigDecimal p = new BigDecimal(0.9);
     private BigDecimal m;
-    
+
     /**
      *  X = (N^(-1) * Σ(N, i=1)|ri - rg|)^(-1)
      *  rg = N^(-1) * Σ(N, i=1)ri
@@ -20,6 +20,11 @@ public class KaKmKp extends Parameter {
      * V converges to zero when the relative velocities of all particles with respect to the center of gravity converge to zero.
      */
     private BigDecimal v;
+    /**
+     * The position of the center of gravity.
+     * rg = N^(-1) * Σ(N, i=1)ri
+     */
+    private BigDecimal gravity;
 
     KaKmKp(int dimension) {
         super(dimension);
@@ -27,7 +32,11 @@ public class KaKmKp extends Parameter {
 
     @Override
     double[][] initTwoDim() {
-        return new double[0][];
+        // TODO: Fix this parameter because it is workaround.
+        return new double[][] {
+                {0.8, 1.7},
+                {0.5, 1.2}
+        };
     }
 
     @Override
