@@ -44,9 +44,9 @@ public class Swarm extends JPanel {
     }
 
     public Swarm(int width, int height, int num, int type) {
-        this.pNum = num;
         this.width = width;
         this.height = height;
+        this.pNum = num;
         this.pType = type;
         // |pPartition| means the first index for second type.
         // i.e. 1. pNum = 4, pType = 2, pPartition = 2
@@ -55,7 +55,7 @@ public class Swarm extends JPanel {
         //      The second type's index starts 3( = pParition).
         this.pPartition = (pNum + pType - 1) / pType;
 
-        this.paramManager = new KaKmKp(pType, num);
+        this.paramManager = new KaKmKp(num, type);
         this.params = paramManager.getParams();
         showParams();
         showBoundaryButton();
@@ -158,8 +158,8 @@ public class Swarm extends JPanel {
             if (count % 10000 == 0) {
                 Extension.printSwarmParam(params, count);
                 BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(params, pNum, pType);
-                Extension.printArgs(
-                        new Extension.Pair<>("HB result", result.toString())
+                Extension.printPairs(
+                        new Pair<>("HB result", result.toString())
                 );
 //                System.exit(0);
             }

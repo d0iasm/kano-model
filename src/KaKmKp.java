@@ -1,4 +1,5 @@
 import utils.Pair;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -6,16 +7,15 @@ import java.util.List;
  * Parameters in this class are defined in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
  */
 public class KaKmKp extends Parameter {
-    private int num;
     private final BigDecimal a = new BigDecimal(0.7);
     private final BigDecimal p = new BigDecimal(0.9);
     private BigDecimal m;
 
     /**
-     *  X = (N^(-1) * Σ(N, i=1)|ri - rg|)^(-1)
-     *  rg = N^(-1) * Σ(N, i=1)ri
-     *  rg denotes the position of the center of gravity.
-     *  X converges to zero when at least one of the particles moves an infinite distance from the center of gravity.
+     * X = (N^(-1) * Σ(N, i=1)|ri - rg|)^(-1)
+     * rg = N^(-1) * Σ(N, i=1)ri
+     * rg denotes the position of the center of gravity.
+     * X converges to zero when at least one of the particles moves an infinite distance from the center of gravity.
      */
     private BigDecimal x;
     /**
@@ -24,9 +24,8 @@ public class KaKmKp extends Parameter {
      */
     private BigDecimal v;
 
-    KaKmKp(int dimension, int num) {
-        super(dimension);
-        this.num = num;
+    KaKmKp(int num, int type) {
+        super(num, type);
     }
 
     /**
@@ -43,27 +42,38 @@ public class KaKmKp extends Parameter {
             sumX += p.x;
             sumY += p.y;
         }
-        BigDecimal gX = BigDecimal.valueOf(sumX).divide(BigDecimal.valueOf(num));
-        BigDecimal gY = BigDecimal.valueOf(sumY).divide(BigDecimal.valueOf(num));
+        BigDecimal gX = BigDecimal.valueOf(sumX).divide(BigDecimal.valueOf(pNum));
+        BigDecimal gY = BigDecimal.valueOf(sumY).divide(BigDecimal.valueOf(pNum));
         return new Pair<>(gX, gY);
     }
 
     @Override
-    double[][] initTwoDim() {
+    double[][] init2x2() {
         // TODO: Fix this parameter because it is workaround.
-        return new double[][] {
+        return new double[][]{
                 {0.8, 1.7},
                 {0.5, 1.2}
         };
     }
 
     @Override
-    double[][] initThreeDim() {
+    double[][] init3x3() {
         return new double[0][];
     }
 
     @Override
     double[][] random() {
-        return new double[0][];
+        double[][] params = new double[pType][pType];
+        double tmp;
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
+                tmp = -2.0 + Math.random() * 4.0;
+                tmp *= 10;
+                tmp = Math.floor(tmp);
+                tmp /= 10;
+                params[i][j] = tmp;
+            }
+        }
+        return params;
     }
 }

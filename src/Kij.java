@@ -1,8 +1,8 @@
-public class Kij extends Parameter{
+public class Kij extends Parameter {
     private int paramChangedCount = 0;
 
-    Kij(int dimension) {
-        super(dimension);
+    Kij(int num, int type) {
+        super(num, type);
     }
 
     public int getParamChangedCount() {
@@ -15,11 +15,12 @@ public class Kij extends Parameter{
 
     /**
      * Change parameters depends on kSum.
-     *   double[][] kSums = new double[][]{
-     *     {0, 0, 0},
-     *     {0, 0, 0},
-     *     {0, 0, 0},
-     *   };
+     * double[][] kSums = new double[][]{
+     * {0, 0, 0},
+     * {0, 0, 0},
+     * {0, 0, 0},
+     * };
+     *
      * @param kSums Define as "kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;" in Swarm::run().
      */
     public void flipKParamSimpleHeider(double[][] kSums) {
@@ -188,7 +189,7 @@ public class Kij extends Parameter{
     }
 
     @Override
-    double[][] initTwoDim() {
+    double[][] init2x2() {
         // Periodic boundary
         // Fig. 1 in the thesis.
         // Create a circle.
@@ -254,7 +255,7 @@ public class Kij extends Parameter{
     }
 
     @Override
-    double[][] initThreeDim() {
+    double[][] init3x3() {
 //        Balance
 //    double[][] params = {
 //                {0.0, 1.0, 1.0},
@@ -355,10 +356,10 @@ public class Kij extends Parameter{
 
     @Override
     double[][] random() {
-        double[][] params = new double[dim][dim];
+        double[][] params = new double[pType][pType];
         double tmp;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
                 tmp = -2.0 + Math.random() * 4.0;
                 tmp *= 10;
                 tmp = Math.floor(tmp);

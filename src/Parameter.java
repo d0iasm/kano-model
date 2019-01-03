@@ -5,19 +5,22 @@ import java.util.List;
 
 
 abstract class Parameter {
-    int dim;
+    int pNum;
+    int pType;
+
     // TODO: Replace to BigDecimal because "double" type is unstable.
     double[][] params;
     JTextArea textArea;
 
-    Parameter(int dimension) {
-        this.dim = dimension;
-        switch (dim) {
+    Parameter(int num, int type) {
+        this.pNum = num;
+        this.pType = type;
+        switch (pType) {
             case 2:
-                this.params = initTwoDim();
+                this.params = init2x2();
                 break;
             case 3:
-                this.params = initThreeDim();
+                this.params = init3x3();
                 break;
             default:
                 this.params = random();
@@ -26,18 +29,61 @@ abstract class Parameter {
         this.textArea = createParamsText();
     }
 
-    abstract double[][] initTwoDim();
-    abstract double[][] initThreeDim();
+    abstract double[][] init2x2();
+
+    abstract double[][] init3x3();
+
     abstract double[][] random();
+
+    /**
+     * Always return 0 because the index of first type starts 0.
+     *
+     * @return 0.
+     */
+    int getFirstTypeIndex() {
+        return 0;
+    }
+
+    /**
+     * Return the index of starting second type. The result of |pNum / pType| is round-down.
+     * To be precise, Java refers to this as rounding toward zero.
+     *
+     * @return the index of starting second type.
+     */
+    int getSecondTypeIndex() {
+        return pNum / pType;
+    }
+
+    /**
+     * Return the index of starting third type. Return |pNum| when pType is 2.
+     * In the case 3,
+     * Ex. n=4 : {0}, {1}, {2, 3} => return 2
+     * Ex. n=5 : {0}, {1, 2}, {3, 4} => return 3
+     * Ex. n=6 : {0, 1}, {2, 3}, {4, 5} => return 4
+     *
+     * @return the index of starting third type.
+     */
+    int getThirdTypeIndex() {
+        switch (pType) {
+            case 2:
+                return pNum;
+            case 3:
+                int s = getSecondTypeIndex();
+                int r = pNum - s;
+                return s + r / 2;
+            default:
+                return pNum;
+        }
+    }
 
     double[][] getParams() {
         return this.params;
     }
 
     void setParams(List<String> paramsList) {
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                params[i][j] = Double.parseDouble(paramsList.get(dim * i + j));
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
+                params[i][j] = Double.parseDouble(paramsList.get(pType * i + j));
             }
         }
     }
@@ -91,13 +137,13 @@ abstract class Parameter {
 
     JTextArea createParamsText() {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
                 if (params[i][j] >= 0) {
                     str.append(" ");
                 }
                 str.append(params[i][j]);
-                if (j != dim - 1) {
+                if (j != pType - 1) {
                     str.append(", ");
                 }
             }
