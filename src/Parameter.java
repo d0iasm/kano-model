@@ -24,7 +24,6 @@ abstract class Parameter {
                 break;
             default:
                 this.params = random();
-                break;
         }
         this.textArea = createParamsText();
     }
@@ -74,6 +73,26 @@ abstract class Parameter {
             default:
                 return pNum;
         }
+    }
+
+    int getType(int i) {
+        switch (pType) {
+            case 2:
+                return i < getSecondTypeIndex() ? 0 : 1;
+            case 3:
+                if (i < getSecondTypeIndex()) {
+                    return 0;
+                } else if (i < getThirdTypeIndex()) {
+                    return 1;
+                }
+                return 2;
+            default:
+                return i < getSecondTypeIndex() ? 0 : 1;
+        }
+    }
+
+    double getKParam(int i, int j) {
+        return params[getType(i)][getType(j)];
     }
 
     double[][] getParams() {

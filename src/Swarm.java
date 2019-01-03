@@ -26,7 +26,6 @@ public class Swarm extends JPanel {
 
     private int pNum;
     private int pType;
-    private int pPartition;
     private List<Particle> particles;
 
     private Boundary boundary;
@@ -48,12 +47,6 @@ public class Swarm extends JPanel {
         this.height = height;
         this.pNum = num;
         this.pType = type;
-        // |pPartition| means the first index for second type.
-        // i.e. 1. pNum = 4, pType = 2, pPartition = 2
-        //      The second type's index starts 2( = pParition).
-        //      2. pNum = 5, pType = 2, pPartition = 3
-        //      The second type's index starts 3( = pParition).
-        this.pPartition = (pNum + pType - 1) / pType;
 
         this.paramManager = new KaKmKp(num, type);
         this.params = paramManager.getParams();
@@ -80,8 +73,8 @@ public class Swarm extends JPanel {
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
-        Pair<BigDecimal> g = ((KaKmKp) paramManager).getGravity(particles);
-        System.out.println("Gravity: " + g.x + ", " + g.y);
+//        Pair<BigDecimal> g = ((KaKmKp) paramManager).getGravity(particles);
+//        System.out.println("Gravity: " + g.x + ", " + g.y);
 
         for (Particle p1 : particles) {
             sumX = 0;
@@ -113,7 +106,7 @@ public class Swarm extends JPanel {
                 }
 
                 // paramK: kij.
-                paramK = getKParam(p1.id, p2.id);
+                paramK = paramManager.getKParam(p1.id, p2.id);
 
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
 //                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
@@ -189,6 +182,7 @@ public class Swarm extends JPanel {
                 break;
         }
 
+        System.out.println("--------------------------------------");
         for (Particle p : particles) {
             if (p.id < paramManager.getSecondTypeIndex()) {
                 g2.setColor(Color.RED);
@@ -204,11 +198,13 @@ public class Swarm extends JPanel {
                             p.x * SCALE,
                             p.y * SCALE,
                             P_SIZE * SCALE, P_SIZE * SCALE));
+                    break;
                 case PERIODIC:
                     g2.fill(new Ellipse2D.Double(
                             p.x * SCALE * 8,
                             p.y * SCALE * 8,
                             P_SIZE * SCALE, P_SIZE * SCALE));
+                    break;
 
             }
         }
@@ -278,10 +274,6 @@ public class Swarm extends JPanel {
                 boundary = Boundary.OPEN;
                 break;
         }
-    }
-
-    private double getKParam(int i, int j) {
-        return params[i / pPartition][j / pPartition];
     }
 
     private double diffX(Particle pi, Particle pj) {
