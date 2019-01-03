@@ -73,8 +73,9 @@ public class Swarm extends JPanel {
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
-        Pair<BigDecimal> g = ((KaKmKp) paramManager).getGravity(particles);
-        System.out.println("Gravity: " + g.x + ", " + g.y);
+        Pair<Double> g = ((KaKmKp) paramManager).getGravity(particles);
+        double x = ((KaKmKp) paramManager).getX(particles);
+        System.out.println("Gravity: " + g.x + ", " + g.y + " X: " + x);
 
         for (Particle p1 : particles) {
             sumX = 0;
@@ -114,8 +115,8 @@ public class Swarm extends JPanel {
 //                tmpX = (diffX(p1, p2) / dis);
 //                tmpY = (diffY(p1, p2) / dis);
 
-                tmpX = (diffX / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
-                tmpY = (diffY / dis) * (paramK * Math.pow(dis, -0.8) - (1 / dis));
+                tmpX = (diffX / dis) * (paramK * Math.pow(dis, -0.8) - (1.0 / dis));
+                tmpY = (diffY / dis) * (paramK * Math.pow(dis, -0.8) - (1.0 / dis));
 
                 sumX += tmpX;
                 sumY += tmpY;
