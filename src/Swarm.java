@@ -62,86 +62,25 @@ public class Swarm extends JPanel {
     }
 
     public void run() {
-        double sumX, sumY;
-        double dis;
-        double diffX, diffY;
-        double paramK;
-        double rungeSumX, rungeSumY;
-
-        double tmpX, tmpY;
-
-        List<Double> newX = new ArrayList<>(pNum);
-        List<Double> newY = new ArrayList<>(pNum);
+        List<Pair<Double>> timeEvolution = timeEvolution(particles);
 
         Pair<Double> g = ((KaKmKp) paramManager).getGravity(particles);
         double x = ((KaKmKp) paramManager).getX(particles);
         System.out.println("Gravity: " + g.x + ", " + g.y + " X: " + x);
 
-        for (Particle p1 : particles) {
-            sumX = 0;
-            sumY = 0;
-
-            for (Particle p2 : particles) {
-                if (p1 == p2) continue;
-
-                // TODO: Calculate a distance table before this.
-                switch (boundary) {
-                    case OPEN:
-                        // dis: |Rij|.
-                        // {diffX, diffY}: Rij.
-                        dis = distance(p1, p2);
-                        diffX = diffX(p1, p2);
-                        diffY = diffY(p1, p2);
-                        break;
-                    case PERIODIC:
-                        // dis: |Rij|.
-                        // {diffX, diffY}: Rij.
-                        dis = distanceClosest(p1, p2);
-                        diffX = diffXClosest(p1, p2);
-                        diffY = diffYClosest(p1, p2);
-                        break;
-                    default:
-                        dis = distance(p1, p2);
-                        diffX = diffX(p1, p2);
-                        diffY = diffY(p1, p2);
-                }
-
-                // paramK: kij.
-                paramK = paramManager.getKParam(p1.id, p2.id);
-
-                // TODO: Bug? |Rij|^-1 and |Rij|^-2
-//                sumX += (diffX(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
-//                sumY += (diffY(p1, p2) / dis) * (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0));
-//                tmpX = (diffX(p1, p2) / dis);
-//                tmpY = (diffY(p1, p2) / dis);
-
-                tmpX = (diffX / dis) * (paramK * Math.pow(dis, -0.8) - (1.0 / dis));
-                tmpY = (diffY / dis) * (paramK * Math.pow(dis, -0.8) - (1.0 / dis));
-
-                sumX += tmpX;
-                sumY += tmpY;
-            }
-
-            rungeSumX = calcRungeKutta(sumX);
-            rungeSumY = calcRungeKutta(sumY);
-
-            newX.add(p1.x + rungeSumX);
-            newY.add(p1.y + rungeSumY);
-        }
-
+        double curX, curY;
         for (int i = 0; i < pNum; i++) {
+            curX = particles.get(i).x;
+            curY = particles.get(i).y;
             switch (boundary) {
                 case OPEN:
-                    particles.get(i).x = newX.get(i);
-                    particles.get(i).y = newY.get(i);
+                    particles.get(i).x = curX + timeEvolution.get(i).x;
+                    particles.get(i).y = curY + timeEvolution.get(i).y;
                     break;
                 case PERIODIC:
-                    particles.get(i).x = imaging(newX.get(i));
-                    particles.get(i).y = imaging(newY.get(i));
+                    particles.get(i).x = imaging(curX + timeEvolution.get(i).x);
+                    particles.get(i).y = imaging(curY + timeEvolution.get(i).y);
                     break;
-                default:
-                    particles.get(i).x = newX.get(i);
-                    particles.get(i).y = newY.get(i);
             }
         }
 
@@ -274,6 +213,59 @@ public class Swarm extends JPanel {
                 boundary = Boundary.OPEN;
                 break;
         }
+    }
+
+    /**
+     * Calculate the time evolution of ri for all particles that is given by
+     * ri = Σ(i!=j) (kij|Rij|^(-1) - |Rij|^(-2)) * ^Rij.
+     * Rij = rj - ri, ^Rij = Rij / |Rij|, and kij denotes a constant that represents
+     * "to what extent person i prefers person j".
+     *
+     * @param particles All N particles.
+     * @return The list of the time evolution for each ri.
+     */
+    private List<Pair<Double>> timeEvolution(List<Particle> particles) {
+        Pair<Double> sum = new Pair<>(0.0, 0.0);
+        Pair<Double> diff = new Pair<>(0.0, 0.0);
+        double dis;
+        double paramK;
+        /**
+         * (dot)ri. The time evolution of ri.
+         */
+        List<Pair<Double>> timeEvolution = new ArrayList<>(pNum);
+
+        for (Particle p1 : particles) {
+            sum.x = 0.0;
+            sum.y = 0.0;
+
+            for (Particle p2 : particles) {
+                if (p1 == p2) continue;
+                switch (boundary) {
+                    case PERIODIC:
+                        dis = distanceClosest(p1, p2); // |Rij|.
+                        diff.x = diffXClosest(p1, p2); // Rij.
+                        diff.y = diffYClosest(p1, p2); // Rij.
+                        break;
+                    default: // case OPEN:
+                        dis = distance(p1, p2); // |Rij|.
+                        diff = diff(p1, p2); // Rij.
+                }
+
+                paramK = paramManager.getKParam(p1.id, p2.id); // kij.
+
+                // TODO: Bug? |Rij|^-1 and |Rij|^-2
+//                sum.x += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.x / dis);
+//                sum.y += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.y / dis);
+                sum.x += (diff.x / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
+                sum.y += (diff.y / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
+            }
+            timeEvolution.add(new Pair<>(calcRungeKutta(sum.x), calcRungeKutta(sum.y)));
+        }
+        return timeEvolution;
+    }
+
+    private Pair<Double> diff(Particle pi, Particle pj) {
+        return new Pair<>(pj.x - pi.x, pj.y - pi.y);
     }
 
     private double diffX(Particle pi, Particle pj) {
