@@ -73,8 +73,8 @@ public class Swarm extends JPanel {
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
 
-//        Pair<BigDecimal> g = ((KaKmKp) paramManager).getGravity(particles);
-//        System.out.println("Gravity: " + g.x + ", " + g.y);
+        Pair<BigDecimal> g = ((KaKmKp) paramManager).getGravity(particles);
+        System.out.println("Gravity: " + g.x + ", " + g.y);
 
         for (Particle p1 : particles) {
             sumX = 0;
@@ -182,7 +182,6 @@ public class Swarm extends JPanel {
                 break;
         }
 
-        System.out.println("--------------------------------------");
         for (Particle p : particles) {
             if (p.id < paramManager.getSecondTypeIndex()) {
                 g2.setColor(Color.RED);

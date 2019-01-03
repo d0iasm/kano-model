@@ -76,19 +76,12 @@ abstract class Parameter {
     }
 
     int getType(int i) {
-        switch (pType) {
-            case 2:
-                return i < getSecondTypeIndex() ? 0 : 1;
-            case 3:
-                if (i < getSecondTypeIndex()) {
-                    return 0;
-                } else if (i < getThirdTypeIndex()) {
-                    return 1;
-                }
-                return 2;
-            default:
-                return i < getSecondTypeIndex() ? 0 : 1;
+        if (i < getSecondTypeIndex()) {
+            return 0;
+        } else if (i < getThirdTypeIndex()) {
+            return 1;
         }
+        return 2;
     }
 
     double getKParam(int i, int j) {
