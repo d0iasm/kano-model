@@ -63,7 +63,7 @@ public class Swarm extends JPanel {
         this.boundary = Boundary.OPEN;
 
         this.particles = new ArrayList<>(num);
-        for (int i = 1; i <= num; i++) {
+        for (int i = 0; i < num; i++) {
             particles.add(new Particle(i));
         }
     }
@@ -190,9 +190,9 @@ public class Swarm extends JPanel {
         }
 
         for (Particle p : particles) {
-            if (p.id <= pPartition) {
+            if (p.id < paramManager.getSecondTypeIndex()) {
                 g2.setColor(Color.RED);
-            } else if (p.id <= pPartition * 2) {
+            } else if (p.id < paramManager.getThirdTypeIndex()) {
                 g2.setColor(Color.BLUE);
             } else {
                 g2.setColor(Color.GREEN);
@@ -281,7 +281,7 @@ public class Swarm extends JPanel {
     }
 
     private double getKParam(int i, int j) {
-        return params[(i - 1) / pPartition][(j - 1) / pPartition];
+        return params[i / pPartition][j / pPartition];
     }
 
     private double diffX(Particle pi, Particle pj) {
