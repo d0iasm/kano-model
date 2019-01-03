@@ -1,9 +1,12 @@
+import utils.Pair;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Parameters in this class are defined in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
  */
 public class KaKmKp extends Parameter {
+    private int num;
     private final BigDecimal a = new BigDecimal(0.7);
     private final BigDecimal p = new BigDecimal(0.9);
     private BigDecimal m;
@@ -20,14 +23,29 @@ public class KaKmKp extends Parameter {
      * V converges to zero when the relative velocities of all particles with respect to the center of gravity converge to zero.
      */
     private BigDecimal v;
-    /**
-     * The position of the center of gravity.
-     * rg = N^(-1) * Σ(N, i=1)ri
-     */
-    private BigDecimal gravity;
 
-    KaKmKp(int dimension) {
+    KaKmKp(int dimension, int num) {
         super(dimension);
+        this.num = num;
+    }
+
+    /**
+     * Calculate the position of the center of gravity.
+     * rg = N^(-1) * Σ(N, i=1)ri
+     *
+     * @param particles The list of particles.
+     * @return The position of the center of gravity.
+     */
+    public Pair<BigDecimal> getGravity(List<Particle> particles) {
+        double sumX = 0;
+        double sumY = 0;
+        for (Particle p : particles) {
+            sumX += p.x;
+            sumY += p.y;
+        }
+        BigDecimal gX = BigDecimal.valueOf(sumX).divide(BigDecimal.valueOf(num));
+        BigDecimal gY = BigDecimal.valueOf(sumY).divide(BigDecimal.valueOf(num));
+        return new Pair<>(gX, gY);
     }
 
     @Override

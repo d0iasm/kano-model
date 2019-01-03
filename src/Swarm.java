@@ -1,6 +1,7 @@
 import metrics.KanoKBalanceMetrics;
 import metrics.Metrics;
 import utils.Extension;
+import utils.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +55,7 @@ public class Swarm extends JPanel {
         //      The second type's index starts 3( = pParition).
         this.pPartition = (pNum + pType - 1) / pType;
 
-        this.paramManager = new KaKmKp(pType);
+        this.paramManager = new KaKmKp(pType, num);
         this.params = paramManager.getParams();
         showParams();
         showBoundaryButton();
@@ -78,6 +79,9 @@ public class Swarm extends JPanel {
 
         List<Double> newX = new ArrayList<>(pNum);
         List<Double> newY = new ArrayList<>(pNum);
+
+        Pair<BigDecimal> g = ((KaKmKp) paramManager).getGravity(particles);
+        System.out.println("Gravity: " + g.x + ", " + g.y);
 
         for (Particle p1 : particles) {
             sumX = 0;
@@ -146,8 +150,6 @@ public class Swarm extends JPanel {
                     particles.get(i).y = newY.get(i);
             }
         }
-
-        this.params = paramManager.getParams();
 
         count++;
         if (count % 100 == 0) {
@@ -394,6 +396,7 @@ public class Swarm extends JPanel {
 
     /**
      * Move the range of from 0 to CYCLE_L.
+     *
      * @param x Current position.
      * @return Moved position.
      */
