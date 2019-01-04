@@ -16,7 +16,10 @@ public class K_ABPM extends Parameter {
 
     K_ABPM(int num, int type, Swarm swarm) {
         super(num, type, swarm);
-        swarm.add(createNewTextArea("k_a = "));
+        swarm.add(createNewTextArea("k_a = ", kA, 12, 20 * 1 - 10));
+        swarm.add(createNewTextArea("k_b = ", kB, 12, 20 * 2 - 10));
+        swarm.add(createNewTextArea("k_p = ", kP, 12, 20 * 3 - 10));
+        swarm.add(createNewTextArea("k_m = ", kM, 12, 20 * 4 - 10));
     }
 
     /**
@@ -84,17 +87,16 @@ public class K_ABPM extends Parameter {
         return distance(x1, y1, x2, y2);
     }
 
-    private JPanel createNewTextArea(String labelText) {
+    private JPanel createNewTextArea(String labelText, double val, int x, int y) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label = new JLabel(labelText);
-        label.setSize(40, 20);
-        JTextField field = new JTextField(String.valueOf(kA));
-        field.setSize(40, 20);
-
-        JPanel panel = new JPanel();
-//        panel.setLayout(new FlowLayout());
+        label.setBounds(0, 0, 46, 20);
+        JTextField field = new JTextField(String.valueOf(val));
+        field.setBounds(46, 0, 34, 20);
+        field.setHorizontalAlignment(JTextField.CENTER);
         panel.add(label);
         panel.add(field);
-        panel.setBounds(10, 30, 80, 20);
+        panel.setBounds(x, y, 80, 20);
         return panel;
     }
 
