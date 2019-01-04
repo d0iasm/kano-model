@@ -28,11 +28,9 @@ public class Swarm extends JPanel {
     private int pType;
     private List<Particle> particles;
 
-    private Boundary boundary;
-
     private int count = 0;
-    private Parameter paramManager;
-    private double[][] params;
+    private Boundary boundary;
+    private Parameter parameter;
 
     private Metrics metrics = KanoKBalanceMetrics.getInstance();
 
@@ -47,11 +45,10 @@ public class Swarm extends JPanel {
         this.pNum = num;
         this.pType = type;
 
-        this.paramManager = new KaKmKp(num, type, this);
-        this.params = paramManager.getParams();
-        showBoundaryButton();
+        this.parameter = new KaKmKp(num, type, this);
 
         this.boundary = Boundary.OPEN;
+        showBoundaryButton();
 
         this.particles = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
@@ -65,7 +62,7 @@ public class Swarm extends JPanel {
     public void run() {
         List<Pair<Double>> timeEvolution = timeEvolution(particles);
 
-        Pair<Double> curG = ((KaKmKp) paramManager).getGravity(particles);
+        Pair<Double> curG = ((KaKmKp) parameter).getGravity(particles);
 
         double curX, curY;
         for (int i = 0; i < pNum; i++) {
@@ -88,14 +85,14 @@ public class Swarm extends JPanel {
             repaint();
 
             // TODO: Remove these lines for debug.
-            Pair<Double> nextG = ((KaKmKp) paramManager).getGravity(particles);
-            double x = ((KaKmKp) paramManager).getX(particles);
-            double v = ((KaKmKp) paramManager).getV(timeEvolution, curG, nextG);
+            Pair<Double> nextG = ((KaKmKp) parameter).getGravity(particles);
+            double x = ((KaKmKp) parameter).getX(particles);
+            double v = ((KaKmKp) parameter).getV(timeEvolution, curG, nextG);
             System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
 
             if (count % 10000 == 0) {
-                Extension.printSwarmParam(params, count);
-                BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(params, pNum, pType);
+                Extension.printSwarmParam(parameter.getParams(), count);
+                BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(parameter.getParams(), pNum, pType);
                 Extension.printPairs(
                         new Pair<>("HB result", result.toString())
                 );
@@ -128,9 +125,9 @@ public class Swarm extends JPanel {
         }
 
         for (Particle p : particles) {
-            if (p.id < paramManager.getSecondTypeIndex()) {
+            if (p.id < parameter.getSecondTypeIndex()) {
                 g2.setColor(Color.RED);
-            } else if (p.id < paramManager.getThirdTypeIndex()) {
+            } else if (p.id < parameter.getThirdTypeIndex()) {
                 g2.setColor(Color.BLUE);
             } else {
                 g2.setColor(Color.GREEN);
@@ -154,10 +151,8 @@ public class Swarm extends JPanel {
         }
     }
 
-
-    // ------------------- Private --------------------
     void reset() {
-        Extension.printSwarmParam(this.params, this.count);
+        Extension.printSwarmParam(parameter.getParams(), this.count);
         System.out.println("============= Reset current count ==============");
         count = 0;
     }
@@ -222,7 +217,7 @@ public class Swarm extends JPanel {
                         diff = diff(p1, p2); // Rij.
                 }
 
-                paramK = paramManager.getKParam(p1.id, p2.id); // kij.
+                paramK = parameter.getKParam(p1.id, p2.id); // kij.
 
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
 //                sum.x += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.x / dis);
