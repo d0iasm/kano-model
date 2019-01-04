@@ -32,7 +32,6 @@ public class Swarm extends JPanel {
 
     private int count = 0;
     private Parameter paramManager;
-    private JTextArea paramsText;
     private double[][] params;
 
     private Metrics metrics = KanoKBalanceMetrics.getInstance();
@@ -48,9 +47,8 @@ public class Swarm extends JPanel {
         this.pNum = num;
         this.pType = type;
 
-        this.paramManager = new KaKmKp(num, type);
+        this.paramManager = new KaKmKp(num, type, this);
         this.params = paramManager.getParams();
-        showParams();
         showBoundaryButton();
 
         this.boundary = Boundary.OPEN;
@@ -158,43 +156,10 @@ public class Swarm extends JPanel {
 
 
     // ------------------- Private --------------------
-    private void reset() {
+    void reset() {
         Extension.printSwarmParam(this.params, this.count);
         System.out.println("============= Reset current count ==============");
         count = 0;
-    }
-
-    private void showParams() {
-        this.setLayout(null);
-        this.add(paramManager.getTitle());
-        this.paramsText = paramManager.getParamsText();
-        this.add(paramsText);
-
-        JButton updateButton = paramManager.getUpdateButton();
-        updateButton.addActionListener(e -> {
-            List<String> pt = paramManager.parseParamsText();
-            paramManager.setParams(pt);
-            this.params = paramManager.getParams();
-            updateParamsText();
-            reset();
-        });
-        this.add(updateButton);
-
-        JButton randomButton = paramManager.getRandomButton();
-        randomButton.addActionListener(e -> {
-            double[][] rnd = paramManager.random();
-            paramManager.setParams(rnd);
-            this.params = paramManager.getParams();
-            updateParamsText();
-            reset();
-        });
-        this.add(randomButton);
-    }
-
-    private void updateParamsText() {
-        this.remove(paramsText);
-        this.paramsText = paramManager.getParamsText();
-        this.add(paramsText);
     }
 
     private void showBoundaryButton() {
@@ -207,7 +172,6 @@ public class Swarm extends JPanel {
             tb.setText(boundary.toString());
             reset();
         });
-
         this.add(tb);
     }
 

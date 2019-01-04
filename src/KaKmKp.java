@@ -11,8 +11,8 @@ public class KaKmKp extends Parameter {
     private final BigDecimal p = new BigDecimal(0.9);
     private BigDecimal m;
 
-    KaKmKp(int num, int type) {
-        super(num, type);
+    KaKmKp(int num, int type, Swarm swarm) {
+        super(num, type, swarm);
     }
 
     /**

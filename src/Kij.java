@@ -1,8 +1,8 @@
 public class Kij extends Parameter {
     private int paramChangedCount = 0;
 
-    Kij(int num, int type) {
-        super(num, type);
+    Kij(int num, int type, Swarm swarm) {
+        super(num, type, swarm);
     }
 
     public int getParamChangedCount() {

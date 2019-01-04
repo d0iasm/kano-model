@@ -7,14 +7,16 @@ import java.util.List;
 abstract class Parameter {
     int pNum;
     int pType;
+    Swarm swarm;
 
     // TODO: Replace to BigDecimal because "double" type is unstable.
     double[][] params;
-    JTextArea textArea;
+    JTextArea paramsText;
 
-    Parameter(int num, int type) {
+    Parameter(int num, int type, Swarm swarm) {
         this.pNum = num;
         this.pType = type;
+        this.swarm = swarm;
         switch (pType) {
             case 2:
                 this.params = init2x2();
@@ -25,7 +27,7 @@ abstract class Parameter {
             default:
                 this.params = random();
         }
-        this.textArea = createParamsText();
+        initParamsLayout(); // Set |paramsText| in this function.
     }
 
     abstract double[][] init2x2();
@@ -75,6 +77,12 @@ abstract class Parameter {
         }
     }
 
+    /**
+     * Return the type of particle.
+     *
+     * @param i The index of particles.
+     * @return The type of particle.
+     */
     int getType(int i) {
         if (i < getSecondTypeIndex()) {
             return 0;
@@ -84,6 +92,13 @@ abstract class Parameter {
         return 2;
     }
 
+    /**
+     * Return the Kij that denotes "to what extent person i prefers person j".
+     *
+     * @param i The index of particle i.
+     * @param j The index of particle j.
+     * @return Kij.
+     */
     double getKParam(int i, int j) {
         return params[getType(i)][getType(j)];
     }
@@ -104,26 +119,17 @@ abstract class Parameter {
         this.params = params;
     }
 
-    JLabel getTitle() {
+    private JLabel getTitle() {
         JLabel label = new JLabel("Params");
         label.setFont(new Font("OpenSans", Font.BOLD, 16));
         label.setBounds(670, 10, 100, 30);
         return label;
     }
 
-    JTextArea getParamsText() {
-        this.textArea = createParamsText();
-        textArea.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        textArea.setBounds(650, 40, 120, 60);
-        textArea.setEditable(true);
-        textArea.requestFocus();
-        return textArea;
-    }
-
-    List<String> parseParamsText() {
+    private List<String> parseParamsText() {
         List<String> l = new ArrayList<>();
 
-        for (String s : textArea.getText().split("\\s+")) {
+        for (String s : paramsText.getText().split("\\s+")) {
             if (s.equals("")) continue;
             s = s.replace(",", "");
             l.add(s);
@@ -131,23 +137,8 @@ abstract class Parameter {
         return l;
     }
 
-    JButton getUpdateButton() {
-        JButton button = new JButton("Update");
-        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        button.setBounds(650, 110, 120, 30);
-        button.setBackground(Color.WHITE);
-        return button;
-    }
-
-    JButton getRandomButton() {
-        JButton button = new JButton("Random");
-        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        button.setBounds(650, 140, 120, 30);
-        button.setBackground(Color.WHITE);
-        return button;
-    }
-
-    JTextArea createParamsText() {
+    private JTextArea createNewParamsText() {
+        JTextArea newParamsText;
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < pType; i++) {
             for (int j = 0; j < pType; j++) {
@@ -161,6 +152,58 @@ abstract class Parameter {
             }
             str.append("\n");
         }
-        return new JTextArea(str.toString());
+        newParamsText = new JTextArea(str.toString());
+        newParamsText.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        newParamsText.setBounds(650, 40, 120, 60);
+        newParamsText.setEditable(true);
+        newParamsText.requestFocus();
+        return newParamsText;
+    }
+
+    private void updateParamsText() {
+        swarm.remove(paramsText);
+        paramsText = createNewParamsText();
+        swarm.add(paramsText);
+    }
+
+    private JButton getUpdateButton() {
+        JButton button = new JButton("Update");
+        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        button.setBounds(650, 110, 120, 30);
+        button.setBackground(Color.WHITE);
+        return button;
+    }
+
+    private JButton getRandomButton() {
+        JButton button = new JButton("Random");
+        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        button.setBounds(650, 140, 120, 30);
+        button.setBackground(Color.WHITE);
+        return button;
+    }
+
+    private void initParamsLayout() {
+        swarm.setLayout(null);
+        swarm.add(getTitle());
+        paramsText = createNewParamsText();
+        swarm.add(paramsText);
+
+        JButton updateButton = getUpdateButton();
+        updateButton.addActionListener(e -> {
+            List<String> pt = parseParamsText();
+            setParams(pt);
+            updateParamsText();
+            swarm.reset();
+        });
+        swarm.add(updateButton);
+
+        JButton randomButton = getRandomButton();
+        randomButton.addActionListener(e -> {
+            double[][] rnd = random();
+            setParams(rnd);
+            updateParamsText();
+            swarm.reset();
+        });
+        swarm.add(randomButton);
     }
 }
