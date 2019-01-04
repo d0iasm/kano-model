@@ -45,7 +45,7 @@ public class Swarm extends JPanel {
         this.pNum = num;
         this.pType = type;
 
-        this.parameter = new KaKmKp(num, type, this);
+        this.parameter = new K_ABPM(num, type, this);
 
         this.boundary = Boundary.OPEN;
         showBoundaryButton();
@@ -62,7 +62,7 @@ public class Swarm extends JPanel {
     public void run() {
         List<Pair<Double>> timeEvolution = timeEvolution(particles);
 
-        Pair<Double> curG = ((KaKmKp) parameter).getGravity(particles);
+        Pair<Double> curG = ((K_ABPM) parameter).getGravity(particles);
 
         double curX, curY;
         for (int i = 0; i < pNum; i++) {
@@ -85,9 +85,9 @@ public class Swarm extends JPanel {
             repaint();
 
             // TODO: Remove these lines for debug.
-            Pair<Double> nextG = ((KaKmKp) parameter).getGravity(particles);
-            double x = ((KaKmKp) parameter).getX(particles);
-            double v = ((KaKmKp) parameter).getV(timeEvolution, curG, nextG);
+            Pair<Double> nextG = ((K_ABPM) parameter).getGravity(particles);
+            double x = ((K_ABPM) parameter).getX(particles);
+            double v = ((K_ABPM) parameter).getV(timeEvolution, curG, nextG);
             System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
 
             if (count % 10000 == 0) {
@@ -220,10 +220,12 @@ public class Swarm extends JPanel {
                 paramK = parameter.getKParam(p1.id, p2.id); // kij.
 
                 // TODO: Bug? |Rij|^-1 and |Rij|^-2
-//                sum.x += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.x / dis);
-//                sum.y += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.y / dis);
-                sum.x += (diff.x / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
-                sum.y += (diff.y / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
+                sum.x += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.x / dis);
+                sum.y += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.y / dis);
+//                sum.x += (diff.x / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
+//                sum.y += (diff.y / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
+//                sum.x += (diff.x / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
+//                sum.y += (diff.y / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
             }
             timeEvolution.add(new Pair<>(calcRungeKutta(sum.x), calcRungeKutta(sum.y)));
         }

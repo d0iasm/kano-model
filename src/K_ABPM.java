@@ -1,17 +1,18 @@
 import utils.Pair;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Parameters in this class are defined in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
  */
-public class KaKmKp extends Parameter {
-    private final BigDecimal a = new BigDecimal(0.7);
-    private final BigDecimal p = new BigDecimal(0.9);
-    private BigDecimal m;
+public class K_ABPM extends Parameter {
+    // TODO: Replace to BigDecimal because "double" type is unstable.
+    private static double kA = 0.8;
+    private static double kB = 0.4;
+    private static double kP = 0.2;
+    private static double kM = 0.4;
 
-    KaKmKp(int num, int type, Swarm swarm) {
+    K_ABPM(int num, int type, Swarm swarm) {
         super(num, type, swarm);
     }
 
@@ -82,10 +83,9 @@ public class KaKmKp extends Parameter {
 
     @Override
     double[][] init2x2() {
-        // TODO: Fix this parameter because it is workaround.
         return new double[][]{
-                {0.8, 1.7},
-                {0.5, 1.2}
+                {kA, kP + kM},
+                {kP - kM, kB}
         };
     }
 
