@@ -179,25 +179,16 @@ abstract class Parameter {
     }
 
     /**
-     * Create new button for updating parameters based on text area you can input. This should be called only once.
-     * @return New button object for updating parameters based on the content in text area.
+     * Create new button component.
+     * @param text The button text.
+     * @param x The position x.
+     * @param y The position y.
+     * @return New button component.
      */
-    private JButton getUpdateButton() {
-        JButton button = new JButton("Update");
+    private JButton createButton(String text, int x, int y) {
+        JButton button = new JButton(text);
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        button.setBounds(650, 110, 120, 30);
-        button.setBackground(Color.WHITE);
-        return button;
-    }
-
-    /**
-     * Create new button for updating parameters randomly. This should be called only once.
-     * @return New button object for random update.
-     */
-    private JButton getRandomButton() {
-        JButton button = new JButton("Random");
-        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        button.setBounds(650, 140, 120, 30);
+        button.setBounds(x, y, 120, 30);
         button.setBackground(Color.WHITE);
         return button;
     }
@@ -212,7 +203,7 @@ abstract class Parameter {
         paramsText = createNewParamsText();
         swarm.add(paramsText);
 
-        JButton updateButton = getUpdateButton();
+        JButton updateButton = createButton("Update", 650, 110);
         updateButton.addActionListener(e -> {
             List<String> pt = parseParamsText();
             setParams(pt);
@@ -221,7 +212,7 @@ abstract class Parameter {
         });
         swarm.add(updateButton);
 
-        JButton randomButton = getRandomButton();
+        JButton randomButton = createButton("Random", 650, 140);
         randomButton.addActionListener(e -> {
             double[][] rnd = random();
             setParams(rnd);

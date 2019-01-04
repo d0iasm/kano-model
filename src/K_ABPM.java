@@ -87,6 +87,14 @@ public class K_ABPM extends Parameter {
         return distance(x1, y1, x2, y2);
     }
 
+    private JButton createUpdateButton() {
+        JButton button = new JButton("Update");
+        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        button.setBounds(650, 110, 120, 30);
+        button.setBackground(Color.WHITE);
+        return button;
+    }
+
     private JPanel createNewTextArea(String labelText, double val, int x, int y) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label = new JLabel(labelText);
