@@ -61,12 +61,13 @@ public class Swarm extends JPanel {
         }
     }
 
+    /**
+     * Main method to calculate one step for each particle.
+     */
     public void run() {
         List<Pair<Double>> timeEvolution = timeEvolution(particles);
 
-        Pair<Double> g = ((KaKmKp) paramManager).getGravity(particles);
-        double x = ((KaKmKp) paramManager).getX(particles);
-        System.out.println("Gravity: " + g.x + ", " + g.y + " X: " + x);
+        Pair<Double> curG = ((KaKmKp) paramManager).getGravity(particles);
 
         double curX, curY;
         for (int i = 0; i < pNum; i++) {
@@ -87,6 +88,12 @@ public class Swarm extends JPanel {
         count++;
         if (count % 100 == 0) {
             repaint();
+
+            // TODO: Remove these lines for debug.
+            Pair<Double> nextG = ((KaKmKp) paramManager).getGravity(particles);
+            double x = ((KaKmKp) paramManager).getX(particles);
+            double v = ((KaKmKp) paramManager).getV(timeEvolution, curG, nextG);
+            System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
 
             if (count % 10000 == 0) {
                 Extension.printSwarmParam(params, count);

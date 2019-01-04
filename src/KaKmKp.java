@@ -1,7 +1,6 @@
 import utils.Pair;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +37,9 @@ public class KaKmKp extends Parameter {
      * rg = N^(-1) * Σ(N, i=1)ri
      * rg denotes the position of the center of gravity.
      * X converges to zero when at least one of the particles moves an infinite distance from the center of gravity.
+     *
+     * @param particles The list of particles.
+     * @return The reciprocal of the average of distance from the gravity.
      */
     double getX(List<Particle> particles) {
         double sum = 0;
@@ -51,9 +53,19 @@ public class KaKmKp extends Parameter {
     /**
      * V = N^(-1) * Σ(N, i=1)|ri(dot)-rg(dot)|
      * V converges to zero when the relative velocities of all particles with respect to the center of gravity converge to zero.
+     *
+     * @param timeEvolution The list of the time evolution for each ri.
+     * @param curG          The position of the center of gravity in current step.
+     * @param nextG         The position of the center of gravity in next step.
+     * @return The average of relative speed with the gravity.
      */
-    double getV(List<Particle> particles) {
-        return 0.0;
+    double getV(List<Pair<Double>> timeEvolution, Pair<Double> curG, Pair<Double> nextG) {
+        Pair<Double> dotrg = new Pair<>(nextG.x - curG.x, nextG.y - curG.y);
+        double sum = 0.0;
+        for (Pair<Double> dotri : timeEvolution) {
+            sum += distance(dotri.x, dotri.y, dotrg.x, dotrg.y);
+        }
+        return sum / pNum;
     }
 
     private double distance(double x1, double y1, double x2, double y2) {
