@@ -1,5 +1,7 @@
 import utils.Pair;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -14,6 +16,7 @@ public class K_ABPM extends Parameter {
 
     K_ABPM(int num, int type, Swarm swarm) {
         super(num, type, swarm);
+        swarm.add(createNewTextArea("k_a = "));
     }
 
     /**
@@ -79,6 +82,20 @@ public class K_ABPM extends Parameter {
         double x2 = rg.x;
         double y2 = rg.y;
         return distance(x1, y1, x2, y2);
+    }
+
+    private JPanel createNewTextArea(String labelText) {
+        JLabel label = new JLabel(labelText);
+        label.setSize(40, 20);
+        JTextField field = new JTextField(String.valueOf(kA));
+        field.setSize(40, 20);
+
+        JPanel panel = new JPanel();
+//        panel.setLayout(new FlowLayout());
+        panel.add(label);
+        panel.add(field);
+        panel.setBounds(10, 30, 80, 20);
+        return panel;
     }
 
     @Override
