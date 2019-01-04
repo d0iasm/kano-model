@@ -185,7 +185,7 @@ abstract class Parameter {
      * @param y The position y.
      * @return New button component.
      */
-    private JButton createButton(String text, int x, int y) {
+    JButton createButton(String text, int x, int y) {
         JButton button = new JButton(text);
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
         button.setBounds(x, y, 120, 30);

@@ -20,6 +20,15 @@ public class K_ABPM extends Parameter {
         swarm.add(createNewTextArea("k_b = ", kB, 12, 20 * 2 - 10));
         swarm.add(createNewTextArea("k_p = ", kP, 12, 20 * 3 - 10));
         swarm.add(createNewTextArea("k_m = ", kM, 12, 20 * 4 - 10));
+        JButton updateButton = createButton("Update", 650, 110);
+        updateButton.addActionListener(e -> {
+            // TODO: Impelemnt it.
+//            List<String> pt = parseParamsText();
+//            setParams(pt);
+//            updateParamsText();
+            swarm.reset();
+        });
+        swarm.add(updateButton);
     }
 
     /**
@@ -85,14 +94,6 @@ public class K_ABPM extends Parameter {
         double x2 = rg.x;
         double y2 = rg.y;
         return distance(x1, y1, x2, y2);
-    }
-
-    private JButton createUpdateButton() {
-        JButton button = new JButton("Update");
-        button.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        button.setBounds(650, 110, 120, 30);
-        button.setBackground(Color.WHITE);
-        return button;
     }
 
     private JPanel createNewTextArea(String labelText, double val, int x, int y) {
