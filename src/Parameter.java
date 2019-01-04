@@ -119,6 +119,10 @@ abstract class Parameter {
         this.params = params;
     }
 
+    /**
+     * Create new JLabel object for showing title. This should be called only once.
+     * @return New JLabel object for showing title.
+     */
     private JLabel getTitle() {
         JLabel label = new JLabel("Params");
         label.setFont(new Font("OpenSans", Font.BOLD, 16));
@@ -137,6 +141,11 @@ abstract class Parameter {
         return l;
     }
 
+    /**
+     * Create new JTextArea that shows parameters. This should be called when you want to update parameters based on
+     * the content in text area that you input.
+     * @return New JTextArea that shows parameters.
+     */
     private JTextArea createNewParamsText() {
         JTextArea newParamsText;
         StringBuilder str = new StringBuilder();
@@ -160,12 +169,19 @@ abstract class Parameter {
         return newParamsText;
     }
 
+    /**
+     * Remove previous |paramsText| from Swarm JPanel and add new one on Swarm JPanel.
+     */
     private void updateParamsText() {
         swarm.remove(paramsText);
         paramsText = createNewParamsText();
         swarm.add(paramsText);
     }
 
+    /**
+     * Create new button for updating parameters based on text area you can input. This should be called only once.
+     * @return New button object for updating parameters based on the content in text area.
+     */
     private JButton getUpdateButton() {
         JButton button = new JButton("Update");
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
@@ -174,6 +190,10 @@ abstract class Parameter {
         return button;
     }
 
+    /**
+     * Create new button for updating parameters randomly. This should be called only once.
+     * @return New button object for random update.
+     */
     private JButton getRandomButton() {
         JButton button = new JButton("Random");
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
@@ -182,6 +202,10 @@ abstract class Parameter {
         return button;
     }
 
+    /**
+     * Create title, text area for parameters, and 2 buttons and add them on Swarm.
+     * This function returns nothing, but initialize |paramsText| as a side effect.
+     */
     private void initParamsLayout() {
         swarm.setLayout(null);
         swarm.add(getTitle());
