@@ -1,13 +1,23 @@
 package utils;
 
-import ptolemy.plot.*;
+import ptolemy.plot.Plot;
+import ptolemy.plot.PlotFrame;
 
 /**
- * Log/Log Ptplot program to draw a y = x*x + a
+ * Log/Log Graph.
  */
-public class LogPlot {
-    public static void main(String args[]) {
+public class LogPlot extends Plot{
+    public LogPlot(String xLabel, String yLabel) {
+        this.setXLog(true);
+        this.setYLog(true);
+        this.setXLabel(xLabel);
+        this.setYLabel(yLabel);
+    }
 
+    /**
+     * This is an example to draw y = x*x + a by using Plot of the parent class.
+     */
+    public static void main(String args[]) {
         Plot plot = new Plot();             // Make a default plot
         plot.setXLog(true);                 // Set x log axis
         plot.setYLog(true);                 // Set y log axis
@@ -18,7 +28,6 @@ public class LogPlot {
             double x = i;                  // Set x/y values
             double y = x * x + a;
             plot.addPoint(0, x, y, true);  // Add to data 0
-
         }
 
         plot.setTitle("Log Plot");      // Set plot title (optional)
