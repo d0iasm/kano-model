@@ -14,6 +14,11 @@ public class K_ABPM extends Parameter {
     private static double kP = 0.2;
     private static double kM = 0.4;
 
+    private JTextArea textA;
+    private JTextArea textB;
+    private JTextArea textP;
+    private JTextArea textM;
+
     K_ABPM(int num, int type, Swarm swarm) {
         super(num, type, swarm);
         swarm.add(createNewTextArea("k_a = ", kA, 12, 20 * 1 - 10));

@@ -27,6 +27,7 @@ abstract class Parameter {
             default:
                 this.params = random();
         }
+        roundingParams();
         initParamsLayout(); // Set |paramsText| in this function.
     }
 
@@ -113,10 +114,25 @@ abstract class Parameter {
                 params[i][j] = Double.parseDouble(paramsList.get(pType * i + j));
             }
         }
+        roundingParams();
     }
 
     void setParams(double[][] params) {
         this.params = params;
+        roundingParams();
+    }
+
+    /**
+     * Round the second decimal place of current params.
+     * Ex. 21.8355 -> 21.8
+     *     21.8755 -> 21.9
+     */
+    private void roundingParams() {
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
+                params[i][j] = Double.parseDouble(String.format("%.1f", params[i][j]));
+            }
+        }
     }
 
     /**
