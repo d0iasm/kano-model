@@ -1,3 +1,4 @@
+import utils.LogPlot;
 import utils.Pair;
 
 import javax.swing.*;
@@ -19,9 +20,12 @@ public class K_ABPM extends Parameter {
     private JPanel textP;
     private JPanel textM;
 
+    private LogPlot plot;
+
     K_ABPM(int num, int type, Swarm swarm) {
         super(num, type, swarm);
         initABPMLayout(); // Set all JPanels and a Button in this function.
+        initLogPlot(); // Set LogPlot up.
     }
 
     /**
@@ -77,8 +81,6 @@ public class K_ABPM extends Parameter {
         return sum / pNum;
     }
 
-
-
     private double distance(double x1, double y1, double x2, double y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
@@ -107,6 +109,15 @@ public class K_ABPM extends Parameter {
         panel.setBackground(Color.WHITE);
         panel.setBounds(x, y, 100, 30);
         return panel;
+    }
+
+    /**
+     * Should be called once in this constructor. Initialize a LogPlot for X and V parameters.
+     */
+    private void initLogPlot() {
+        plot = new LogPlot("log10(10^3*X+1)", "log10(10^3*V+1)");
+        plot.setBounds(10, 490, 260, 260);
+        swarm.add(plot);
     }
 
     /**
