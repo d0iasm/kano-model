@@ -108,7 +108,7 @@ public class K_ABPM extends Parameter {
     }
 
     /**
-     * Should be called once in this constructor.
+     * Should be called once in this constructor. Initialize all JPanel for ABPM parameters and set them up.
      */
     private void initABPMLayout() {
         textA = createNewTextArea("k_a = ", kA, 20, 30 * 1 - 15);
@@ -122,9 +122,16 @@ public class K_ABPM extends Parameter {
 
         JButton updateButton = createButton("Update", 20, 140, 100, 30);
         updateButton.addActionListener(e -> {
-//            List<String> pt = parseParamsText();
-//            setParams(pt);
-//            updateParamsText();
+            double a = Double.parseDouble(((JTextField) textA.getComponent(1)).getText());
+            double b = Double.parseDouble(((JTextField) textB.getComponent(1)).getText());
+            double p = Double.parseDouble(((JTextField) textP.getComponent(1)).getText());
+            double m = Double.parseDouble(((JTextField) textM.getComponent(1)).getText());
+            double[][] newParams = {
+                    {a, p + m},
+                    {p - m, b}
+            };
+            super.setParams(newParams);
+            super.updateParamsText();
             swarm.reset();
         });
         swarm.add(updateButton);

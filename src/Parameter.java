@@ -190,7 +190,7 @@ abstract class Parameter {
     /**
      * Remove previous |paramsText| from Swarm JPanel and add new one on Swarm JPanel.
      */
-    private void updateParamsText() {
+    void updateParamsText() {
         swarm.remove(paramsText);
         paramsText = createNewParamsText();
         swarm.add(paramsText);
