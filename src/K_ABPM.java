@@ -11,29 +11,17 @@ public class K_ABPM extends Parameter {
     // TODO: Replace to BigDecimal because "double" type is unstable.
     private static double kA = 0.8;
     private static double kB = 0.4;
-    private static double kP = 0.2;
-    private static double kM = 0.4;
+    private static double kP = 0.6;
+    private static double kM = -0.8;
 
-    private JTextArea textA;
-    private JTextArea textB;
-    private JTextArea textP;
-    private JTextArea textM;
+    private JPanel textA;
+    private JPanel textB;
+    private JPanel textP;
+    private JPanel textM;
 
     K_ABPM(int num, int type, Swarm swarm) {
         super(num, type, swarm);
-        swarm.add(createNewTextArea("k_a = ", kA, 12, 20 * 1 - 10));
-        swarm.add(createNewTextArea("k_b = ", kB, 12, 20 * 2 - 10));
-        swarm.add(createNewTextArea("k_p = ", kP, 12, 20 * 3 - 10));
-        swarm.add(createNewTextArea("k_m = ", kM, 12, 20 * 4 - 10));
-        JButton updateButton = createButton("Update", 650, 110);
-        updateButton.addActionListener(e -> {
-            // TODO: Impelemnt it.
-//            List<String> pt = parseParamsText();
-//            setParams(pt);
-//            updateParamsText();
-            swarm.reset();
-        });
-        swarm.add(updateButton);
+        initABPMLayout(); // Set all JPanels and a Button in this function.
     }
 
     /**
@@ -102,16 +90,44 @@ public class K_ABPM extends Parameter {
     }
 
     private JPanel createNewTextArea(String labelText, double val, int x, int y) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label = new JLabel(labelText);
-        label.setBounds(0, 0, 46, 20);
+        label.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        label.setBounds(0, 0, 60, 30);
+
         JTextField field = new JTextField(String.valueOf(val));
-        field.setBounds(46, 0, 34, 20);
+        field.setFont(new Font("OpenSans", Font.PLAIN, 16));
+        field.setBounds(60, 4, 40, 26);
         field.setHorizontalAlignment(JTextField.CENTER);
+
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.add(label);
         panel.add(field);
-        panel.setBounds(x, y, 80, 20);
+        panel.setBackground(Color.WHITE);
+        panel.setBounds(x, y, 100, 30);
         return panel;
+    }
+
+    /**
+     * Should be called once in this constructor.
+     */
+    private void initABPMLayout() {
+        textA = createNewTextArea("k_a = ", kA, 20, 30 * 1 - 15);
+        textB = createNewTextArea("k_b = ", kB, 20, 30 * 2 - 15);
+        textP = createNewTextArea("k_p = ", kP, 20, 30 * 3 - 15);
+        textM = createNewTextArea("k_m = ", kM, 20, 30 * 4 - 15);
+        swarm.add(textA);
+        swarm.add(textB);
+        swarm.add(textP);
+        swarm.add(textM);
+
+        JButton updateButton = createButton("Update", 20, 140, 100, 30);
+        updateButton.addActionListener(e -> {
+//            List<String> pt = parseParamsText();
+//            setParams(pt);
+//            updateParamsText();
+            swarm.reset();
+        });
+        swarm.add(updateButton);
     }
 
     @Override

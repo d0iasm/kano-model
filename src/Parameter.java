@@ -125,7 +125,7 @@ abstract class Parameter {
     /**
      * Round the second decimal place of current params.
      * Ex. 21.8355 -> 21.8
-     *     21.8755 -> 21.9
+     * 21.8755 -> 21.9
      */
     private void roundingParams() {
         for (int i = 0; i < pType; i++) {
@@ -137,6 +137,7 @@ abstract class Parameter {
 
     /**
      * Create new JLabel object for showing title. This should be called only once.
+     *
      * @return New JLabel object for showing title.
      */
     private JLabel getTitle() {
@@ -160,6 +161,7 @@ abstract class Parameter {
     /**
      * Create new JTextArea that shows parameters. This should be called when you want to update parameters based on
      * the content in text area that you input.
+     *
      * @return New JTextArea that shows parameters.
      */
     private JTextArea createNewParamsText() {
@@ -196,15 +198,16 @@ abstract class Parameter {
 
     /**
      * Create new button component.
+     *
      * @param text The button text.
-     * @param x The position x.
-     * @param y The position y.
+     * @param x    The position x.
+     * @param y    The position y.
      * @return New button component.
      */
-    JButton createButton(String text, int x, int y) {
+    JButton createButton(String text, int x, int y, int w, int h) {
         JButton button = new JButton(text);
         button.setFont(new Font("OpenSans", Font.PLAIN, 16));
-        button.setBounds(x, y, 120, 30);
+        button.setBounds(x, y, w, h);
         button.setBackground(Color.WHITE);
         return button;
     }
@@ -219,7 +222,7 @@ abstract class Parameter {
         paramsText = createNewParamsText();
         swarm.add(paramsText);
 
-        JButton updateButton = createButton("Update", 650, 110);
+        JButton updateButton = createButton("Update", 650, 110, 120, 30);
         updateButton.addActionListener(e -> {
             List<String> pt = parseParamsText();
             setParams(pt);
@@ -228,7 +231,7 @@ abstract class Parameter {
         });
         swarm.add(updateButton);
 
-        JButton randomButton = createButton("Random", 650, 140);
+        JButton randomButton = createButton("Random", 650, 140, 120, 30);
         randomButton.addActionListener(e -> {
             double[][] rnd = random();
             setParams(rnd);
