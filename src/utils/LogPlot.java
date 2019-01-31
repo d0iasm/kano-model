@@ -3,15 +3,40 @@ package utils;
 import ptolemy.plot.Plot;
 import ptolemy.plot.PlotFrame;
 
+import java.awt.*;
+
 /**
  * Log/Log Graph.
  */
-public class LogPlot extends Plot{
+public class LogPlot extends Plot {
     public LogPlot(String xLabel, String yLabel) {
         this.setXLog(true);
         this.setYLog(true);
         this.setXLabel(xLabel);
         this.setYLabel(yLabel);
+        this.setMarksStyle("none", 0);
+        this.setMarksStyle("dots", 1);
+    }
+
+    /**
+     * Plot a new point.
+     * @param x
+     * @param y
+     */
+    public void addPoint(double x, double y) {
+        this.setColors(new Color[]{Color.blue, Color.red});
+        this.clear(1);
+        this.addPoint(0, x, y, true);
+        this.addPoint(1, x, y, false);
+        this.fillPlot();
+    }
+
+    /**
+     * Clear 2 data sets.
+     */
+    public void clearAll() {
+        this.clear(0);
+        this.clear(1);
     }
 
     /**

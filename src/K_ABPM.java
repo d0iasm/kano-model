@@ -81,6 +81,19 @@ public class K_ABPM extends Parameter {
         return sum / pNum;
     }
 
+    /**
+     * X = (N^(-1) * Σ(N, i=1)|ri - rg|)^(-1), rg = N^(-1) * Σ(N, i=1)ri
+     * V = N^(-1) * Σ(N, i=1)|ri(dot)-rg(dot)|
+     * x = log10(10^3*X+1)
+     * y = log10(10^3*V+1)
+     *
+     * @param x The reciprocal of the average of distance from the gravity.
+     * @param v The average of relative speed with the gravity.
+     */
+    void addPoint(double x, double v) {
+        plot.addPoint(Math.log10(1000 * x + 1), Math.log10(1000 * v + 1));
+    }
+
     private double distance(double x1, double y1, double x2, double y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
@@ -146,6 +159,7 @@ public class K_ABPM extends Parameter {
             super.setParams(newParams);
             super.updateParamsText();
             swarm.reset();
+            plot.clearAll();
         });
         swarm.add(updateButton);
     }
