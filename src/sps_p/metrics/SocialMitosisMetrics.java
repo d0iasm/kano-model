@@ -3,7 +3,9 @@ package sps_p.metrics;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Deprecated.
+ */
 final class SocialMitosisMetrics implements Metrics {
     private static Metrics instance = new SocialMitosisMetrics();
     private List<int[]> nbals = new ArrayList<>(1000);

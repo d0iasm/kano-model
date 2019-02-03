@@ -14,8 +14,8 @@ import java.util.List;
 
 
 /**
- * sps_p.Swarm is a main class that calculate next position for each particle and paint them.
- * There are 2 ways to calculate next position. The one is open boundary and the second is periodic boundary.
+ * Calculate next position for each particle and paint them.
+ * There are 2 ways to calculate next position, open boundary and periodic boundary.
  */
 public class Swarm extends JPanel {
     private int width;
@@ -59,7 +59,7 @@ public class Swarm extends JPanel {
     }
 
     /**
-     * sps_p.Main method to calculate one step for each particle.
+     * Main method to calculate one step for each particle.
      */
     public void run() {
         List<Pair<Double>> timeEvolution = timeEvolution(particles);
@@ -157,6 +157,7 @@ public class Swarm extends JPanel {
     void reset() {
         Extension.printSwarmParam(parameter.getParams(), this.count);
         System.out.println("============= Reset current count ==============");
+        // TODO: Call parameter reset()
         for (Particle p : particles) {
             p.initPosition();
         }

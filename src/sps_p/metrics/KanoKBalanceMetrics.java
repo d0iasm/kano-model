@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-
+/**
+ * Calculate the stable value besed on Heider balance theory.
+ */
 public class KanoKBalanceMetrics implements Metrics {
     private static Metrics instance = new KanoKBalanceMetrics();
     private final int TRIANGLE = 3;

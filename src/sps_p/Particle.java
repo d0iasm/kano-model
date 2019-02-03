@@ -1,14 +1,17 @@
 package sps_p;
 
+/**
+ *
+ */
 public class Particle {
     public double x, y;
     public int id;
-    //    private int min = -100;
-//    private int max = 100;
+        private int min = -100;
+    private int max = 100;
 //    private int min = -1;
 //    private int max = 1;
-    private int min = 39;
-    private int max = 41;
+//    private int min = -1;
+//    private int max = 1;
 
     public Particle(int id) {
         this.id = id;
