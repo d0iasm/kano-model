@@ -1,7 +1,9 @@
-public class Kij extends Parameter {
+package sps_p;
+
+public class ParameterKij extends Parameter {
     private int paramChangedCount = 0;
 
-    Kij(int num, int type, Swarm swarm) {
+    ParameterKij(int num, int type, Swarm swarm) {
         super(num, type, swarm);
     }
 
@@ -21,7 +23,7 @@ public class Kij extends Parameter {
      * {0, 0, 0},
      * };
      *
-     * @param kSums Define as "kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;" in Swarm::run().
+     * @param kSums Define as "kSums[(p1.id - 1) / pPartition][(p2.id - 1) / pPartition] = tmpX + tmpY;" in sps_p.Swarm::run().
      */
     public void flipKParamSimpleHeider(double[][] kSums) {
         if (kSums[0][1] * kSums[1][2] * kSums[2][0] < 0) {

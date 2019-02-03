@@ -1,5 +1,7 @@
-import utils.LogPlot;
-import utils.Pair;
+package sps_p;
+
+import sps_p.utils.LogPlot;
+import sps_p.utils.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * Parameters in this class are defined in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
  */
-public class K_ABPM extends Parameter {
+public class ParameterKabpm extends Parameter {
     // TODO: Replace to BigDecimal because "double" type is unstable.
     private static double kA = 0.8;
     private static double kB = 0.4;
@@ -22,7 +24,7 @@ public class K_ABPM extends Parameter {
 
     private LogPlot plot;
 
-    K_ABPM(int num, int type, Swarm swarm) {
+    ParameterKabpm(int num, int type, Swarm swarm) {
         super(num, type, swarm);
         initABPMLayout(); // Set all JPanels and a Button in this function.
         initLogPlot(); // Set LogPlot up.

@@ -1,4 +1,4 @@
-package utils;
+package sps_p.utils;
 
 public class Pair<T> {
     public T x;

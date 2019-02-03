@@ -1,4 +1,4 @@
-package utils;
+package sps_p.utils;
 
 import ptolemy.plot.Plot;
 import ptolemy.plot.PlotFrame;

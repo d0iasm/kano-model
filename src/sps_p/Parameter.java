@@ -1,3 +1,5 @@
+package sps_p;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -94,11 +96,11 @@ abstract class Parameter {
     }
 
     /**
-     * Return the Kij that denotes "to what extent person i prefers person j".
+     * Return the sps_p.ParameterKij that denotes "to what extent person i prefers person j".
      *
      * @param i The index of particle i.
      * @param j The index of particle j.
-     * @return Kij.
+     * @return sps_p.ParameterKij.
      */
     double getKParam(int i, int j) {
         return params[getType(i)][getType(j)];
@@ -188,7 +190,7 @@ abstract class Parameter {
     }
 
     /**
-     * Remove previous |paramsText| from Swarm JPanel and add new one on Swarm JPanel.
+     * Remove previous |paramsText| from sps_p.Swarm JPanel and add new one on sps_p.Swarm JPanel.
      */
     void updateParamsText() {
         swarm.remove(paramsText);
@@ -213,7 +215,7 @@ abstract class Parameter {
     }
 
     /**
-     * Create title, text area for parameters, and 2 buttons and add them on Swarm.
+     * Create title, text area for parameters, and 2 buttons and add them on sps_p.Swarm.
      * This function returns nothing, but initialize |paramsText| as a side effect.
      */
     private void initParamsLayout() {

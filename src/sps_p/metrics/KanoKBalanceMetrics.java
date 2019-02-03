@@ -1,7 +1,7 @@
-package metrics;
+package sps_p.metrics;
 
-import utils.Combination;
-import utils.Permutation;
+import sps_p.utils.Combination;
+import sps_p.utils.Permutation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -28,13 +28,13 @@ public class KanoKBalanceMetrics implements Metrics {
 
     @Override
     public void debug() {
-        System.out.println("Kano Kij Balance metrics.Metrics");
+        System.out.println("Kano sps_p.ParameterKij Balance sps_p.metrics.Metrics");
     }
 
     /**
      * This function calculates the index of Heider balance state based on all triangles in particles.
      *
-     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The average of Heider balance state per a triangle.
      */
     public BigDecimal calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
@@ -55,7 +55,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * [DEPRECATED and NOT IMPLEMENTED YET]
      * This function calculates the index of Heider balance state based on a combination of K params.
      *
-     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The index of Heider balance state.
      */
     public double calcHeiderBalanceBasedOnK(double[][] k) {
@@ -86,7 +86,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     /**
-     * Calculate the Heider balance state with an average of Kij and Kji.
+     * Calculate the Heider balance state with an average of sps_p.ParameterKij and Kji.
      * i.e. c[] = {1, 4, 39};
      * There is the 3 connections in c[] defined MEMO_3C2.
      * {1, 4}, {1, 39}, {4, 39}
@@ -96,7 +96,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * (K(4->39) + K(39->3)) / 2
      * Then, multiply all averages.
      *
-     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
@@ -142,7 +142,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * + ....
      * ) / 6
      *
-     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
@@ -173,7 +173,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     /**
-     * @param k Kij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
@@ -190,7 +190,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @param i The index of a particle.
      * @param n The total number of particles.
      * @param t The number of type.
-     * @return The index for Kij array.
+     * @return The index for sps_p.ParameterKij array.
      */
     private int index(int i, int n, int t) {
         if (i <= n / t)

@@ -1,4 +1,4 @@
-package metrics;
+package sps_p.metrics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ final class SocialMitosisMetrics implements Metrics {
 
     @Override
     public void debug() {
-        System.out.println("Social Mitosis metrics.Metrics");
+        System.out.println("Social Mitosis sps_p.metrics.Metrics");
     }
 
     private int isLike(double preDis, double newDis) {
@@ -34,7 +34,7 @@ final class SocialMitosisMetrics implements Metrics {
         return isLike(preDisIJ, newDisIJ) * isLike(preDisIK, newDisIK) * isLike(preDisJK, newDisJK) > 0;
     }
 
-    // TODO: Currently cannot use it because distance() and distanceClosest() are defined in Swarm class.
+    // TODO: Currently cannot use it because distance() and distanceClosest() are defined in sps_p.Swarm class.
 //    public int[] nbal(List<Double> preX, List<Double> preY, List<Double> newX, List<Double> newY) {
     /*
      * > The function nbal counted the number of all triads that were balanced,
@@ -112,17 +112,17 @@ final class SocialMitosisMetrics implements Metrics {
      * 2.4 (http://jasss.soc.surrey.ac.uk/6/3/2.html)
      *
      * Usage:
-     *   Create new variables to store previous step position and in Swarm::run().
+     *   Create new variables to store previous step position and in sps_p.Swarm::run().
      *     List<Double> preX = new ArrayList<>(pNum);
      *     List<Double> preY = new ArrayList<>(pNum);
      *
-     *     for (Particle p1 : particles) {
+     *     for (sps_p.Particle p1 : particles) {
      *       preX.add(p1.x);
      *       preY.add(p1.y);
      *       ....
      *     }
      *
-     *     metrics.addNbals(nbal(preX, preY, newX, newY));
+     *     sps_p.metrics.addNbals(nbal(preX, preY, newX, newY));
      *
      * @param counts The first element means the number of balanced triads and
      *               the second one means the number of imbalanced triads.

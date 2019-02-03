@@ -1,7 +1,9 @@
-import metrics.KanoKBalanceMetrics;
-import metrics.Metrics;
-import utils.Extension;
-import utils.Pair;
+package sps_p;
+
+import sps_p.metrics.KanoKBalanceMetrics;
+import sps_p.metrics.Metrics;
+import sps_p.utils.Extension;
+import sps_p.utils.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.util.List;
 
 
 /**
- * Swarm is a main class that calculate next position for each particle and paint them.
+ * sps_p.Swarm is a main class that calculate next position for each particle and paint them.
  * There are 2 ways to calculate next position. The one is open boundary and the second is periodic boundary.
  */
 public class Swarm extends JPanel {
@@ -45,7 +47,7 @@ public class Swarm extends JPanel {
         this.pNum = num;
         this.pType = type;
 
-        this.parameter = new K_ABPM(num, type, this);
+        this.parameter = new ParameterKabpm(num, type, this);
 
         this.boundary = Boundary.OPEN;
         showBoundaryButton();
@@ -57,12 +59,12 @@ public class Swarm extends JPanel {
     }
 
     /**
-     * Main method to calculate one step for each particle.
+     * sps_p.Main method to calculate one step for each particle.
      */
     public void run() {
         List<Pair<Double>> timeEvolution = timeEvolution(particles);
 
-        Pair<Double> curG = ((K_ABPM) parameter).getGravity(particles);
+        Pair<Double> curG = ((ParameterKabpm) parameter).getGravity(particles);
 
         double curX, curY;
         for (int i = 0; i < pNum; i++) {
@@ -85,13 +87,13 @@ public class Swarm extends JPanel {
             repaint();
 
             // TODO: Remove these lines for debug.
-            Pair<Double> nextG = ((K_ABPM) parameter).getGravity(particles);
-            double x = ((K_ABPM) parameter).getX(particles);
-            double v = ((K_ABPM) parameter).getV(timeEvolution, curG, nextG);
+            Pair<Double> nextG = ((ParameterKabpm) parameter).getGravity(particles);
+            double x = ((ParameterKabpm) parameter).getX(particles);
+            double v = ((ParameterKabpm) parameter).getV(timeEvolution, curG, nextG);
 //            System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
-            ((K_ABPM) parameter).addPoint(x, v);
+            ((ParameterKabpm) parameter).addPoint(x, v);
 
-            if (count % 10000 == 0) {
+            if (count % 100000 == 0) {
                 Extension.printSwarmParam(parameter.getParams(), count);
                 BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(parameter.getParams(), pNum, pType);
                 Extension.printPairs(
@@ -155,6 +157,9 @@ public class Swarm extends JPanel {
     void reset() {
         Extension.printSwarmParam(parameter.getParams(), this.count);
         System.out.println("============= Reset current count ==============");
+        for (Particle p : particles) {
+            p.initPosition();
+        }
         count = 0;
     }
 
@@ -261,8 +266,8 @@ public class Swarm extends JPanel {
      * Calculate the closest X difference between Pi and moved 9 types Pj.
      * Pi doesn't change its position and Pj changes its position.
      *
-     * @param pi Particle I.
-     * @param pj Particle J.
+     * @param pi sps_p.Particle I.
+     * @param pj sps_p.Particle J.
      * @return The closest X difference between Pi and moved 9 types Pj.
      */
     private double diffXClosest(Particle pi, Particle pj) {
@@ -285,8 +290,8 @@ public class Swarm extends JPanel {
      * Calculate the closest Y difference between Pi and moved 9 types Pj.
      * Pi doesn't change its position and Pj changes its position.
      *
-     * @param pi Particle I.
-     * @param pj Particle J.
+     * @param pi sps_p.Particle I.
+     * @param pj sps_p.Particle J.
      * @return The closest Y difference between Pi and moved 9 types Pj.
      */
     private double diffYClosest(Particle pi, Particle pj) {
@@ -339,8 +344,8 @@ public class Swarm extends JPanel {
      * Calculate the closest distance between Pi and moved 9 types Pj.
      * Pi doesn't change its position and Pj changes its position.
      *
-     * @param pi Particle I.
-     * @param pj Particle J.
+     * @param pi sps_p.Particle I.
+     * @param pj sps_p.Particle J.
      * @return The closest distance between Pi and moved 9 types Pj.
      */
     private double distanceClosest(Particle pi, Particle pj) {

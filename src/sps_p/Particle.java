@@ -1,7 +1,9 @@
+package sps_p;
+
 public class Particle {
     public double x, y;
     public int id;
-//    private int min = -100;
+    //    private int min = -100;
 //    private int max = 100;
 //    private int min = -1;
 //    private int max = 1;
@@ -10,11 +12,15 @@ public class Particle {
 
     public Particle(int id) {
         this.id = id;
-        x = min + Math.random() * (max - min);
-        y = min + Math.random() * (max - min);
+        initPosition();
     }
 
-    public void printPosition() {
-        System.out.println("x: " + x + ", y: " + y);
+    public void initPosition() {
+        this.x = init();
+        this.y = init();
+    }
+
+    public double init() {
+        return min + Math.random() * (max - min);
     }
 }
