@@ -6,7 +6,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * sps_p.Environment is a base class for displaying a window. The main task of this class is to initialize two main components, JFrame and JPanel, and combine them.
+ * Display a window. The main task is to initialize two main components, JFrame and JPanel, and put JPanel on JFrame.
  */
 class Environment {
     private JFrame frame;
@@ -19,7 +19,7 @@ class Environment {
     }
 
     /**
-     * Keep to update sps_p.Swarm's state.
+     * Keep to update Swarm's state.
      */
     void run() {
         // TODO: Keep the screen position to chase the middle of particles while running.
@@ -27,7 +27,7 @@ class Environment {
     }
 
     /**
-     * Initialize JFrame.
+     * Initialize JFrame. This is the main base window.
      *
      * @param width The width of a window.
      * @param height The height of a window.
@@ -50,7 +50,7 @@ class Environment {
     }
 
     /**
-     * Initialize sps_p.Swarm that extends JPanel.
+     * Initialize Swarm that extends JPanel.
      *
      * @param width The width of a window.
      * @param height The height of a window.

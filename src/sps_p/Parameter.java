@@ -5,7 +5,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Abstract class for parameter K which represents "to what extent person i prefers person j".
+ */
 abstract class Parameter {
     int pNum;
     int pType;
@@ -96,7 +98,7 @@ abstract class Parameter {
     }
 
     /**
-     * Return the sps_p.ParameterKij that denotes "to what extent person i prefers person j".
+     * Return the ParameterKij that denotes "to what extent person i prefers person j".
      *
      * @param i The index of particle i.
      * @param j The index of particle j.

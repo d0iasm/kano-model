@@ -8,7 +8,13 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Parameters in this class are defined in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
+ * Parameters are defined by using A, B, P, and M which is written in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
+ * Kij = {
+ *     Ka      (1 <= i <= 2/N, 1 <= j <= 2/N)
+ *     Kp + Km (1 <= i <= 2/N, 2/N < j <= N)
+ *     Kp - Km (2/N < j <= N, 1 <= j <= 2/N)
+ *     Ka      (2/N < j <= N, 2/N < j <= N)
+ * }
  */
 public class ParameterKabpm extends Parameter {
     // TODO: Replace to BigDecimal because "double" type is unstable.
@@ -24,6 +30,12 @@ public class ParameterKabpm extends Parameter {
 
     private LogPlot plot;
 
+    /**
+     * Initialize this class itself and UIs.
+     * @param num
+     * @param type
+     * @param swarm
+     */
     ParameterKabpm(int num, int type, Swarm swarm) {
         super(num, type, swarm);
         initABPMLayout(); // Set all JPanels and a Button in this function.
