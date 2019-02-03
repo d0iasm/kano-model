@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"metrics"},{"l":"utils"}]
+packageSearchIndex = [{"l":"sps_p"},{"l":"sps_p.metrics"},{"l":"sps_p.utils"}]
