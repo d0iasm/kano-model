@@ -38,27 +38,6 @@ public class ParameterKij extends Parameter {
         return params;
     }
 
-    /**
-     * Return the randomized parameter K which is depending on the number of |pType|.
-     *
-     * @return Randomized parameter K.
-     */
-    @Override
-    double[][] random() {
-        double[][] params = new double[pType][pType];
-        double tmp;
-        for (int i = 0; i < pType; i++) {
-            for (int j = 0; j < pType; j++) {
-                tmp = -2.0 + Math.random() * 4.0;
-                tmp *= 10;
-                tmp = Math.floor(tmp);
-                tmp /= 10;
-                params[i][j] = tmp;
-            }
-        }
-        return params;
-    }
-
     @Override
     void reset() {
         // Nothing for Kij parameter.

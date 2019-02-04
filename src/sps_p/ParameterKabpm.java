@@ -70,6 +70,7 @@ public class ParameterKabpm extends Parameter {
      * @return The reciprocal of the average of distance from the gravity.
      */
     double getX(List<Particle> particles) {
+        // TODO: Bug? when periodic.
         double sum = 0;
         Pair<Double> rg = getGravity(particles);
         for (Particle ri : particles) {
@@ -88,6 +89,7 @@ public class ParameterKabpm extends Parameter {
      * @return The average of relative speed with the gravity.
      */
     double getV(List<Pair<Double>> timeEvolution, Pair<Double> curG, Pair<Double> nextG) {
+        // TODO: Bug? when periodic.
         Pair<Double> dotrg = new Pair<>(nextG.x - curG.x, nextG.y - curG.y);
         double sum = 0.0;
         for (Pair<Double> dotri : timeEvolution) {
@@ -201,22 +203,6 @@ public class ParameterKabpm extends Parameter {
     @Override
     double[][] init3x3() {
         return new double[0][];
-    }
-
-    @Override
-    double[][] random() {
-        double[][] params = new double[pType][pType];
-        double tmp;
-        for (int i = 0; i < pType; i++) {
-            for (int j = 0; j < pType; j++) {
-                tmp = -2.0 + Math.random() * 4.0;
-                tmp *= 10;
-                tmp = Math.floor(tmp);
-                tmp /= 10;
-                params[i][j] = tmp;
-            }
-        }
-        return params;
     }
 
     /**

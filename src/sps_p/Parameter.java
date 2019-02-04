@@ -15,7 +15,7 @@ abstract class Parameter {
 
     // TODO: Replace to BigDecimal because "double" type is unstable.
     double[][] params;
-    JTextArea paramsText;
+    private JTextArea paramsText;
 
     Parameter(int num, int type, Swarm swarm) {
         this.pNum = num;
@@ -39,9 +39,27 @@ abstract class Parameter {
 
     abstract double[][] init3x3();
 
-    abstract double[][] random();
-
     abstract void reset();
+
+    /**
+     * Return the randomized parameter K which is depending on the number of |pType|.
+     *
+     * @return Randomized parameter K.
+     */
+    double[][] random() {
+        double[][] params = new double[pType][pType];
+        double tmp;
+        for (int i = 0; i < pType; i++) {
+            for (int j = 0; j < pType; j++) {
+                tmp = -2.0 + Math.random() * 4.0;
+                tmp *= 10;
+                tmp = Math.floor(tmp);
+                tmp /= 10;
+                params[i][j] = tmp;
+            }
+        }
+        return params;
+    };
 
     /**
      * Always return 0 because the index of first type starts 0.
