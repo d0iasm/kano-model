@@ -64,7 +64,7 @@ public class Swarm extends JPanel {
      * Calculate one step for each particle.
      */
     public void run() {
-        List<Pair<Double>> timeEvolution = timeEvolution(particles);
+        List<Pair<Double>> timeEvolution = timeEvolutions(particles);
 
         Pair<Double> curG = ((ParameterKabpm) parameter).getGravity(particles);
 
@@ -168,6 +168,41 @@ public class Swarm extends JPanel {
         count = 0;
     }
 
+    /**
+     * Calculate |Rij| which denotes the distance between particle i and particle j.
+     *
+     * @param p1 Particle i.
+     * @param p2 Particle j.
+     * @return The distance between particle i and particle j.
+     */
+    double distance(Particle p1, Particle p2) {
+        switch (boundary) {
+            case PERIODIC:
+                return distanceClosest(p1, p2);
+            default: // case OPEN:
+                return distanceDirect(p1, p2);
+        }
+    }
+
+    /**
+     * Calculate Rij which denotes the difference of position vector between particle i and particle j.
+     *
+     * @param p1 Particle i.
+     * @param p2 Particle j.
+     * @return The difference of position vector between particle i and particle j.
+     */
+    Pair<Double> diff(Particle p1, Particle p2) {
+        switch (boundary) {
+            case PERIODIC:
+                Pair<Double> diff = new Pair<>(0.0, 0.0);
+                diff.x = diffXClosest(p1, p2);
+                diff.y = diffYClosest(p1, p2);
+                return diff;
+            default: // case OPEN:
+                return diffDirect(p1, p2);
+        }
+    }
+
     private void showBoundaryButton() {
         JToggleButton tb = new JToggleButton("Open");
         tb.setFont(new Font("OpenSans", Font.PLAIN, 16));
@@ -202,15 +237,15 @@ public class Swarm extends JPanel {
      * @param particles All N particles.
      * @return The list of the time evolution for each ri.
      */
-    private List<Pair<Double>> timeEvolution(List<Particle> particles) {
+    private List<Pair<Double>> timeEvolutions(List<Particle> particles) {
         Pair<Double> sum = new Pair<>(0.0, 0.0);
-        Pair<Double> diff = new Pair<>(0.0, 0.0);
+        Pair<Double> diff;
         double dis;
         double paramK;
         /**
          * (dot)ri. The time evolution of ri.
          */
-        List<Pair<Double>> timeEvolution = new ArrayList<>(pNum);
+        List<Pair<Double>> timeEvolutions = new ArrayList<>(pNum);
 
         for (Particle p1 : particles) {
             sum.x = 0.0;
@@ -218,62 +253,48 @@ public class Swarm extends JPanel {
 
             for (Particle p2 : particles) {
                 if (p1 == p2) continue;
-                switch (boundary) {
-                    case PERIODIC:
-                        dis = distanceClosest(p1, p2); // |Rij|.
-                        diff.x = diffXClosest(p1, p2); // Rij.
-                        diff.y = diffYClosest(p1, p2); // Rij.
-                        break;
-                    default: // case OPEN:
-                        dis = distance(p1, p2); // |Rij|.
-                        diff = diff(p1, p2); // Rij.
-                }
-
+                dis = distance(p1, p2); // |Rij|.
+                diff = diff(p1, p2); // Rij.
                 paramK = parameter.getKParam(p1.id, p2.id); // kij.
 
-                // TODO: Bug? |Rij|^-1 and |Rij|^-2
                 sum.x += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.x / dis);
                 sum.y += (paramK * Math.pow(dis, -1.0) - Math.pow(dis, -2.0)) * (diff.y / dis);
-//                sum.x += (diff.x / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
-//                sum.y += (diff.y / dis) * (paramK * Math.pow(dis, -0.8) - Math.pow(dis, -1.0));
-//                sum.x += (diff.x / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
-//                sum.y += (diff.y / dis) * (paramK * Math.pow(dis, -0.8) - (1/dis));
             }
-            timeEvolution.add(new Pair<>(calcRungeKutta(sum.x), calcRungeKutta(sum.y)));
+            timeEvolutions.add(new Pair<>(calcRungeKutta(sum.x), calcRungeKutta(sum.y)));
         }
-        return timeEvolution;
+        return timeEvolutions;
     }
 
-    private Pair<Double> diff(Particle pi, Particle pj) {
+    private Pair<Double> diffDirect(Particle pi, Particle pj) {
         return new Pair<>(pj.x - pi.x, pj.y - pi.y);
     }
 
-    private double diffX(Particle pi, Particle pj) {
+    private double diffXDirect(Particle pi, Particle pj) {
         return pj.x - pi.x;
     }
 
-    private double diffY(Particle pi, Particle pj) {
+    private double diffYDirect(Particle pi, Particle pj) {
         return pj.y - pi.y;
     }
 
-    private double distance(double x1, double y1, double x2, double y2) {
+    private double distanceDirect(double x1, double y1, double x2, double y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 
-    private double distance(Particle pi, Particle pj) {
+    private double distanceDirect(Particle pi, Particle pj) {
         double x1 = pi.x;
         double y1 = pi.y;
         double x2 = pj.x;
         double y2 = pj.y;
-        return distance(x1, y1, x2, y2);
+        return distanceDirect(x1, y1, x2, y2);
     }
 
     /**
      * Calculate the closest X difference between Pi and moved 9 types Pj.
      * Pi doesn't change its position and Pj changes its position.
      *
-     * @param pi sps_p.Particle I.
-     * @param pj sps_p.Particle J.
+     * @param pi Particle I.
+     * @param pj Particle J.
      * @return The closest X difference between Pi and moved 9 types Pj.
      */
     private double diffXClosest(Particle pi, Particle pj) {
@@ -282,7 +303,7 @@ public class Swarm extends JPanel {
         iX = pi.x % CYCLE_L;
         jX = pj.x % CYCLE_L;
         int d[] = {-1, 0, 1};
-        double diffX = diffX(pi, pj);
+        double diffX = diffXDirect(pi, pj);
         for (int i = 0; i < 3; i++) {
             tmp = jX + CYCLE_L * d[i] - iX;
             if (Math.abs(tmp) < Math.abs(diffX)) {
@@ -296,8 +317,8 @@ public class Swarm extends JPanel {
      * Calculate the closest Y difference between Pi and moved 9 types Pj.
      * Pi doesn't change its position and Pj changes its position.
      *
-     * @param pi sps_p.Particle I.
-     * @param pj sps_p.Particle J.
+     * @param pi Particle I.
+     * @param pj Particle J.
      * @return The closest Y difference between Pi and moved 9 types Pj.
      */
     private double diffYClosest(Particle pi, Particle pj) {
@@ -306,7 +327,7 @@ public class Swarm extends JPanel {
         iY = pi.y % CYCLE_L;
         jY = pj.y % CYCLE_L;
         int d[] = {-1, 0, 1};
-        double diffY = diffY(pi, pj);
+        double diffY = diffYDirect(pi, pj);
         for (int i = 0; i < 3; i++) {
             tmp = jY + CYCLE_L * d[i] - iY;
             if (Math.abs(tmp) < Math.abs(diffY)) {
@@ -334,10 +355,10 @@ public class Swarm extends JPanel {
         jX = x2 % CYCLE_L;
         jY = y2 % CYCLE_L;
         int d[] = {-1, 0, 1};
-        double closest = distance(x1, y1, x2, y2);
+        double closest = distanceDirect(x1, y1, x2, y2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                tmp = distance(iX, iY, CYCLE_L * d[i] + jX, CYCLE_L * d[j] + jY);
+                tmp = distanceDirect(iX, iY, CYCLE_L * d[i] + jX, CYCLE_L * d[j] + jY);
                 if (tmp < closest) {
                     closest = tmp;
                 }
