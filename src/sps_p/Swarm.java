@@ -54,7 +54,9 @@ public class Swarm extends JPanel {
 
         this.particles = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
-            particles.add(new Particle(i));
+            Particle p = new Particle(i);
+            p.initPosition((width/2)/SCALE - 1, (width/2)/SCALE + 1);
+            particles.add(p);
         }
     }
 
@@ -159,7 +161,7 @@ public class Swarm extends JPanel {
         System.out.println("============= Reset current count ==============");
         // TODO: Call parameter reset()
         for (Particle p : particles) {
-            p.initPosition();
+            p.initPosition((width/2)/SCALE - 1, (width/2)/SCALE + 1);
         }
         count = 0;
     }
@@ -345,8 +347,8 @@ public class Swarm extends JPanel {
      * Calculate the closest distance between Pi and moved 9 types Pj.
      * Pi doesn't change its position and Pj changes its position.
      *
-     * @param pi sps_p.Particle I.
-     * @param pj sps_p.Particle J.
+     * @param pi Particle I.
+     * @param pj Particle J.
      * @return The closest distance between Pi and moved 9 types Pj.
      */
     private double distanceClosest(Particle pi, Particle pj) {

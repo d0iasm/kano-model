@@ -1,29 +1,27 @@
 package sps_p;
 
 /**
- *
+ * Represent a particle which holds x, y positions and id.
  */
 public class Particle {
     public double x, y;
     public int id;
-        private int min = -100;
-    private int max = 100;
-//    private int min = -1;
-//    private int max = 1;
-//    private int min = -1;
-//    private int max = 1;
 
     public Particle(int id) {
         this.id = id;
-        initPosition();
     }
 
-    public void initPosition() {
-        this.x = init();
-        this.y = init();
+    /**
+     * Initialize x, y positions which become between min and max.
+     * @param min The minimum value of positions.
+     * @param max The maximum value of positions.
+     */
+    void initPosition(int min, int max) {
+        this.x = init(min, max);
+        this.y = init(min, max);
     }
 
-    public double init() {
+    private double init(int min, int max) {
         return min + Math.random() * (max - min);
     }
 }
