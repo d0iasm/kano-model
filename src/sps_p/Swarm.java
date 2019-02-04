@@ -171,6 +171,24 @@ public class Swarm extends JPanel {
     /**
      * Calculate |Rij| which denotes the distance between particle i and particle j.
      *
+     * @param x1 The position x of particle I.
+     * @param y1 The position y of particle I.
+     * @param x2 The position x of particle J.
+     * @param y2 The position y of particle J.
+     * @return The distance between particle i and particle j.
+     */
+    double distance(double x1, double y1, double x2, double y2) {
+        switch (boundary) {
+            case PERIODIC:
+                return distanceClosest(x1, y1, x2, y2);
+            default: // case OPEN:
+                return distanceDirect(x1, y1, x2, y2);
+        }
+    }
+
+    /**
+     * Calculate |Rij| which denotes the distance between particle i and particle j.
+     *
      * @param p1 Particle i.
      * @param p2 Particle j.
      * @return The distance between particle i and particle j.

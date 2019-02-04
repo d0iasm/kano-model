@@ -70,11 +70,10 @@ public class ParameterKabpm extends Parameter {
      * @return The reciprocal of the average of distance from the gravity.
      */
     double getX(List<Particle> particles) {
-        // TODO: Bug? when periodic.
         double sum = 0;
         Pair<Double> rg = getGravity(particles);
         for (Particle ri : particles) {
-            sum += distance(ri, rg);
+            sum += swarm.distance(ri.x, ri.y, rg.x, rg.y);
         }
         return Math.pow(sum / pNum, -1.0);
     }
@@ -89,11 +88,10 @@ public class ParameterKabpm extends Parameter {
      * @return The average of relative speed with the gravity.
      */
     double getV(List<Pair<Double>> timeEvolution, Pair<Double> curG, Pair<Double> nextG) {
-        // TODO: Bug? when periodic.
         Pair<Double> dotrg = new Pair<>(nextG.x - curG.x, nextG.y - curG.y);
         double sum = 0.0;
         for (Pair<Double> dotri : timeEvolution) {
-            sum += distance(dotri.x, dotri.y, dotrg.x, dotrg.y);
+            sum += swarm.distance(dotri.x, dotri.y, dotrg.x, dotrg.y);
         }
         return sum / pNum;
     }
@@ -109,18 +107,6 @@ public class ParameterKabpm extends Parameter {
      */
     void addPoint(double x, double v) {
         plot.addPoint(Math.log10(1000 * x + 1), Math.log10(1000 * v + 1));
-    }
-
-    private double distance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-    }
-
-    private double distance(Particle pi, Pair<Double> rg) {
-        double x1 = pi.x;
-        double y1 = pi.y;
-        double x2 = rg.x;
-        double y2 = rg.y;
-        return distance(x1, y1, x2, y2);
     }
 
     private JPanel createNewTextArea(String labelText, double val, int x, int y) {
