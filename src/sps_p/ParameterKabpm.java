@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * Parameters are defined by using A, B, P, and M which is written in Kano's thesis(Mathematical Analysis for Non-reciprocal-interaction-based Model of Collective Behavior, 2017).
  * Kij = {
- *     Ka      (1 <= i <= 2/N, 1 <= j <= 2/N)
- *     Kp + Km (1 <= i <= 2/N, 2/N < j <= N)
- *     Kp - Km (2/N < j <= N, 1 <= j <= 2/N)
- *     Ka      (2/N < j <= N, 2/N < j <= N)
+ * Ka      (1 <= i <= 2/N, 1 <= j <= 2/N)
+ * Kp + Km (1 <= i <= 2/N, 2/N < j <= N)
+ * Kp - Km (2/N < j <= N, 1 <= j <= 2/N)
+ * Ka      (2/N < j <= N, 2/N < j <= N)
  * }
  */
 public class ParameterKabpm extends Parameter {
@@ -32,6 +32,7 @@ public class ParameterKabpm extends Parameter {
 
     /**
      * Initialize this class itself and UIs.
+     *
      * @param num
      * @param type
      * @param swarm
@@ -173,11 +174,22 @@ public class ParameterKabpm extends Parameter {
             super.setParams(newParams);
             super.updateParamsText();
             swarm.reset();
-            plot.clearAll();
+            this.reset();
         });
         swarm.add(updateButton);
     }
 
+    /**
+     * Return the hard-coded parameter K which is for 2 types of particles.
+     * Kij = {
+     * Ka      (1 <= i <= 2/N, 1 <= j <= 2/N)
+     * Kp + Km (1 <= i <= 2/N, 2/N < j <= N)
+     * Kp - Km (2/N < j <= N, 1 <= j <= 2/N)
+     * Ka      (2/N < j <= N, 2/N < j <= N)
+     * }
+     *
+     * @return Parameter K for 2 types of particles.
+     */
     @Override
     double[][] init2x2() {
         return new double[][]{
@@ -205,5 +217,13 @@ public class ParameterKabpm extends Parameter {
             }
         }
         return params;
+    }
+
+    /**
+     * Reset log log plot.
+     */
+    @Override
+    void reset() {
+        plot.clearAll();
     }
 }

@@ -375,4 +375,9 @@ public class ParameterKijChangedByHeider extends Parameter {
         }
         return params;
     }
+
+    @Override
+    void reset() {
+        // Not Implement.
+    }
 }

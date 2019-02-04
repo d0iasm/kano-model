@@ -55,13 +55,13 @@ public class Swarm extends JPanel {
         this.particles = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             Particle p = new Particle(i);
-            p.initPosition((width/2)/SCALE - 1, (width/2)/SCALE + 1);
+            p.initPosition((width / 2) / SCALE - 1, (width / 2) / SCALE + 1);
             particles.add(p);
         }
     }
 
     /**
-     * Main method to calculate one step for each particle.
+     * Calculate one step for each particle.
      */
     public void run() {
         List<Pair<Double>> timeEvolution = timeEvolution(particles);
@@ -156,12 +156,14 @@ public class Swarm extends JPanel {
         }
     }
 
+    /**
+     * Reset the positions of all particles.
+     */
     void reset() {
         Extension.printSwarmParam(parameter.getParams(), this.count);
         System.out.println("============= Reset current count ==============");
-        // TODO: Call parameter reset()
         for (Particle p : particles) {
-            p.initPosition((width/2)/SCALE - 1, (width/2)/SCALE + 1);
+            p.initPosition((width / 2) / SCALE - 1, (width / 2) / SCALE + 1);
         }
         count = 0;
     }
@@ -174,7 +176,8 @@ public class Swarm extends JPanel {
         tb.addActionListener(e -> {
             toggleBoundary();
             tb.setText(boundary.toString());
-            reset();
+            this.reset();
+            parameter.reset();
         });
         this.add(tb);
     }

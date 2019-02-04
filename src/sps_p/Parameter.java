@@ -41,6 +41,8 @@ abstract class Parameter {
 
     abstract double[][] random();
 
+    abstract void reset();
+
     /**
      * Always return 0 because the index of first type starts 0.
      *
@@ -232,6 +234,7 @@ abstract class Parameter {
             setParams(pt);
             updateParamsText();
             swarm.reset();
+            this.reset();
         });
         swarm.add(updateButton);
 
@@ -241,6 +244,7 @@ abstract class Parameter {
             setParams(rnd);
             updateParamsText();
             swarm.reset();
+            this.reset();
         });
         swarm.add(randomButton);
     }

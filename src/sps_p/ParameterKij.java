@@ -10,6 +10,7 @@ public class ParameterKij extends Parameter {
 
     /**
      * Return the hard-coded parameter K which is for 2 types of particles.
+     *
      * @return Parameter K for 2 types of particles.
      */
     @Override
@@ -23,6 +24,7 @@ public class ParameterKij extends Parameter {
 
     /**
      * Return the hard-coded parameter K which is for 3 types of particles.
+     *
      * @return Parameter K for 3 types of particles.
      */
     @Override
@@ -38,6 +40,7 @@ public class ParameterKij extends Parameter {
 
     /**
      * Return the randomized parameter K which is depending on the number of |pType|.
+     *
      * @return Randomized parameter K.
      */
     @Override
@@ -54,5 +57,10 @@ public class ParameterKij extends Parameter {
             }
         }
         return params;
+    }
+
+    @Override
+    void reset() {
+        // Nothing for Kij parameter.
     }
 }
