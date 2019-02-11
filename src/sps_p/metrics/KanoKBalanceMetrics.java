@@ -5,9 +5,9 @@ import sps_p.utils.Permutation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Calculate the stable value besed on Heider balance theory.
@@ -136,7 +136,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * 4  |  39 |  1
      * 39 |  1  |  4
      * 39 |  4  |  1
-     *
+     * <p>
      * Calculate the average of the sum of each pattern.
      * ( K(1->4) * K(1->39) * K(4->39)
      * + K(1->39) * K(1->4) * K(4->39)

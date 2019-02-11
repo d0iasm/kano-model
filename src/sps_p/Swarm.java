@@ -24,7 +24,7 @@ public class Swarm extends JPanel {
     private static final int SCALE = 10;
     private static final int CYCLE_L = 10;
     private static final double TIME_STEP = 0.002;
-    private static final int P_SIZE = 1;
+    private static final int P_SIZE = 10;
 
     private int pNum;
     private int pType;
@@ -112,6 +112,8 @@ public class Swarm extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        // TODO: this method can modify scale!!!!
+        g2.scale(0.5, 0.5);
 
         g2.setColor(Color.LIGHT_GRAY);
         switch (boundary) {
@@ -143,19 +145,18 @@ public class Swarm extends JPanel {
             switch (boundary) {
                 case OPEN:
                     g2.fill(new Ellipse2D.Double(
-                            p.x * SCALE,
-                            p.y * SCALE,
-                            P_SIZE * SCALE, P_SIZE * SCALE));
+                            p.x * SCALE, p.y * SCALE,
+                            P_SIZE, P_SIZE));
                     break;
                 case PERIODIC:
                     g2.fill(new Ellipse2D.Double(
-                            p.x * SCALE * 8,
-                            p.y * SCALE * 8,
-                            P_SIZE * SCALE, P_SIZE * SCALE));
+                            p.x * SCALE * 8, p.y * SCALE * 8,
+                            P_SIZE, P_SIZE));
                     break;
 
             }
         }
+        g2.scale(1, 1);
     }
 
     /**

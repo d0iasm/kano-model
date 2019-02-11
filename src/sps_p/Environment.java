@@ -22,14 +22,14 @@ class Environment {
      * Keep to update Swarm's state.
      */
     void run() {
-        // TODO: Keep the screen position to chase the middle of particles while running.
+        // TODO: Keep the screen position to chase the middle of particles while running. This might be implemented by using Graphics2D.scale(). However, need to divide Swarm and Parameter class to use it.
         while (true) swarm.run();
     }
 
     /**
      * Initialize JFrame. This is the main base window.
      *
-     * @param width The width of a window.
+     * @param width  The width of a window.
      * @param height The height of a window.
      * @return Initialized JFrame.
      */
@@ -52,10 +52,10 @@ class Environment {
     /**
      * Initialize Swarm that extends JPanel.
      *
-     * @param width The width of a window.
+     * @param width  The width of a window.
      * @param height The height of a window.
-     * @param num The number of particles.
-     * @param type The number of type of particles.
+     * @param num    The number of particles.
+     * @param type   The number of type of particles.
      * @return Initialized sps_p.Swarm.
      */
     private Swarm initSwarm(int width, int height, int num, int type) {
