@@ -167,10 +167,13 @@ public class Swarm extends JPanel {
         for (Particle p : particles) {
             p.initPosition((width / 2) / SCALE - 1, (width / 2) / SCALE + 1);
         }
+
+        // TODO: Remove this lines because they are for experiment to examine the relationship between X, V values and Heider balance value.
         BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(parameter.getParams(), pNum, pType);
         Extension.printPairs(
                 new Pair<>("HB result", result.toString())
         );
+
         count = 0;
     }
 

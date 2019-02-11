@@ -34,7 +34,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     /**
-     * This function calculates the index of Heider balance state based on all triangles in particles.
+     * Calculates the index of Heider balance state based on all triangles in particles.
      *
      * @param k ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The average of Heider balance state per a triangle.
@@ -57,7 +57,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * [DEPRECATED and NOT IMPLEMENTED YET]
      * This function calculates the index of Heider balance state based on a combination of K params.
      *
-     * @param k ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k Parameters represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The index of Heider balance state.
      */
     public double calcHeiderBalanceBasedOnK(double[][] k) {
@@ -88,7 +88,7 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     /**
-     * Calculate the Heider balance state with an average of sps_p.ParameterKij and Kji.
+     * Calculate the Heider balance state with an average of Parameters and Kji.
      * i.e. c[] = {1, 4, 39};
      * There is the 3 connections in c[] defined MEMO_3C2.
      * {1, 4}, {1, 39}, {4, 39}
@@ -98,7 +98,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * (K(4->39) + K(39->3)) / 2
      * Then, multiply all averages.
      *
-     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k Parameters represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
@@ -144,7 +144,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * + ....
      * ) / 6
      *
-     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k Parameters represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @param c The 3 particle's indexes.
      * @param n The total number of particles.
      * @param t The number of type.
@@ -175,24 +175,12 @@ public class KanoKBalanceMetrics implements Metrics {
     }
 
     /**
-     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
-     * @param c The 3 particle's indexes.
-     * @param n The total number of particles.
-     * @param t The number of type.
-     * @return Result of Heider balance state.
-     */
-    private BigDecimal balanceWithAllDirections(double[][] k, int c[], int n, int t) {
-        BigDecimal balance = new BigDecimal(1);
-        return balance;
-    }
-
-    /**
      * Note that this method only handle 2 type particles.
      *
      * @param i The index of a particle.
      * @param n The total number of particles.
      * @param t The number of type.
-     * @return The index for sps_p.ParameterKij array.
+     * @return The index for Parameters array.
      */
     private int index(int i, int n, int t) {
         if (i <= n / t)
