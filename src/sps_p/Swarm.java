@@ -93,9 +93,9 @@ public class Swarm extends JPanel {
             double x = ((ParameterKabpm) parameter).getX(particles);
             double v = ((ParameterKabpm) parameter).getV(timeEvolution, curG, nextG);
             ((ParameterKabpm) parameter).addPoint(x, v);
-            if (count % 1000 == 0) {
-                System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
-            }
+//            if (count % 1000 == 0) {
+//                System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
+//            }
 
 //            if (count % 100000 == 0) {
 //                Extension.printSwarmParam(parameter.getParams(), count);

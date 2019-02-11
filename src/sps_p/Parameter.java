@@ -185,6 +185,11 @@ abstract class Parameter {
     /**
      * Create new JTextArea that shows parameters. This should be called when you want to update parameters based on
      * the content in text area that you input.
+     * The order of parameters is {i, j} =
+     * {0, 0}, {0, 1}
+     * {1, 0}, {1, 1}
+     * 0 means the index of particle < 2/N.
+     * 1 means the index of particle >= 2/N.
      *
      * @return New JTextArea that shows parameters.
      */
