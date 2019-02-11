@@ -92,17 +92,19 @@ public class Swarm extends JPanel {
             Pair<Double> nextG = ((ParameterKabpm) parameter).getGravity(particles);
             double x = ((ParameterKabpm) parameter).getX(particles);
             double v = ((ParameterKabpm) parameter).getV(timeEvolution, curG, nextG);
-//            System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
             ((ParameterKabpm) parameter).addPoint(x, v);
-
-            if (count % 100000 == 0) {
-                Extension.printSwarmParam(parameter.getParams(), count);
-                BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(parameter.getParams(), pNum, pType);
-                Extension.printPairs(
-                        new Pair<>("HB result", result.toString())
-                );
-//                System.exit(0);
+            if (count % 1000 == 0) {
+                System.out.println("Gravity: " + curG.x + ", " + curG.y + ", X: " + x + ", V: " + v);
             }
+
+//            if (count % 100000 == 0) {
+//                Extension.printSwarmParam(parameter.getParams(), count);
+//                BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(parameter.getParams(), pNum, pType);
+//                Extension.printPairs(
+//                        new Pair<>("HB result", result.toString())
+//                );
+//                System.exit(0);
+//            }
         }
     }
 
@@ -165,6 +167,10 @@ public class Swarm extends JPanel {
         for (Particle p : particles) {
             p.initPosition((width / 2) / SCALE - 1, (width / 2) / SCALE + 1);
         }
+        BigDecimal result = ((KanoKBalanceMetrics) metrics).calcHeiderBalanceBasedOnAllTriangle(parameter.getParams(), pNum, pType);
+        Extension.printPairs(
+                new Pair<>("HB result", result.toString())
+        );
         count = 0;
     }
 

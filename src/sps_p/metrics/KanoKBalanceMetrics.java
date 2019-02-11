@@ -36,7 +36,7 @@ public class KanoKBalanceMetrics implements Metrics {
     /**
      * This function calculates the index of Heider balance state based on all triangles in particles.
      *
-     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The average of Heider balance state per a triangle.
      */
     public BigDecimal calcHeiderBalanceBasedOnAllTriangle(double[][] k, int n, int type) {
@@ -57,7 +57,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * [DEPRECATED and NOT IMPLEMENTED YET]
      * This function calculates the index of Heider balance state based on a combination of K params.
      *
-     * @param k sps_p.ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
+     * @param k ParameterKij represents "to what extent person i prefers person j" defined in the Kano's thesis.
      * @return The index of Heider balance state.
      */
     public double calcHeiderBalanceBasedOnK(double[][] k) {
