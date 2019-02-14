@@ -113,7 +113,7 @@ public class Swarm extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         // TODO: this method can modify scale!!!!
-        g2.scale(0.5, 0.5);
+//        g2.scale(0.5, 0.5);
 
         g2.setColor(Color.LIGHT_GRAY);
         switch (boundary) {
@@ -156,7 +156,9 @@ public class Swarm extends JPanel {
 
             }
         }
-        g2.scale(1, 1);
+
+        // To revert scale for parameter UI, but it didn't work well.
+//        g2.scale(1, 1);
     }
 
     /**
