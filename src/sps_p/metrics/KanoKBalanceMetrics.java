@@ -5,9 +5,7 @@ import sps_p.utils.Permutation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Calculate the stable value besed on Heider balance theory.
@@ -43,48 +41,23 @@ public class KanoKBalanceMetrics implements Metrics {
         Combination combination = new Combination(n, TRIANGLE);
         List<int[]> l = combination.list();
         int tNum = combination.size();
+        int count = 1;
+
+        BigDecimal tmp;
 
         BigDecimal balance = new BigDecimal(0);
         for (int[] c : l) {
+            tmp = balanceWithPOX(k, c, n, type);
             balance = balance.add(balanceWithPOX(k, c, n, type));
 //            balance = balance.add(balanceWithAverage(k, c, n, type));
+            System.out.println(count + ": " + balance + ", " + tmp + "[" + c[0] + "," + c[1] + "," + c[2] + "]");
+            count++;
         }
+
+        System.out.println("COUNT:" + count);
+        System.out.println("SUM:" + balance);
 
         return balance.divide(new BigDecimal(tNum), MathContext.DECIMAL32);
-    }
-
-    /**
-     * [DEPRECATED and NOT IMPLEMENTED YET]
-     * This function calculates the index of Heider balance state based on a combination of K params.
-     *
-     * @param k Parameters represents "to what extent person i prefers person j" defined in the Kano's thesis.
-     * @return The index of Heider balance state.
-     */
-    public double calcHeiderBalanceBasedOnK(double[][] k) {
-        Combination combination = new Combination(k.length * k[0].length, TRIANGLE);
-
-        System.out.println("combination results");
-        List<int[]> l = combination.list();
-        combination.print();
-        System.out.println(combination.size());
-
-        double balance = 0;
-        double tmpBalance = 1;
-
-        Map<Integer, Integer[]> memo = new HashMap<>();
-        for (int[] c : l) {
-            for (int key = 0; key < TRIANGLE; key++) {
-                if (!memo.containsKey(c[key])) {
-                    memo.put(c[key], indexes(c[key], k.length));
-                }
-                int i = memo.get(c[key])[0];
-                int j = memo.get(c[key])[1];
-                tmpBalance *= k[i][j];
-            }
-            balance += tmpBalance;
-            tmpBalance = 1;
-        }
-        return balance;
     }
 
     /**
@@ -183,7 +156,7 @@ public class KanoKBalanceMetrics implements Metrics {
      * @return The index for Parameters array.
      */
     private int index(int i, int n, int t) {
-        if (i <= n / t)
+        if (i < n / t)
             return 0;
         else
             return 1;
